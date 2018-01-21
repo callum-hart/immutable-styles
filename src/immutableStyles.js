@@ -51,7 +51,7 @@ const Mono = {
   createCSS(styles) {
     styles.forEach(block => Mono._parseStyles(block));
     Mono._parseAst();
-    Mono._makeCSS();
+    return Mono._makeCSS();
   },
 
   _parseStyles(block, parentRef = null, inheritedMedia = null) {
@@ -196,6 +196,7 @@ const Mono = {
     }
 
     console.log(CSS);
+    return CSS;
   },
 
   _AST: {},
@@ -401,6 +402,11 @@ const Mono = {
       console.log(` - maxWidth: ${maxWidth}`);
     }
     console.log(`\nNested media queries are not allowed\n`);
+  },
+
+  // for testing
+  clear() {
+    Mono._AST = {};
   }
 }
 

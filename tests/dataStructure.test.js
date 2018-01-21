@@ -1,8 +1,10 @@
 /*
- Data structure returned by `ImmutableStyles.createStyle`
+ Testing data structure returned by `ImmutableStyles.createStyle`
 */
 
 const ImmutableStyles = require('../src/immutableStyles');
+
+beforeEach(() => ImmutableStyles.clear());
 
 
 test('[createStyle] Single node', () => {
@@ -267,7 +269,7 @@ test('[createStyle] Media min-width and max-width', () => {
     {
       className: 'pageTitle',
       minWidth: 768,
-      minWidth: 1024
+      maxWidth: 1024
     },
     'font-size: 26px;'
   );
@@ -277,7 +279,7 @@ test('[createStyle] Media min-width and max-width', () => {
     attrs: {
       className: 'pageTitle',
       minWidth: 768,
-      minWidth: 1024
+      maxWidth: 1024
     },
     styles: 'font-size: 26px;',
     children: []
