@@ -2,6 +2,9 @@
  * Get first version of this done asap to test idea
  *
  * - Tidy this up
+ *   - rename things about composition... subclass not coposible class!
+ *   - restructure abit, only export what's needed (createStyle, createCSS, clear)
+ *   - dont' generate CSS for rule-set without styles
  * - Features:
  *   - Psuedo selectors (:hover)
  *   - Psuedo elements (::after)
@@ -34,16 +37,24 @@ class OverrideFound {
 }
 
 const Mono = {
-  createStyle(element, attrs, styles, ...children) {
-    const childElements = children.filter(child => child instanceof Object);
-    const stylesWithVars = children.filter(child => !(child instanceof Object))
-                                   .join(BLANK);
+  createStyle(element, attrs, ...children) {
+    let styles = BLANK;
+    const childNodes = [];
+
+    // children can contain styles for current element or child nodes
+    children.forEach(child => {
+      if (child instanceof Object) {
+        childNodes.push(child);
+      } else {
+        styles += child;
+      }
+    });
 
     return {
       element,
       attrs: attrs || {},
-      styles: styles + stylesWithVars || BLANK,
-      children: childElements
+      styles,
+      children: childNodes
     }
   },
 
@@ -125,6 +136,7 @@ const Mono = {
     }
   },
 
+  // isSubClass
   _isComposableClass(parentRef, className) {
     // for now only support composition for:
     //  - top level nodes (cannot use composition in nested nodes)

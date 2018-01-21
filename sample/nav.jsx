@@ -9,8 +9,27 @@ module.exports = (ImmutableStyles) => [
     clear: both;
     background: red;
 
-    <a className="someLink" on="hover">
+    <p>
+      <a>
+        background: red;
+        font-weight: {fontWeight};
+      </a>
+    </p>
+
+    <p className="someParagraph">
+      <span>
+        background: blue;
+      </span>
+    </p>
+
+    {/*pseudo-class*/}
+    <a className="someLink" pseudo=":hover">
       color: blue;
+    </a>
+
+    {/*pseudo-element*/}
+    <a className="someLink" pseudo="::after">
+      content: '';
     </a>
 
     <hr>

@@ -312,8 +312,7 @@ test('[createStyle] Node without styles', () => {
     'div',
     {
       className: 'titleBar'
-    },
-    ''
+    }
   );
 
   const output = {
@@ -331,9 +330,7 @@ test('[createStyle] Node without styles', () => {
 
 test('[createStyle] Node without attributes or styles', () => {
   const input = ImmutableStyles.createStyle(
-    'div',
-    null,
-    ''
+    'div'
   );
 
   const output = {
