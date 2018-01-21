@@ -27,7 +27,7 @@ const ZERO              = 0;
 const MEDIA_UNIT        = 'px';
 
 
-class CSXException {
+class OverrideFound {
   constructor(message, data) {
     this.message = message;
     this.data = data;
@@ -151,10 +151,11 @@ const Mono = {
               Mono._AST[accumulator].forEach(accumulatedStyle => Mono._stylesUnique(accumulatedStyle, existingStyle));
             });
           } catch (e) {
-            console.log(`\n[Override Found] \`${ref}\` overrides the property \`${e.data.property}\` set by \`${accumulator}\``);
+            const errorMessage = `[Override Found] \`${ref}\` overrides the property \`${e.data.property}\` set by \`${accumulator}\``;
+            console.log(`\n${errorMessage}`);
             console.log(`\nExisting style (\`${accumulator}\`):\n   \`${e.data.control.styles}\``);
             console.log(`\nNew style (\`${ref}\`):\n   \`${e.data.comparison.styles}\``);
-            throw new e.constructor();
+            throw new Error(errorMessage);
           }
         }
 
@@ -250,10 +251,11 @@ const Mono = {
       Mono._AST[ref].forEach(existingStyle => Mono._stylesUnique(existingStyle, newStyle));
       Mono._AST[ref].push(newStyle); // save styles
     } catch (e) {
-      console.log(`\nThe CSS property \`${e.data.property}\` has already been defined for \`${ref}\``);
+      const errorMessage = `The CSS property \`${e.data.property}\` has already been defined for \`${ref}\``;
+      console.log(`\n${errorMessage}`);
       console.log(`\nExisting style (\`${ref}\`):\n   "${e.data.control.styles}"`);
       console.log(`\nNew style (\`${ref}\`):\n   "${e.data.comparison.styles}"`);
-      throw new e.constructor();
+      throw new Error(errorMessage);
     }
   },
 
@@ -290,7 +292,7 @@ const Mono = {
       for (var property in Mono._stylesToObject(comparison.styles)) {
         if (Mono._stylesToObject(control.styles)[property]) {
           console.log('override found');
-          throw new CSXException('Override found', {
+          throw new OverrideFound('Override found', {
             property,
             control,
             comparison
