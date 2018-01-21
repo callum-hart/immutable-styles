@@ -81,8 +81,9 @@ const Mono = {
         Mono._cloneBaseStyles(baseRef, fullyQualifiedRef);
         // todo: generate run-time validations (see composition.css:116)
       } else {
-        console.log(`The base class: "${baseRef}" does not exist.`);
-        throw new Error('Base class not found');
+        const errorMessage = `The base class \`${baseRef}\` does not exist`;
+        console.log(errorMessage);
+        throw new Error(errorMessage);
       }
     }
 
@@ -267,7 +268,7 @@ const Mono = {
     for (var property in newStyles) {
       if (equivalentStyles[property]) {
         // style already exists, override it
-        equivalentStyles[property] = `${newStyles[property]} /* polymorphic (original value: ${equivalentStyles[property]}) */`;
+        equivalentStyles[property] = `${newStyles[property]} /* (original value: ${equivalentStyles[property]}) */`;
       } else {
         // add style
         equivalentStyles[property] = `${newStyles[property]}`;
