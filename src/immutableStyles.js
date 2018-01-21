@@ -235,11 +235,12 @@ const Mono = {
       const whitelistedProperty = properties.find(property => styles.includes(property));
 
       if (whitelistedProperty && !elements.includes(element)) {
-        console.log(`\nThe HTML element "${element}" (${ref}) cannot use the property "${whitelistedProperty}"`);
+        const errorMessage = `The HTML element \`${element}\` (${ref}) cannot use the property \`${whitelistedProperty}\``;
+        console.log(`\n${errorMessage}`);
         console.log(`\nThe property "${whitelistedProperty}" can only be used by the following elements:`);
         elements.forEach(element => console.log(`  - ${element}`));
         console.log('\n');
-        throw new Error('Element cannot not use property');
+        throw new Error(errorMessage);
       }
     });
 
