@@ -60,7 +60,44 @@ test('Override found from child node', () => {
 });
 
 
-test('Override not found for inequal elements', () => {
+test('Override found from adjacent child nodes', () => {
+  const input = [
+    ImmutableStyles.createStyle(
+      'div',
+      {
+        className: 'parent'
+      },
+      '',
+      ImmutableStyles.createStyle(
+        'span',
+        {
+          className: 'child'
+        },
+        'color: cadetblue;'
+      )
+    ),
+    ImmutableStyles.createStyle(
+      'div',
+      {
+        className: 'parent'
+      },
+      '',
+      ImmutableStyles.createStyle(
+        'span',
+        {
+          className: 'child'
+        },
+        'color: forestgreen;'
+      )
+    )
+  ];
+
+  const overrideFound = () => ImmutableStyles.createCSS(input);
+  expect(overrideFound).toThrow('The CSS property `color` has already been defined for `div.parent span.child`');
+});
+
+
+test('Override not found when elements are not equal', () => {
   const input = [
     ImmutableStyles.createStyle(
       'h1',
@@ -77,7 +114,7 @@ test('Override not found for inequal elements', () => {
   ];
 
   const overrideNotFound = () => ImmutableStyles.createCSS(input);
-  expect(overrideNotFound).not.toThrow('[Override Found] `div.titleBar h1.pageTitle` overrides the property `font-size` set by `h1.pageTitle`');
+  expect(overrideNotFound).not.toThrow();
 });
 
 
@@ -128,5 +165,42 @@ test('Override not found when breakpoints are discrete', () => {
   ];
 
   const overrideNotFound = () => ImmutableStyles.createCSS(input);
-  expect(overrideNotFound).not.toThrow('The CSS property `display` has already been defined for `section.sideBar`');
+  expect(overrideNotFound).not.toThrow();
+});
+
+
+test('Override not found when equal child nodes have different parent', () => {
+  const input = [
+    ImmutableStyles.createStyle(
+      'div',
+      {
+        className: 'parentOne'
+      },
+      '',
+      ImmutableStyles.createStyle(
+        'span',
+        {
+          className: 'child'
+        },
+        'color: cadetblue;'
+      )
+    ),
+    ImmutableStyles.createStyle(
+      'div',
+      {
+        className: 'parentTwo'
+      },
+      '',
+      ImmutableStyles.createStyle(
+        'span',
+        {
+          className: 'child'
+        },
+        'color: forestgreen;'
+      )
+    )
+  ];
+
+  const overrideNotFound = () => ImmutableStyles.createCSS(input);
+  expect(overrideNotFound).not.toThrow();
 });
