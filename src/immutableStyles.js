@@ -1,12 +1,11 @@
 /**
  * Get first version of this done asap to test idea
  *
- * - Add tests
  * - Tidy this up
  * - Features:
  *   - Psuedo selectors (:hover)
  *   - Psuedo elements (::after)
- *   - Override detection in detatched rule-sets
+ *   - Override detection in same / detached rule-sets
  * - Add docs
  */
 
