@@ -2,14 +2,17 @@
  * Get first version of this done asap to test idea
  *
  * - Tidy this up
- *   - rename things about composition... subclass not coposible class!
+ *   - rename things about composition... subclass not composible class!
  *   - restructure abit, only export what's needed (createStyle, createCSS, clear)
- *   - dont' generate CSS for rule-set without styles
  * - Features:
  *   - Psuedo selectors (:hover)
  *   - Psuedo elements (::after)
  *   - Override detection in same / detached rule-sets
  * - Add docs
+ * - Caveats:
+ *   - child nodes use child combinator selector (<)
+ *   - element != element with class might feel unnatural
+ *
  */
 
 const propertyWhitelist = require('./propertyWhitelist');
@@ -43,7 +46,7 @@ const Mono = {
 
     // children can contain styles for current element or child nodes
     children.forEach(child => {
-      if (child instanceof Object) {
+      if (child.element) {
         childNodes.push(child);
       } else {
         styles += child;
@@ -182,7 +185,8 @@ const Mono = {
     for (var ref in Mono._AST) {
       const selector = Mono._makeSelectorFromRef(ref);
 
-      Mono._AST[ref].forEach(({styles, minWidth, maxWidth}) => {
+      Mono._AST[ref].filter(({styles}) => styles != BLANK)
+                    .forEach(({styles, minWidth, maxWidth}) => {
         if (minWidth === ZERO && maxWidth === Infinity) {
           CSS += `${selector}${SPACE}${OPEN_BRACE}\n`;
           CSS += `${SPACE.repeat(2)}${styles}\n`;

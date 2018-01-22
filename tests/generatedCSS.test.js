@@ -255,35 +255,31 @@ test('[createCSS] Node without attributes', () => {
 });
 
 
-// todo: only return CSS when styles are present
-test.skip('[createCSS] Node without styles', () => {
+test('[createCSS] Node without styles', () => {
   const input = [
     ImmutableStyles.createStyle(
       'div',
       {
         className: 'titleBar'
-      },
-      ''
+      }
     )
   ];
 
-  const output = ``;
+  const output = '';
 
   expect(ImmutableStyles.createCSS(input)).toEqual(output);
 });
 
 
-// todo: only return CSS when styles are present
-test.skip('[createCSS] Node without attributes or styles', () => {
+test('[createCSS] Node without attributes or styles', () => {
   const input = [
     ImmutableStyles.createStyle(
       'div',
-      null,
-      ''
+      null
     )
   ];
 
-  const output = ``;
+  const output = '';
 
-  expect(input).toEqual(output);
+  expect(ImmutableStyles.createCSS(input)).toEqual(output);
 });
