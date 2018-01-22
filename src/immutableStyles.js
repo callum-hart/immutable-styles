@@ -2,7 +2,6 @@
  * Get first version of this done asap to test idea
  *
  * - Tidy this up
- *   - rename things about composition... subclass not composible class!
  *   - restructure abit, only export what's needed (createStyle, createCSS, clear)
  * - Features:
  *   - Psuedo selectors (:hover)
@@ -86,13 +85,13 @@ const Mono = {
       }
     }
 
-    if (Mono._isComposableClass(parentRef, className)) {
+    if (Mono._isSubclass(parentRef, className)) {
       const baseClass = className.match(/^.+(?=(\.))/)[0]; // upto (but not including) dot
       const baseRef = `${block.element}${DOT}${baseClass}`;
 
       if (Mono._AST[baseRef]) {
         Mono._cloneBaseStyles(baseRef, fullyQualifiedRef);
-        // todo: generate run-time validations (see composition.css:116)
+        // todo: generate run-time validations
       } else {
         const errorMessage = `The base class \`${baseRef}\` does not exist`;
         console.log(errorMessage);
@@ -128,7 +127,7 @@ const Mono = {
     for (var ref in Mono._AST) {
       // thought: could potentially clone all styles that include (not just start with) baseRef
       // i.e: `div.container form.base-form` => `div.container form.base-form.base-form--saving`
-      // this would enable composition among nested nodes.
+      // this would enable inheritance among nested nodes.
       if (ref === baseRef || ref.startsWith(`${baseRef}${SPACE}`)) {
         // clone and save base styles
         const fullyQualifiedClonedRef = ref.replace(baseRef, clonedRef);
@@ -139,11 +138,10 @@ const Mono = {
     }
   },
 
-  // isSubClass
-  _isComposableClass(parentRef, className) {
-    // for now only support composition for:
-    //  - top level nodes (cannot use composition in nested nodes)
-    //  - two classes
+  _isSubclass(parentRef, className) {
+    // for now only support inheritance for:
+    //  - top level nodes
+    //  - single inheritance
     return parentRef === null &&
            className &&
            className.includes(DOT);
@@ -185,7 +183,7 @@ const Mono = {
     for (var ref in Mono._AST) {
       const selector = Mono._makeSelectorFromRef(ref);
 
-      Mono._AST[ref].filter(({styles}) => styles != BLANK)
+      Mono._AST[ref].filter(({styles}) => styles !== BLANK)
                     .forEach(({styles, minWidth, maxWidth}) => {
         if (minWidth === ZERO && maxWidth === Infinity) {
           CSS += `${selector}${SPACE}${OPEN_BRACE}\n`;
@@ -194,11 +192,11 @@ const Mono = {
           // optimization: one media query per unique range containing all styles for that range
           const ranges = [];
 
-          if (minWidth != ZERO) {
+          if (minWidth !== ZERO) {
             ranges.push(`${OPEN_PARENTHESIS}min-width:${minWidth}${MEDIA_UNIT}${CLOSE_PARENTHESIS}`);
           }
 
-          if (maxWidth != Infinity) {
+          if (maxWidth !== Infinity) {
             ranges.push(`${OPEN_PARENTHESIS}max-width:${maxWidth}${MEDIA_UNIT}${CLOSE_PARENTHESIS}`);
           }
 

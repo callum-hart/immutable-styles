@@ -1,5 +1,5 @@
 /*
- Testing that styles can be composed from a base class.
+ Testing that styles can extend from a base class.
 */
 
 const ImmutableStyles = require('../src/immutableStyles');
