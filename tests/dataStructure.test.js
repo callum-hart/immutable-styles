@@ -4,7 +4,7 @@
 
 const ImmutableStyles = require('../src/immutableStyles');
 
-beforeEach(() => ImmutableStyles.clear());
+beforeEach(() => ImmutableStyles.tearDown());
 
 
 test('[createStyle] Single node', () => {

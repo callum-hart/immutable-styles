@@ -4,7 +4,7 @@
 
 const ImmutableStyles = require('../src/immutableStyles');
 
-beforeEach(() => ImmutableStyles.clear());
+beforeEach(() => ImmutableStyles.tearDown());
 
 
 test('[inheritance] textual styles can be applied to textual nodes', () => {

@@ -5,7 +5,7 @@
 
 const ImmutableStyles = require('../src/immutableStyles');
 
-beforeEach(() => ImmutableStyles.clear());
+beforeEach(() => ImmutableStyles.tearDown());
 
 
 test('[nodeEquality] Elements of different type without class are not equal', () => {
