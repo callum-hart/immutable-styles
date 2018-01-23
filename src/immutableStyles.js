@@ -184,7 +184,7 @@ const makeCSS = () => {
     const selector = makeSelectorFromRef(ref);
 
     AST.get(ref).filter(({styles}) => styles !== BLANK)
-                  .forEach(({styles, minWidth, maxWidth}) => {
+                .forEach(({styles, minWidth, maxWidth}) => {
       if (minWidth === ZERO && maxWidth === Infinity) {
         CSS += `${selector}${SPACE}${OPEN_BRACE}\n`;
         CSS += `${SPACE.repeat(2)}${styles}\n`;
@@ -372,10 +372,10 @@ const makeSelectorFromRef = ref => {
 
   ref.split(SPACE).forEach(part => {
     if (part.includes(DOT)) {
-      const isComposableClass = part.split(DOT).length === 3; // [element, baseClass, subClass]
+      const isSubclass = part.split(DOT).length === 3; // [element, baseClass, subClass]
 
-      if (isComposableClass) {
-        selector.push(makeComposableClassSelector(part));
+      if (isSubclass) {
+        selector.push(makeSubclassSelector(part));
       } else {
         selector.push(makeClassSelector(part));
       }
@@ -396,8 +396,8 @@ const makeClassSelector = elementWithClass => {
   return `${element}[class="${cssClass}"]`;
 }
 
-const makeComposableClassSelector = elementWithComposableClass => {
-  const [element, baseClass, subClass] = elementWithComposableClass.split(DOT);
+const makeSubclassSelector = elementWithSubclass => {
+  const [element, baseClass, subClass] = elementWithSubclass.split(DOT);
   return `${element}[class="${baseClass}${SPACE}${subClass}"]`;
 }
 
