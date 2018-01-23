@@ -29,7 +29,7 @@ const CLOSE_BRACE       = '}';
 const ZERO              = 0;
 const MEDIA_UNIT        = 'px';
 
-let AST = {};
+const AST = new Map();
 
 
 class OverrideFound {
@@ -89,7 +89,7 @@ const parseStyles = (block, parentRef = null, inheritedMedia = null) => {
     const baseClass = className.match(/^.+(?=(\.))/)[0]; // upto (but not including) dot
     const baseRef = `${block.element}${DOT}${baseClass}`;
 
-    if (AST[baseRef]) {
+    if (AST.has(baseRef)) {
       cloneBaseStyles(baseRef, fullyQualifiedRef);
       // todo: generate run-time validations
     } else {
@@ -124,16 +124,16 @@ const parseStyles = (block, parentRef = null, inheritedMedia = null) => {
 }
 
 const cloneBaseStyles = (baseRef, clonedRef) => {
-  for (var ref in AST) {
+  for (var ref of AST.keys()) {
     // thought: could potentially clone all styles that include (not just start with) baseRef
     // i.e: `div.container form.base-form` => `div.container form.base-form.base-form--saving`
     // this would enable inheritance among nested nodes.
     if (ref === baseRef || ref.startsWith(`${baseRef}${SPACE}`)) {
       // clone and save base styles
       const fullyQualifiedClonedRef = ref.replace(baseRef, clonedRef);
-      AST[fullyQualifiedClonedRef] = AST[ref].map(style => ({...style}));
-      AST[fullyQualifiedClonedRef].__proto__.cloned = true;
-      AST[fullyQualifiedClonedRef].__proto__._clonedFrom = ref; // just for debugging
+      AST.set(fullyQualifiedClonedRef, AST.get(ref).map(style => ({...style})));
+      AST.get(fullyQualifiedClonedRef).isCloned = true;
+      AST.get(fullyQualifiedClonedRef)._clonedFrom = ref; // just for debugging
     }
   }
 }
@@ -148,7 +148,7 @@ const isSubclass = (parentRef, className) => {
 }
 
 const parseAst = () => {
-  for (var ref in AST) {
+  for (var ref of AST.keys()) {
     const paths = ref.split(SPACE);
     let i = paths.length - 1;
     let accumulator = BLANK;
@@ -157,11 +157,11 @@ const parseAst = () => {
     do {
       accumulator = (accumulator === BLANK) ? paths[i] : `${paths[i]}${SPACE}` + accumulator;
 
-      if (ref !== accumulator && AST[accumulator]) {
+      if (ref !== accumulator && AST.has(accumulator)) {
         // ref exists as part of another ref, check if styles are unique
         try {
-          AST[ref].forEach(existingStyle => {
-            AST[accumulator].forEach(accumulatedStyle => stylesUnique(accumulatedStyle, existingStyle));
+          AST.get(ref).forEach(existingStyle => {
+            AST.get(accumulator).forEach(accumulatedStyle => stylesUnique(accumulatedStyle, existingStyle));
           });
         } catch (e) {
           const errorMessage = `[Override Found] \`${ref}\` overrides the property \`${e.data.property}\` set by \`${accumulator}\``;
@@ -180,10 +180,10 @@ const parseAst = () => {
 const makeCSS = () => {
   let CSS = BLANK;
 
-  for (var ref in AST) {
+  for (var ref of AST.keys()) {
     const selector = makeSelectorFromRef(ref);
 
-    AST[ref].filter(({styles}) => styles !== BLANK)
+    AST.get(ref).filter(({styles}) => styles !== BLANK)
                   .forEach(({styles, minWidth, maxWidth}) => {
       if (minWidth === ZERO && maxWidth === Infinity) {
         CSS += `${selector}${SPACE}${OPEN_BRACE}\n`;
@@ -216,13 +216,13 @@ const makeCSS = () => {
 
 const saveRef = (ref, {element, attrs, styles}) => {
   if (stylesValid(ref, element, styles)) {
-    if (AST[ref]) {
+    if (AST.has(ref)) {
       // ref already exists
       const newStyle = createStyleEntry(styles, attrs);
 
-      if (AST[ref].__proto__.cloned) {
+      if (AST.get(ref).isCloned) {
         // find existing style whose min & max width are equal to new style (if any)
-        const equivalentStyle = AST[ref].find(({minWidth, maxWidth}) => minWidth === newStyle.minWidth && maxWidth === newStyle.maxWidth);
+        const equivalentStyle = AST.get(ref).find(({minWidth, maxWidth}) => minWidth === newStyle.minWidth && maxWidth === newStyle.maxWidth);
 
         if (equivalentStyle) {
           // merge new style with an equivalent style
@@ -236,7 +236,7 @@ const saveRef = (ref, {element, attrs, styles}) => {
         saveNewStyleForExistingRef(newStyle, ref);
       }
     } else {
-      AST[ref] = [createStyleEntry(styles, attrs)];
+      AST.set(ref, [createStyleEntry(styles, attrs)]);
     }
   }
 }
@@ -261,8 +261,8 @@ const stylesValid = (ref, element, styles) => {
 
 const saveNewStyleForExistingRef = (newStyle, ref) => {
   try {
-    AST[ref].forEach(existingStyle => stylesUnique(existingStyle, newStyle));
-    AST[ref].push(newStyle); // save styles
+    AST.get(ref).forEach(existingStyle => stylesUnique(existingStyle, newStyle));
+    AST.get(ref).push(newStyle); // save styles
   } catch (e) {
     const errorMessage = `The CSS property \`${e.data.property}\` has already been defined for \`${ref}\``;
     console.log(`\n${errorMessage}`);
@@ -421,7 +421,7 @@ const logNestedMediaQuery = (inheritedMedia, minWidth, maxWidth, fullyQualifiedR
 
 // for testing
 const tearDown = () => {
-  AST = {};
+  AST.clear();
 }
 
 module.exports = {
