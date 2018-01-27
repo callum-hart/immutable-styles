@@ -206,7 +206,7 @@ test('Override not found when equal child nodes have different parent', () => {
 });
 
 
-test.skip('Override found in same rule-set', () => {
+test('Override found in same rule-set', () => {
   const input = [
     ImmutableStyles.createStyle(
       'h1',
@@ -218,11 +218,11 @@ test.skip('Override found in same rule-set', () => {
   ];
 
   const overrideNotFound = () => ImmutableStyles.createCSS(input);
-  expect(overrideNotFound).toThrow('The CSS property `font-size` has already been defined for `h1.pageTitle`');
+  expect(overrideNotFound).toThrow('The CSS property `font-size` is defined twice by `h1.pageTitle`');
 });
 
 
-test.skip('Override found in detached CSS rule-set', () => {
+test('Override found in detached CSS rule-set', () => {
   const headingStyles = 'font-family: "Fira Code"; font-size: 30px; font-weight: bold;';
 
   const input = [
@@ -236,5 +236,5 @@ test.skip('Override found in detached CSS rule-set', () => {
   ];
 
   const overrideNotFound = () => ImmutableStyles.createCSS(input);
-  expect(overrideNotFound).toThrow('The CSS property `font-size` has already been defined for `h1.pageTitle`');
+  expect(overrideNotFound).toThrow('The CSS property `font-size` is defined twice by `h1.pageTitle`');
 });

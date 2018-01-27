@@ -2,7 +2,6 @@
  * Get first version of this done asap to test idea
  *
  * - Features:
- *   - Override detection in same / detached rule-sets
  *   - Better logging
  * - Add docs
  * - Caveats:
@@ -240,8 +239,12 @@ const saveRef = (ref, {element, attrs, styles}) => {
   }
 }
 
-// valid in regards to inheritance
 const stylesValid = (ref, element, styles) => {
+  return elementCanUseProperty(ref, element, styles) &&
+         propertiesAreUnique(ref, element, styles);
+}
+
+const elementCanUseProperty = (ref, element, styles) => {
   propertyWhitelist.forEach(({elements, properties}) => {
     const whitelistedProperty = properties.find(property => styles.includes(property));
 
@@ -254,6 +257,16 @@ const stylesValid = (ref, element, styles) => {
       throw new Error(errorMessage);
     }
   });
+
+  return true;
+}
+
+const propertiesAreUnique = (ref, element, styles) => {
+  try {
+    stylesAsMap(styles, ref);
+  } catch (e) {
+    throw e.constructor(e.message);
+  }
 
   return true;
 }
@@ -272,16 +285,16 @@ const saveNewStyleForExistingRef = (newStyle, ref) => {
 }
 
 const mergeNewStyleWithEquivalentStyle = (newStyle, equivalentStyle) => {
-  const newStyles = stylesToObject(newStyle.styles);
-  const equivalentStyles = stylesToObject(equivalentStyle.styles);
+  const newStyles = stylesAsMap(newStyle.styles);
+  const equivalentStyles = stylesAsMap(equivalentStyle.styles);
 
-  for (var property in newStyles) {
-    if (equivalentStyles[property]) {
+  for (var property of newStyles.keys()) {
+    if (equivalentStyles.has(property)) {
       // style already exists, override it
-      equivalentStyles[property] = `${newStyles[property]} /* (original value: ${equivalentStyles[property]}) */`;
+      equivalentStyles.set(property, `${newStyles.get(property)} /* (original value: ${equivalentStyles.get(property)}) */`);
     } else {
       // add style
-      equivalentStyles[property] = `${newStyles[property]}`;
+      equivalentStyles.set(property, `${newStyles.get(property)}`);
     }
   }
 
@@ -296,13 +309,12 @@ const createStyleEntry = (styles, {minWidth, maxWidth}) => {
   }
 }
 
-// unique in terms of CSS property (not including CSS value)
 // todo: needs to handle short-hands (margin vs margin-top) or validate against short-hand usage
 const stylesUnique = (control, comparison) => {
   if (breakpointsOverlap(control, comparison)) {
     console.log('breakpoints overlap');
-    for (var property in stylesToObject(comparison.styles)) {
-      if (stylesToObject(control.styles)[property]) {
+    for (var property of stylesAsMap(comparison.styles).keys()) {
+      if (stylesAsMap(control.styles).get(property)) {
         console.log('override found');
         throw new OverrideFound('Override found', {
           property,
@@ -334,28 +346,36 @@ const breakpointsOverlap = (controlRange, comparisonRange) => {
   }
 }
 
-const stylesToObject = stylesAsString => {
-  const styleObj = {};
+const stylesAsMap = (stylesAsString, ref = null) => {
+  const styles = new Map();
 
   stylesAsString.split(SEMI_COLON)
-        .filter(res => res !== BLANK)
-        .map(res => res.trim())
-        .forEach(declaration => {
-          const [property, value] = declaration.split(COLON).map(res => res.trim());
-          styleObj[property.toLowerCase()] = value;
-        });
+    .filter(res => res !== BLANK)
+    .map(res => res.trim())
+    .forEach(declaration => {
+      const [property, value] = declaration.split(COLON).map(res => res.trim().toLowerCase());
 
-  return styleObj;
+      if (styles.has(property)) {
+        const errorMessage = `The CSS property \`${property}\` is defined twice by \`h1.pageTitle\``;
+        console.log(`\n${errorMessage}`);
+        console.log(`\n   "${stylesAsString}"\n`);
+        throw new Error(errorMessage);
+      } else {
+        styles.set(property, value);
+      }
+    });
+
+  return styles;
 }
 
-const stylesToString = stylesAsObject => {
-  let stylesStr = BLANK;
+const stylesToString = stylesAsMap => {
+  let styles = BLANK;
 
-  for (var [property, value] of Object.entries(stylesAsObject)) {
-    stylesStr += `${property}${COLON}${value}${SEMI_COLON}`;
-  }
+  stylesAsMap.forEach((value, property) => {
+    styles += `${property}${COLON}${value}${SEMI_COLON}`;
+  });
 
-  return stylesStr;
+  return styles;
 }
 
 const makeRef = ({element, attrs}) => {
