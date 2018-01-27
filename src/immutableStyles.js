@@ -2,9 +2,8 @@
  * Get first version of this done asap to test idea
  *
  * - Features:
- *   - Psuedo selectors (:hover)
- *   - Psuedo elements (::after)
  *   - Override detection in same / detached rule-sets
+ *   - Better logging
  * - Add docs
  * - Caveats:
  *   - child nodes use child combinator selector (<)
@@ -360,31 +359,38 @@ const stylesToString = stylesAsObject => {
 }
 
 const makeRef = ({element, attrs}) => {
-  if (attrs && attrs.className) {
-    return `${element}${DOT}${attrs.className}`;
-  } else {
-    return element;
-  }
+  const { className, pseudo } = attrs;
+
+  return element.concat(className ? `${DOT}${className}` : BLANK)
+                .concat(pseudo ? pseudo : BLANK);
 }
 
 const makeSelectorFromRef = ref => {
-  let selector = [];
+  const finalSelector = [];
 
   ref.split(SPACE).forEach(part => {
-    if (part.includes(DOT)) {
-      const isSubclass = part.split(DOT).length === 3; // [element, baseClass, subClass]
+    let selector = part;
+    let pseudoSelector = BLANK;
+
+    if (selector.includes(COLON)) {
+      pseudoSelector = selector.match(/:.+/)[0];
+      selector = selector.replace(pseudoSelector, BLANK);
+    }
+
+    if (selector.includes(DOT)) {
+      const isSubclass = selector.split(DOT).length === 3; // [element, baseClass, subClass]
 
       if (isSubclass) {
-        selector.push(makeSubclassSelector(part));
+        finalSelector.push(`${makeSubclassSelector(selector)}${pseudoSelector}`);
       } else {
-        selector.push(makeClassSelector(part));
+        finalSelector.push(`${makeClassSelector(selector)}${pseudoSelector}`);
       }
     } else {
-      selector.push(makeTagOnlySelector(part));
+      finalSelector.push(`${makeTagOnlySelector(selector)}${pseudoSelector}`);
     }
   });
 
-  return(selector.join(`${SPACE}${CHILD_COMBINATOR}${SPACE}`));
+  return(finalSelector.join(`${SPACE}${CHILD_COMBINATOR}${SPACE}`));
 }
 
 const makeTagOnlySelector = element => {
