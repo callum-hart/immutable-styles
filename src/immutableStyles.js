@@ -3,6 +3,7 @@
  *
  * - Features:
  *   - Better logging
+ *   - Validate attrs
  * - Add docs
  * - Caveats:
  *   - child nodes use child combinator selector (<)
@@ -11,6 +12,7 @@
  *
  */
 
+const log = require('./log');
 const propertyWhitelist = require('./propertyWhitelist');
 
 
@@ -30,13 +32,6 @@ const MEDIA_UNIT        = 'px';
 const AST = new Map();
 
 
-class OverrideFound {
-  constructor(message, data) {
-    this.message = message;
-    this.data = data;
-  }
-}
-
 const createStyle = (element, attrs, ...children) => {
   let styles = BLANK;
   const childNodes = [];
@@ -49,6 +44,8 @@ const createStyle = (element, attrs, ...children) => {
       styles += child;
     }
   });
+
+  // todo: validate attrs? only allow: `className`, `minWidth`, `maxWidth`, `pseudo`
 
   return {
     element,
@@ -71,7 +68,7 @@ const parseStyles = (block, parentRef = null, inheritedMedia = null) => {
 
   if (inheritedMedia) {
     if (minWidth || maxWidth) {
-      logNestedMediaQuery(inheritedMedia, minWidth, maxWidth, fullyQualifiedRef);
+      log.NESTED_MEDIA_QUERY(fullyQualifiedRef, inheritedMedia, minWidth, maxWidth);
       throw new Error('Nested media query found');
     } else {
       // add inherited media queries to child block
@@ -91,9 +88,8 @@ const parseStyles = (block, parentRef = null, inheritedMedia = null) => {
       cloneBaseStyles(baseRef, fullyQualifiedRef);
       // todo: generate run-time validations
     } else {
-      const errorMessage = `The base class \`${baseRef}\` does not exist`;
-      console.log(errorMessage);
-      throw new Error(errorMessage);
+      log.UNKOWN_BASE_CLASS(fullyQualifiedRef, baseRef);
+      throw new Error(`The base class \`${baseRef}\` does not exist`);
     }
   }
 
@@ -157,17 +153,16 @@ const parseAst = () => {
 
       if (ref !== accumulator && AST.has(accumulator)) {
         // ref exists as part of another ref, check if styles are unique
-        try {
-          AST.get(ref).forEach(existingStyle => {
-            AST.get(accumulator).forEach(accumulatedStyle => stylesUnique(accumulatedStyle, existingStyle));
+        AST.get(ref).forEach(existingStyle => {
+          AST.get(accumulator).forEach(accumulatedStyle => {
+            try {
+              areStylesUnique(accumulatedStyle, existingStyle);
+            } catch ({message, data}) {
+              log.OVERRIDE_FOUND(accumulator, ref, data.property, data.styles, data.offendingStyles);
+              throw new arguments.constructor(message);
+            }
           });
-        } catch (e) {
-          const errorMessage = `[Override Found] \`${ref}\` overrides the property \`${e.data.property}\` set by \`${accumulator}\``;
-          console.log(`\n${errorMessage}`);
-          console.log(`\nExisting style (\`${accumulator}\`):\n   \`${e.data.control.styles}\``);
-          console.log(`\nNew style (\`${ref}\`):\n   \`${e.data.comparison.styles}\``);
-          throw new Error(errorMessage);
-        }
+        });
       }
 
       i--;
@@ -249,12 +244,8 @@ const elementCanUseProperty = (ref, element, styles) => {
     const whitelistedProperty = properties.find(property => styles.includes(property));
 
     if (whitelistedProperty && !elements.includes(element)) {
-      const errorMessage = `The HTML element \`${element}\` (${ref}) cannot use the property \`${whitelistedProperty}\``;
-      console.log(`\n${errorMessage}`);
-      console.log(`\nThe property "${whitelistedProperty}" can only be used by the following elements:`);
-      elements.forEach(element => console.log(`  - ${element}`));
-      console.log('\n');
-      throw new Error(errorMessage);
+      log.ELEMENT_CANNOT_USE_PROPERTY(ref, whitelistedProperty, element, elements);
+      throw new Error(`The HTML element \`${element}\` (${ref}) cannot use the property \`${whitelistedProperty}\``);
     }
   });
 
@@ -272,16 +263,16 @@ const propertiesAreUnique = (ref, element, styles) => {
 }
 
 const saveNewStyleForExistingRef = (newStyle, ref) => {
-  try {
-    AST.get(ref).forEach(existingStyle => stylesUnique(existingStyle, newStyle));
-    AST.get(ref).push(newStyle); // save styles
-  } catch (e) {
-    const errorMessage = `The CSS property \`${e.data.property}\` has already been defined for \`${ref}\``;
-    console.log(`\n${errorMessage}`);
-    console.log(`\nExisting style (\`${ref}\`):\n   "${e.data.control.styles}"`);
-    console.log(`\nNew style (\`${ref}\`):\n   "${e.data.comparison.styles}"`);
-    throw new Error(errorMessage);
-  }
+  AST.get(ref).forEach(existingStyle => {
+    try {
+      areStylesUnique(existingStyle, newStyle);
+    } catch ({message, data}) {
+      log.OVERRIDE_FOUND(ref, ref, data.property, data.styles, data.offendingStyles);
+      throw new arguments.constructor(message);
+    }
+  });
+
+  AST.get(ref).push(newStyle); // save styles
 }
 
 const mergeNewStyleWithEquivalentStyle = (newStyle, equivalentStyle) => {
@@ -310,24 +301,20 @@ const createStyleEntry = (styles, {minWidth, maxWidth}) => {
 }
 
 // todo: needs to handle short-hands (margin vs margin-top) or validate against short-hand usage
-const stylesUnique = (control, comparison) => {
+const areStylesUnique = (control, comparison) => {
   if (breakpointsOverlap(control, comparison)) {
-    console.log('breakpoints overlap');
     for (var property of stylesAsMap(comparison.styles).keys()) {
       if (stylesAsMap(control.styles).get(property)) {
-        console.log('override found');
-        throw new OverrideFound('Override found', {
-          property,
-          control,
-          comparison
-        });
-      } else {
-        console.log('no overrides found');
+        throw new ErrorWithData(
+          `Override found. The property \`${property}\` has already been defined`,
+          {
+            property,
+            styles: control.styles,
+            offendingStyles: comparison.styles
+          }
+        );
       }
     }
-  } else {
-    // overrides can't exist when breakpoints don't overlap
-    console.log('breakpoints don\'t overlap');
   }
 
   return true;
@@ -356,10 +343,8 @@ const stylesAsMap = (stylesAsString, ref = null) => {
       const [property, value] = declaration.split(COLON).map(res => res.trim().toLowerCase());
 
       if (styles.has(property)) {
-        const errorMessage = `The CSS property \`${property}\` is defined twice by \`h1.pageTitle\``;
-        console.log(`\n${errorMessage}`);
-        console.log(`\n   "${stylesAsString}"\n`);
-        throw new Error(errorMessage);
+        log.DUPLICATE_PROPERTY(ref, property, stylesAsString);
+        throw new Error(`The CSS property \`${property}\` is defined twice by \`${ref}\``);
       } else {
         styles.set(property, value);
       }
@@ -427,22 +412,11 @@ const makeSubclassSelector = elementWithSubclass => {
   return `${element}[class="${baseClass}${SPACE}${subClass}"]`;
 }
 
-const logNestedMediaQuery = (inheritedMedia, minWidth, maxWidth, fullyQualifiedRef) => {
-  console.log(`\nMedia query already set by parent: "${inheritedMedia.setBy}"`);
-  if (inheritedMedia.minWidth) {
-    console.log(` - minWidth of: ${inheritedMedia.minWidth}`);
+class ErrorWithData {
+  constructor(message, data) {
+    this.message = message;
+    this.data = data;
   }
-  if (inheritedMedia.maxWidth) {
-    console.log(` - maxWidth of: ${inheritedMedia.maxWidth}`);
-  }
-  console.log(`\nNested media query found in: "${fullyQualifiedRef}"`);
-  if (minWidth) {
-    console.log(` - minWidth: ${minWidth}`);
-  }
-  if (maxWidth) {
-    console.log(` - maxWidth: ${maxWidth}`);
-  }
-  console.log(`\nNested media queries are not allowed\n`);
 }
 
 // for testing

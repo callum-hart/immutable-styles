@@ -26,7 +26,7 @@ test('Override found from adjacent node', () => {
   ];
 
   const overrideFound = () => ImmutableStyles.createCSS(input);
-  expect(overrideFound).toThrow('The CSS property `font-size` has already been defined for `h1.pageTitle`');
+  expect(overrideFound).toThrow('Override found. The property `font-size` has already been defined');
 });
 
 
@@ -56,7 +56,7 @@ test('Override found from child node', () => {
   ];
 
   const overrideFound = () => ImmutableStyles.createCSS(input);
-  expect(overrideFound).toThrow('[Override Found] `div.titleBar h1.pageTitle` overrides the property `font-size` set by `h1.pageTitle`');
+  expect(overrideFound).toThrow('Override found. The property `font-size` has already been defined');
 });
 
 
@@ -93,7 +93,7 @@ test('Override found from adjacent child nodes', () => {
   ];
 
   const overrideFound = () => ImmutableStyles.createCSS(input);
-  expect(overrideFound).toThrow('The CSS property `color` has already been defined for `div.parent span.child`');
+  expect(overrideFound).toThrow('Override found. The property `color` has already been defined');
 });
 
 
@@ -139,7 +139,7 @@ test('Override found when breakpoints are indiscrete', () => {
   ];
 
   const overrideFound = () => ImmutableStyles.createCSS(input);
-  expect(overrideFound).toThrow('The CSS property `display` has already been defined for `section.sideBar`');
+  expect(overrideFound).toThrow('Override found. The property `display` has already been defined');
 });
 
 
