@@ -1,3 +1,20 @@
+const BLANK = '';
+const SPACE = ' ';
+const TAB = SPACE.repeat(2);
+const SEMI_COLON = ';';
+
+const logStyles = styles => {
+  console.log('\n' +
+    styles.split(SEMI_COLON)
+      .filter(style => style !== BLANK)
+      .map(style => style.trim())
+      .map(style => `${TAB}${style}${SEMI_COLON}`)
+      .join('\n')
+      .concat('\n')
+      );
+}
+
+
 /**
  * Inheritable property is used by a whitelisted element.
  *
@@ -39,22 +56,20 @@ const OVERRIDE_FOUND = (ref, offendingRef, property, styles, offendingStyles) =>
  * @param  {String} maxWidth       - Nested max-width (if any)
  */
 const NESTED_MEDIA_QUERY = (ref, inheritedMedia, minWidth, maxWidth) => {
-  console.log('Nested media query found.');
-  console.log(`\nMedia query already set by parent: "${inheritedMedia.setBy}"`);
-  if (inheritedMedia.minWidth) {
-    console.log(` - minWidth of: ${inheritedMedia.minWidth}`);
-  }
-  if (inheritedMedia.maxWidth) {
-    console.log(` - maxWidth of: ${inheritedMedia.maxWidth}`);
-  }
-  console.log(`\nNested media query found in: "${ref}"`);
+  console.log(`\n[Nested Media Query] Nested media query set by "${ref}"`);
+
   if (minWidth) {
-    console.log(` - minWidth: ${minWidth}`);
+    console.log(`${TAB}- min-width: ${minWidth}`);
   }
   if (maxWidth) {
-    console.log(` - maxWidth: ${maxWidth}`);
+    console.log(`${TAB} - max-width: ${maxWidth}`);
   }
-  console.log(`\nNested media queries are not allowed\n`);
+
+  console.log(`\n"${ref}" inherits`
+    .concat(`${inheritedMedia.minWidth ? ` a min-width of ${inheritedMedia.minWidth}` : BLANK }`)
+    .concat(`${inheritedMedia.maxWidth ? `${inheritedMedia.minWidth ? ' and' : BLANK} a max-width of ${inheritedMedia.maxWidth}` : BLANK }`)
+    .concat(` from "${inheritedMedia.setBy}"\n`)
+    );
 }
 
 
@@ -65,7 +80,8 @@ const NESTED_MEDIA_QUERY = (ref, inheritedMedia, minWidth, maxWidth) => {
  * @param  {String} baseClass - The unkown base class
  */
 const UNKOWN_BASE_CLASS = (ref, baseClass) => {
-  console.log(`The base class "${baseClass}" does not exist for "${ref}"`);
+  console.log(`\n[Unkown Base Class] The base class "${baseClass}" does not exist`);
+  console.log(`\n${TAB}"${ref}"\n`);
 }
 
 
@@ -77,9 +93,8 @@ const UNKOWN_BASE_CLASS = (ref, baseClass) => {
  * @param  {[type]} styles   - Styles containing duplicate property
  */
 const DUPLICATE_PROPERTY = (ref, property, styles) => {
-  console.log('\nDuplicate property found.');
-  console.log(`The property "${property}" has been defined more than once by "${ref}"`);
-  console.log(styles);
+  console.log(`\n[Duplicate Property] The property "${property}" has been defined more than once by "${ref}"`);
+  logStyles(styles);
 }
 
 
