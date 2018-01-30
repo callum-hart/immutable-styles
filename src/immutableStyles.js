@@ -2,7 +2,6 @@
  * Get first version of this done asap to test idea
  *
  * - Features:
- *   - Better logging
  *   - Validate attrs
  * - Add docs
  * - Caveats:
@@ -244,7 +243,7 @@ const elementCanUseProperty = (ref, element, styles) => {
     const whitelistedProperty = properties.find(property => styles.includes(property));
 
     if (whitelistedProperty && !elements.includes(element)) {
-      log.ELEMENT_CANNOT_USE_PROPERTY(ref, whitelistedProperty, element, elements);
+      log.ELEMENT_CANNOT_USE_PROPERTY(ref, whitelistedProperty, styles, element, elements);
       throw new Error(`The HTML element \`${element}\` (${ref}) cannot use the property \`${whitelistedProperty}\``);
     }
   });

@@ -2,6 +2,7 @@ const BLANK = '';
 const SPACE = ' ';
 const TAB = SPACE.repeat(2);
 const SEMI_COLON = ';';
+const COMMA = ',';
 
 const logStyles = styles => {
   console.log('\n' +
@@ -14,6 +15,25 @@ const logStyles = styles => {
       );
 }
 
+const logMediaQuery = (minWidth, maxWidth) => {
+  console.log(`\n`
+    .concat(minWidth ?
+      `${TAB}min-width of ${minWidth}` :
+      BLANK)
+    .concat(maxWidth ?
+      `${minWidth ? ' and' : BLANK} max-width of ${maxWidth}` :
+      BLANK)
+    );
+}
+
+const chunkArray = (array, chunk) => {
+  if (array.length === 0) {
+    return [];
+  } else {
+    return [array.slice(0,chunk)].concat(chunkArray(array.slice(chunk), chunk));
+  }
+}
+
 
 /**
  * Inheritable property is used by a whitelisted element.
@@ -24,10 +44,16 @@ const logStyles = styles => {
  * @param {Array} permittedElements - List of elements that can use property
  */
 
-const ELEMENT_CANNOT_USE_PROPERTY = (ref, property, element, permittedElements) => {
-  console.log(`The element ${element} (${ref}) cannot use the property ${property}`);
-  console.log(`\nThe property ${property} can only be used by the following elements:`);
-  permittedElements.forEach(element => console.log(`  - ${element}`));
+const ELEMENT_CANNOT_USE_PROPERTY = (ref, property, styles, element, permittedElements) => {
+  console.log(`\n[Element Property Mismatch] The element <${element}> cannot use the property "${property}"`);
+  console.log(`\nFound in ("${ref}"):`);
+  logStyles(styles);
+  console.log(`"${property}" can only be used by the following elements:\n`);
+  chunkArray(permittedElements, 10)
+    .map(chunk => chunk.map(element => `<${element}>`))
+    .map(chunk => chunk.join(`${COMMA}${SPACE}`))
+    .forEach(chunk => console.log(`${TAB}${chunk}`));
+  console.log('\n');
 }
 
 
@@ -36,14 +62,30 @@ const ELEMENT_CANNOT_USE_PROPERTY = (ref, property, element, permittedElements) 
  *
  * @param {String} ref             - Style ID for styles
  * @param {String} offendingRef    - Style ID for offendingStyles
- * @param {String} property        - Property that is being overriden
- * @param {String} styles          - Contains rule that is being overriden
+ * @param {String} property        - Property that is being overridden
+ * @param {String} styles          - Contains rule that is being overridden
  * @param {String} offendingStyles - Contains the overriding rule
  */
 const OVERRIDE_FOUND = (ref, offendingRef, property, styles, offendingStyles) => {
-  console.log(`The property ${property} has already been defined for ${ref}`);
-  console.log(`\nCurrent: ${ref !== offendingRef ? ref: ''}\n   ${styles}`);
-  console.log(`\nNew: ${ref !== offendingRef ? offendingRef: ''}\n   "${offendingStyles}"`);
+  console.log(`\n[Override Found]`
+    .concat(ref !== offendingRef ?
+      ` "${offendingRef}" overrides the "${property}" set by "${ref}"` :
+      ` the "${property}" of "${ref}" has already been defined`)
+    );
+
+  if (ref !== offendingRef) {
+    console.log(`\nOveridden styles ("${ref}"):`);
+    logStyles(styles);
+    console.log(`Overriding styles ("${offendingRef}"):`);
+    logStyles(offendingStyles);
+  } else {
+    console.log(`\nThe "${property}" of "${ref}" is defined here:`);
+    logStyles(styles);
+    console.log('and again here:');
+    logStyles(offendingStyles);
+  }
+
+  console.log(`The "${property}" of "${ref}" cannot be overridden`);
 }
 
 
@@ -56,20 +98,12 @@ const OVERRIDE_FOUND = (ref, offendingRef, property, styles, offendingStyles) =>
  * @param  {String} maxWidth       - Nested max-width (if any)
  */
 const NESTED_MEDIA_QUERY = (ref, inheritedMedia, minWidth, maxWidth) => {
-  console.log(`\n[Nested Media Query] Nested media query set by "${ref}"`);
-
-  if (minWidth) {
-    console.log(`${TAB}- min-width: ${minWidth}`);
-  }
-  if (maxWidth) {
-    console.log(`${TAB} - max-width: ${maxWidth}`);
-  }
-
-  console.log(`\n"${ref}" inherits`
-    .concat(`${inheritedMedia.minWidth ? ` a min-width of ${inheritedMedia.minWidth}` : BLANK }`)
-    .concat(`${inheritedMedia.maxWidth ? `${inheritedMedia.minWidth ? ' and' : BLANK} a max-width of ${inheritedMedia.maxWidth}` : BLANK }`)
-    .concat(` from "${inheritedMedia.setBy}"\n`)
-    );
+  console.log(`\n[Nested Media Query] Nested media query found in "${inheritedMedia.setBy}"`);
+  console.log(`\nOuter media query ("${inheritedMedia.setBy}"):`);
+  logMediaQuery(inheritedMedia.minWidth, inheritedMedia.maxWidth);
+  console.log(`\nInner media query ("${ref}"):`);
+  logMediaQuery(minWidth, maxWidth);
+  console.log('\nMedia queries cannot be nested within other media queries\n');
 }
 
 
@@ -93,7 +127,7 @@ const UNKOWN_BASE_CLASS = (ref, baseClass) => {
  * @param  {[type]} styles   - Styles containing duplicate property
  */
 const DUPLICATE_PROPERTY = (ref, property, styles) => {
-  console.log(`\n[Duplicate Property] The property "${property}" has been defined more than once by "${ref}"`);
+  console.log(`\n[Duplicate CSS Property] The property "${property}" has been defined more than once by "${ref}"`);
   logStyles(styles);
 }
 
