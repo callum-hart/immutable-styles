@@ -1,14 +1,3 @@
-/**
- * Get first version of this done asap to test idea
- *
- * - Add docs
- * - Caveats:
- *   - child nodes use child combinator selector (<)
- *   - element != element with class might feel unnatural
- * - Tests for jsx
- *
- */
-
 const log = require('./log');
 const propertyWhitelist = require('./propertyWhitelist');
 

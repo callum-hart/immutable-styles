@@ -75,7 +75,7 @@
 
 
 module.exports = (ImmutableStyles) => [
-  <h1 id="invalid">
+  <h1 foo="invalidAttr">
     color: #333;
     font-size: 20px;
     color: red;
