@@ -1,8 +1,6 @@
 /**
  * Get first version of this done asap to test idea
  *
- * - Features:
- *   - Validate attrs
  * - Add docs
  * - Caveats:
  *   - child nodes use child combinator selector (<)
@@ -32,26 +30,41 @@ const AST = new Map();
 
 
 const createStyle = (element, attrs, ...children) => {
-  let styles = BLANK;
-  const childNodes = [];
+  if (attrsValid(attrs)) {
+    let styles = BLANK;
+    const childNodes = [];
 
-  // children can contain styles for current element or child nodes
-  children.forEach(child => {
-    if (child.element) {
-      childNodes.push(child);
-    } else {
-      styles += child;
+    // children can contain styles for current element or child nodes
+    children.forEach(child => {
+      if (child.element) {
+        childNodes.push(child);
+      } else {
+        styles += child;
+      }
+    });
+
+    return {
+      element,
+      attrs: attrs || {},
+      styles,
+      children: childNodes
     }
-  });
-
-  // todo: validate attrs? only allow: `className`, `minWidth`, `maxWidth`, `pseudo`
-
-  return {
-    element,
-    attrs: attrs || {},
-    styles,
-    children: childNodes
   }
+}
+
+const attrsValid = attrs => {
+  if (attrs) {
+    const permittedAttrs = ['className', 'minWidth', 'maxWidth', 'pseudo'];
+
+    Object.keys(attrs).forEach(attr => {
+      if (!permittedAttrs.includes(attr)) {
+        log.UNKOWN_ATTRIBUTE(attr, attrs[attr], permittedAttrs);
+        throw Error(`\`${attr}\` is not a valid attribute`);
+      }
+    });
+  }
+
+  return true;
 }
 
 const createCSS = (styles) => {
@@ -156,9 +169,9 @@ const parseAst = () => {
           AST.get(accumulator).forEach(accumulatedStyle => {
             try {
               areStylesUnique(accumulatedStyle, existingStyle);
-            } catch ({message, data}) {
-              log.OVERRIDE_FOUND(accumulator, ref, data.property, data.styles, data.offendingStyles);
-              throw new arguments.constructor(message);
+            } catch (e) {
+              log.OVERRIDE_FOUND(accumulator, ref, e.data.property, e.data.styles, e.data.offendingStyles);
+              throw e;
             }
           });
         });
@@ -255,7 +268,7 @@ const propertiesAreUnique = (ref, element, styles) => {
   try {
     stylesAsMap(styles, ref);
   } catch (e) {
-    throw e.constructor(e.message);
+    throw e;
   }
 
   return true;
@@ -265,9 +278,9 @@ const saveNewStyleForExistingRef = (newStyle, ref) => {
   AST.get(ref).forEach(existingStyle => {
     try {
       areStylesUnique(existingStyle, newStyle);
-    } catch ({message, data}) {
-      log.OVERRIDE_FOUND(ref, ref, data.property, data.styles, data.offendingStyles);
-      throw new arguments.constructor(message);
+    } catch (e) {
+      log.OVERRIDE_FOUND(ref, ref, e.data.property, e.data.styles, e.data.offendingStyles);
+      throw e;
     }
   });
 

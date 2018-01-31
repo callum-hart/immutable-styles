@@ -1,4 +1,15 @@
 /*
+  UNKOWN_ATTRIBUTE
+
+  <h1 foo="invalidAttr">
+    color: #333;
+    font-size: 20px;
+    color: red;
+  </h1>
+ */
+
+
+/*
   ELEMENT_CANNOT_USE_PROPERTY
 
   <div>
@@ -17,7 +28,7 @@
   <p className="foo">
     color: red;
     font-size: 10px;
-  </p>,
+  </p>
 
   <p className="child">
     color: black;
@@ -62,8 +73,9 @@
   </h1>
  */
 
+
 module.exports = (ImmutableStyles) => [
-  <h1>
+  <h1 id="invalid">
     color: #333;
     font-size: 20px;
     color: red;
