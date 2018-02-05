@@ -18,11 +18,3 @@ Add following to `package.json`:
 ```
 
 Run tests with: `npm test`
-
-**Todos:**
-
-- Add docs
-  - Gotchas / caveats:
-    - child nodes use child combinator selector (<)
-    - element != element with class
-    - cannot use IDs for styling
