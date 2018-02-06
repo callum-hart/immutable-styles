@@ -71,19 +71,35 @@ The "font-size" of "p" cannot be overridden
 - The mutable (overriding) nature of CSS means we cannot confidently make changes.
 - Immutable styles is an attempt to remove overrides from CSS.
 
-## Getting Started
+## Usage
 
 - TODO
 
 ## API
 
-- createStyle
-- createCSS
-- Attrs
-	- className 
-	- minWidth 
-	- maxWidth 
-	- pseudo
+### `createStyle`
+**createStyle(element, attrs, ...children)**
+
+- `element` HTML tag name
+- `attrs` attribute(s) if any
+- `children` styles and/or child element(s) if any
+
+- Create and return a new immutable style
+- Styles written in JSX are converted to `ImmutableStyles.createStyle(element, attrs, ...children)`
+
+### `createCSS`
+**createCSS(styles)**
+
+- `styles` result returned from `ImmutableStyles.createStyle`
+
+- Create and return CSS
+
+### Attrs
+
+- **`className`**
+- **`minWidth`**
+- **`maxWidth`**
+- **`pseudo`**
 
 ### Errors
 
