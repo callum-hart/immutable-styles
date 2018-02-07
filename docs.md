@@ -4,7 +4,7 @@
 
 - Immutable styles cannot change once created.
 - A style that is immutable cannot be overridden.
-- Immutability leads to much simpler development since it makes CSS predictable and deterministic.
+- Immutable styles lead to simpler development since they make CSS predictable and deterministic.
 - Reduces time spent coordinating overrides and troubleshooting the side-effects of cascade, specificity and importance.
 
 ## How
@@ -12,6 +12,7 @@
 - Immutable styles have the same data structure as the DOM - a tree.
 - Styles as functions that can be mapped to JSX.
 - Compiled to CSS (version 2.1+).
+- All styles are immutable - it won't compile if overrides exist.
 - Example:
 
 ```jsx
@@ -66,7 +67,7 @@ The "font-size" of "p" cannot be overridden
 	- **Difficult to contain** Global scope permits anyone to override, whilst a lack of encapsulation dampens efforts to protect styles from being overridden.
 	- **Hard to troubleshoot** Overrides operate globally which means their side effects aren't always immediately apparent.
 	- **No escape** It’s hard to escape an overriding system. There is a direct correlation between the number of overrides and the time/energy spent managing them.
-	- **Deadcode** Keeping track of the styles that override versus the styles that are overridden is laborious, which can lead to redundant styles.
+	- **Deadcode** Overrides make it hard to differentiate between styles that are actually used and those that are redundant.
 	- **Self-perpetuating** The more overrides exist the more overriding you do
 - The mutable (overriding) nature of CSS means we cannot confidently make changes.
 - Immutable styles is an attempt to remove overrides from CSS.
@@ -74,6 +75,8 @@ The "font-size" of "p" cannot be overridden
 ## Usage
 
 - TODO
+- Usage with JSX
+- Prerequisite: concept of [discrete breakpoints]()
 
 ## API
 
@@ -92,35 +95,252 @@ The "font-size" of "p" cannot be overridden
 
 - `styles` result returned from `ImmutableStyles.createStyle`
 
-- Create and return CSS
+- Generate CSS from the AST returned from `ImmutableStyles.createStyle`
 
 ### Attrs
 
-- **`className`**
-- **`minWidth`**
-- **`maxWidth`**
-- **`pseudo`**
+- Attributes are optional - element can have zero or more attributes
+- Available attributes listed below:
+	- **`className`** CSS class of a given element
+	- **`minWidth`** Pixel value of the `min-width` a style should apply
+	- **`maxWidth`** Pixel value of the `max-width` a style should apply
+	- **`pseudo`** Pseudo class(es) and/or pseudo element(s)
 
-### Errors
+## Single Inheritance Model
 
-- Unkown Attribute
-- Override Found
-- Nested Media Query
-- Unkown Base Class
-- Duplicate CSS Property
-- Element Property Mismatch
+- Usually CSS overrides are used to allow styles to be reused and repurposed across similar but not identical interfaces.
+- In order to achieve the same effect without overrides Immutable Styles implements a single inheritance model.
+- This allows a style to acquire the properties from another style, for example:
 
-## Extends (Single inheritance)
+```jsx
+<form className="form">
+	padding: 20px;
+	background: ivory;
+	border: 1px solid lightgray;
+</form>,
+
+<form className="form.form--withError">
+	border: 1px solid lightcoral;
+</form>
+```
+
+Generates:
+
+```css
+form[class="form"] {
+  padding: 20px;
+  background: ivory;
+  border: 1px solid lightgray;
+}
+
+form[class="form form--withError"] {
+  padding: 20px;
+  background: ivory;
+  border: 1px solid lightcoral /* (original value: 1px solid lightgray) */;
+}
+```
+
+- `form--withError` inherits the `padding` and `background` from `form`.
+- `form--withError` overrides the `border` at compile-time not run-time.
+- This also works with nested elements:
+
+```jsx
+<form className="form">
+	<span className="form__error">
+		display: none;
+	</span>
+</form>,
+
+<form className="form.form--withError">
+	<span className="form__error">
+		display: block;
+		color: indianred;
+	</span>
+</form>
+```
+
+Generates:
+
+```css
+form[class="form"] > span[class="form__error"] {
+  display: none;
+}
+
+form[class="form form--withError"] > span[class="form__error"] {
+  display: block /* (original value: none) */;
+  color: indianred;
+}
+```
+
+### Compile-time Errors
+
+### Unkown Attribute
+
+When an unkown attribute is found, for example:
+
+```jsx
+<p foo="invalidAttr">
+	font-size: 20px;
+</p>
+```
+
+Throws:
+
+```
+[Unkown Attribute] "foo" is not a valid attribute
+
+Occurrence found:
+
+  foo="invalidAttr"
+
+Only the following attributes are permitted:
+
+  className, minWidth, maxWidth, pseudo
+```
+
+### Duplicate CSS Property
+
+When a CSS property is defined more than once in same block.
+
+```jsx
+<h1 className="title">
+  color: darkslategray;
+  font-size: 20px;
+  color: burlywood;
+</h1>
+```
+
+Throws:
+
+```
+[Duplicate CSS Property] The property "color" has been defined more than once by "h1.title"
+
+  color: darkslategray;
+  font-size: 20px;
+  color: burlywood;
+```
+
+### Override Found
+
+When one style overrides another style.
+
+```jsx
+<p className="child">
+  color: darksalmon;
+</p>,
+
+<div className="parent">
+  <p className="child">
+    font-size: 10px;
+    color: lightsalmon;
+  </p>
+</div>
+```
+
+Throws:
+
+```
+[Override Found] "div.parent p.child" overrides the "color" set by "p.child"
+
+Overidden styles ("p.child"):
+
+  color: darksalmon;
+
+Overriding styles ("div.parent p.child"):
+
+  font-size: 10px;
+  color: lightsalmon;
+
+The "color" of "p.child" cannot be overridden
+```
+
+### Nested Media Query
+
+When a media query is nested inside another media query.
+
+```jsx
+<footer minWidth="900">
+  padding: 0 30px;
+  <p minWidth="300">
+    font-size: 12px;
+  </p>
+</footer>
+```
+
+Throws:
+
+```
+[Nested Media Query] Nested media query found in "footer"
+
+Outer media query ("footer"):
+
+  min-width of 900
+
+Inner media query ("footer p"):
+
+  min-width of 300
+```
+
+### Unkown Base Class
+
+When a subclass extends a superclass that hasn't been defined.
+
+```jsx
+<div className="baseClass.subClass">
+  padding: 30px;
+</div>
+```
+
+Throws:
+
+```
+[Unkown Base Class] The base class "div.baseClass" does not exist
+
+Occurrence found:
+
+  "div.baseClass.subClass"
+```
+
+### Element Property Mismatch
+
+When an element uses a whitelisted CSS property.
+
+```jsx
+<div>
+  font-size: 20px;
+</div>
+```
+
+Throws:
+
+```
+[Element Property Mismatch] The element <div> cannot use the property "font-size"
+
+Occurrence found ("div"):
+
+  font-size: 20px;
+
+"font-size" can only be used by the following elements:
+
+  <h1>, <h2>, <h3>, <h4>, <h5>, <h6>, <p>, <a>, <strong>, <span>
+  <li>, <input>, <button>
+```
+
+## Tests
 
 - TODO
 
-## Gotchas
+## Tradeoffs
 
- - Element != element with class
- - Cannot use IDs for styling
- - Discrete vs indiscrete media queries
- - Child nodes use child combinator selector (<)
- - Inheritable properties
+- In order to achieve no overrides there are some tradeoffs, some of which may feel unatural and the rationale not immediately apparent.
+- For each say what and why
+- These could be improved in future
+
+- Element != element with class
+- Class is matched via attributte selector
+- Cannot use IDs for styling
+- All child nodes are targeted with combinator selector (<)
+- Inheritable properties
 
 
 

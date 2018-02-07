@@ -140,6 +140,7 @@ const NESTED_MEDIA_QUERY = (ref, inheritedMedia, minWidth, maxWidth) => {
  */
 const UNKOWN_BASE_CLASS = (ref, baseClass) => {
   console.log(`\n[Unkown Base Class] The base class "${baseClass}" does not exist`);
+  console.log(`\nOccurrence found:`);
   console.log(`\n${TAB}"${ref}"\n`);
 }
 
