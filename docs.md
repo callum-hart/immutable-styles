@@ -171,7 +171,7 @@ form[class="form form--withError"] > span[class="form__error"] {
 }
 ```
 
-### Compile-time Errors
+## Compile-time Errors
 
 ### Unkown Attribute
 
@@ -327,21 +327,196 @@ Occurrence found ("div"):
 
 ## Tests
 
-- Immutable styles uses [Jest](https://facebook.github.io/jest/) for testing.
-- Tests are located in the `tests` folder.
-- Run tests with `npm test`.
+Immutable styles uses [Jest](https://facebook.github.io/jest/) for testing. The tests are located in the `[tests]()` directory.
 
-## Tradeoffs / Implementation Details
+Run all tests with:
 
-In order to achieve no overrides there are some tradeoffs - some of which may feel unatural, and the rationale not immediately apparent. Each tradeoff is documented below explaining what it is, and why it exists. It should be noted that tradeoffs are subject to change, if a better solution is found.
+```
+npm test
+```
 
+Or run a specific test with:
 
+```
+npm test singleInheritance.test.js
+```
 
-	- Element != element with class
-	- Class is matched via attributte selector
-	- Cannot use IDs for styling
-	- All child nodes are targeted with combinator selector (<)
-	- Inheritable properties
+## Design Decisions / Tradeoffs
+
+In order to achieve no overrides there are some tradeoffs, some of which may feel unatural - and the rationale not immediately apparent. Each tradeoff is documented below explaining *what* it is, *why* it exists and the *problem* it solves. It should be noted that tradeoffs are subject to change if and when a better solution is found.
+
+### Class Selectors
+
+**What**
+
+- All classes are matched with *exact* attribute selectors `[class=className]`
+
+**Why**
+
+- Prevent overrides when an element uses classes containing competing styles.
+
+**Problem**
+
+```html
+<p class="foo">...</p>
+<p class="bar">...</p>
+```
+
+```css
+p.foo {
+	color: black;
+}
+
+p.bar {
+	color: red;
+}
+```
+
+- Cannot guarantee the color of `p.foo` will always be `black`.
+- Current example assumes paragraphs will never use both classes `foo bar`.
+
+```html
+<p class="foo bar">...</p>
+```
+
+- Override introduced when both classes are used.
+
+**Solution**
+
+- To counter this Immutable Styles treats `foo` and `bar` as exact values - the generated CSS for this example is:
+
+```css
+p[class="foo"] {
+  color: black;
+}
+
+p[class="bar"] {
+  color: red;
+}
+```
+
+### Child Selectors
+
+**What**
+
+- All child nodes are matched using *direct* child selectors `A < B`.
+
+**Why**
+
+- Structure of HTML is an unkown.
+- Prevent overrides when nested HTML structures contain competing styles.
+
+**Problem**
+
+```html
+<div>
+ <p>...</p>
+</div>
+
+<section>
+ <p>...</p>
+</section>
+```
+
+```css
+div p {
+	color: black;
+}
+
+section p {
+	color: red
+}
+```
+
+- Cannot guarantee the color of `p.foo` will always be `black`.
+- Current example assumes paragraphs are only nested within `div` **or** `section`.
+
+```diff
+<div>
+ <p>...</p>
++ <section>
++  <p>...</p>
++ </section>
+</div>
+```
+
+- Override introduced when a paragraph is nested within `div` **and** `section`.
+
+**Solution**
+
+- To counter this Immutable Styles treats all child nodes as direct children - the generated CSS for this example is:
+
+```css
+div:not([class]) > p:not([class]) {
+  color: black;
+}
+section:not([class]) > p:not([class]) {
+  color: red;
+}
+```
+
+### Element Equality
+
+**What**
+
+- Element != element (of same type) with a class.
+- For example `span` and `span.icon` are treated unrelated (despite sharing the same HTML tag).
+- This means styles applied to `span` are not applied to `span.icon`.
+
+**Why**
+
+- If elements (of same type) were treated equally overrides *could* go undetected.
+- Cannot determine what class(es) an element has/will have in HTML.
+
+**Problem**
+
+```html
+<p class="foo">...</p>
+
+<div class="bar">
+ <p>...</p>
+</div>
+```
+
+```css
+p.foo {
+	color: black;
+}
+
+div.bar p {
+	color: red;
+}
+```
+
+- Cannot guarantee the color of `p.foo` will always be `black`.
+- Current example assumes paragraphs within `div.bar` will never use the class `foo`.
+
+```diff
+<div class="bar">
+- <p>...</p>
++ <p class="foo">...</p>
+</div>
+```
+
+- Override introduced when the class `foo` is added.
+- The color of paragraphs within `div.bar` is nondeterministic.
+
+**Solution**
+
+- To counter this Immutable Styles treats `p` and `p.foo` differently - the generated CSS for this example is:
+
+```css
+p[class="foo"] {
+  color: black;
+}
+
+div[class="bar"] > p:not([class]) {
+  color: red;
+}
+```
+
+### Cannot use IDs for styling
+### Inheritable properties
 
 - Prerequisite: concept of [discrete breakpoints]()
 
