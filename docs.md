@@ -103,8 +103,8 @@ Generate CSS from the AST returned from `ImmutableStyles.createStyle`.
 Attributes are optional. An element can have zero or more attributes. Available attributes are:
 
 - **`className`** CSS class of a given element
-- **`minWidth`** Pixel value of the `min-width` a style should apply
-- **`maxWidth`** Pixel value of the `max-width` a style should apply
+- **`minWidth`** Minimum size style(s) should apply (px)
+- **`maxWidth`** Maximum size style(s) should apply (px)
 - **`pseudo`** Pseudo class(es) and/or pseudo element(s)
 
 ## Single Inheritance Model
@@ -349,7 +349,7 @@ In order to achieve no overrides there are some tradeoffs, some of which may fee
 
 **What**
 
-- All classes are matched with *exact* attribute selectors `[class=className]`
+- All classes are matched via *exact* attribute selectors `[class=className]`
 
 **Why**
 
@@ -383,7 +383,7 @@ p.bar {
 
 **Solution**
 
-- To counter this Immutable Styles treats `foo` and `bar` as exact values - the generated CSS for this example is:
+- To counter this Immutable Styles treats `foo` and `bar` as distinct values - the generated CSS for this example is:
 
 ```css
 p[class="foo"] {
@@ -399,7 +399,7 @@ p[class="bar"] {
 
 **What**
 
-- All child nodes are matched using *direct* child selectors `A < B`.
+- All child nodes are matched via *direct* child selectors `A < B`.
 
 **Why**
 
@@ -460,7 +460,7 @@ section:not([class]) > p:not([class]) {
 **What**
 
 - Element != element (of same type) with a class.
-- For example `span` and `span.icon` are treated unrelated (despite sharing the same HTML tag).
+- For example `span` and `span.icon` are treated disparate (despite sharing the same HTML tag).
 - This means styles applied to `span` are not applied to `span.icon`.
 
 **Why**
