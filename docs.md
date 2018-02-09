@@ -3,22 +3,22 @@
 ## What
 
 - Immutable styles cannot change once created.
-- A style that is immutable cannot be overridden.
+- A style that is immutable **cannot be overridden**.
 - Immutable styles lead to simpler development since they make CSS predictable and deterministic.
-- Reduces time spent coordinating overrides and troubleshooting the side-effects of cascade, specificity and importance.
+- This reduces time spent coordinating overrides and troubleshooting the side-effects of cascade, specificity and importance.
 
 ## How
 
 - Immutable styles have the same data structure as the DOM - a tree.
 - Styles as functions that can be mapped to JSX.
 - Compiled to CSS (version 2.1+).
-- All styles are immutable - it won't compile if overrides exist.
-- Example:
+
+## Example
 
 ```jsx
 <p>
-	font-family: "Operator Mono";
-	font-size: 15px;
+ font-family: "Operator Mono";
+ font-size: 15px;
 </p>
 ```
 
@@ -26,22 +26,22 @@ Compiles to:
 
 ```css
 p:not([class]) {
-	font-family: "Operator Mono";
-	font-size: 15px;
+ font-family: "Operator Mono";
+ font-size: 15px;
 }
 ```
 
-- If we tried to mutate (override) the `font-size`:
+If we tried to mutate (override) the `font-size`:
 
 ```jsx
 <div className="parent">
-	<p>
-		font-size: 16px;
-	</p>
+ <p>
+  font-size: 16px;
+ </p>
 </div>
 ```
 
-- We would get the compile time error:
+We would get the compile time error:
 
 ```
 [Override Found] "div.parent p" overrides the "font-size" set by "p"
@@ -74,9 +74,11 @@ The "font-size" of "p" cannot be overridden
 
 ## Usage
 
-- TODO
+TODO:
+
+- Install
+- ImmutableStyles entry point
 - Usage with JSX
-- Prerequisite: concept of [discrete breakpoints]()
 
 ## API
 
@@ -87,30 +89,27 @@ The "font-size" of "p" cannot be overridden
 - `attrs` attribute(s) if any
 - `children` styles and/or child element(s) if any
 
-- Create and return a new immutable style
-- Styles written in JSX are converted to `ImmutableStyles.createStyle(element, attrs, ...children)`
+Create and return a new immutable style. Styles written in JSX are converted to `ImmutableStyles.createStyle(element, attrs, ...children)`.
 
 ### `createCSS`
 **createCSS(styles)**
 
 - `styles` result returned from `ImmutableStyles.createStyle`
 
-- Generate CSS from the AST returned from `ImmutableStyles.createStyle`
+Generate CSS from the AST returned from `ImmutableStyles.createStyle`.
 
 ### Attrs
 
-- Attributes are optional - element can have zero or more attributes
-- Available attributes listed below:
-	- **`className`** CSS class of a given element
-	- **`minWidth`** Pixel value of the `min-width` a style should apply
-	- **`maxWidth`** Pixel value of the `max-width` a style should apply
-	- **`pseudo`** Pseudo class(es) and/or pseudo element(s)
+Attributes are optional. An element can have zero or more attributes. Available attributes are:
+
+- **`className`** CSS class of a given element
+- **`minWidth`** Pixel value of the `min-width` a style should apply
+- **`maxWidth`** Pixel value of the `max-width` a style should apply
+- **`pseudo`** Pseudo class(es) and/or pseudo element(s)
 
 ## Single Inheritance Model
 
-- Usually CSS overrides are used to allow styles to be reused and repurposed across similar but not identical interfaces.
-- In order to achieve the same effect without overrides Immutable Styles implements a single inheritance model.
-- This allows a style to acquire the properties from another style, for example:
+Usually CSS overrides are used to allow styles to be reused and repurposed across similar but not identical interfaces. In order to achieve the same effect without overrides Immutable Styles implements a single inheritance model. This allows a style to acquire the properties from another style, for example:
 
 ```jsx
 <form className="form">
@@ -328,20 +327,22 @@ Occurrence found ("div"):
 
 ## Tests
 
-- TODO
+- Immutable styles uses [Jest](https://facebook.github.io/jest/) for testing.
+- Tests are located in the `tests` folder.
+- Run tests with `npm test`.
 
-## Tradeoffs
+## Tradeoffs / Implementation Details
 
-- In order to achieve no overrides there are some tradeoffs, some of which may feel unatural and the rationale not immediately apparent.
-- For each say what and why
-- These could be improved in future
-
-- Element != element with class
-- Class is matched via attributte selector
-- Cannot use IDs for styling
-- All child nodes are targeted with combinator selector (<)
-- Inheritable properties
+In order to achieve no overrides there are some tradeoffs - some of which may feel unatural, and the rationale not immediately apparent. Each tradeoff is documented below explaining what it is, and why it exists. It should be noted that tradeoffs are subject to change, if a better solution is found.
 
 
+
+	- Element != element with class
+	- Class is matched via attributte selector
+	- Cannot use IDs for styling
+	- All child nodes are targeted with combinator selector (<)
+	- Inheritable properties
+
+- Prerequisite: concept of [discrete breakpoints]()
 
 
