@@ -1,5 +1,9 @@
 # Immutable Styles for CSS
 
+
+- Variables and Mixins
+- Prerequisite: concept of discrete breakpoints]()
+
 ## What
 
 - Immutable styles cannot change once created.
@@ -10,53 +14,83 @@
 ## How
 
 - Immutable styles have the same data structure as the DOM - a tree.
-- Styles as functions that can be mapped to JSX.
+- Styles as functions that *can* be mapped to JSX.
 - Compiled to CSS (version 2.1+).
 
 ## Example
 
-```jsx
-<p>
- font-family: "Operator Mono";
- font-size: 15px;
-</p>
+```js
+ImmutableStyles.createStyle(
+ 'p',
+ {
+  className: 'foo'
+ },
+ 'font-size: 14px;'
+)
 ```
 
 Compiles to:
 
 ```css
-p:not([class]) {
- font-family: "Operator Mono";
- font-size: 15px;
+p[class="foo"] {
+ font-size: 14px;
 }
 ```
 
-If we tried to mutate (override) the `font-size`:
+The `font-size` of `p.foo` is immutable - it cannot change. An attempt to mutate (override) the `font-size`:
+
+```js
+ImmutableStyles.createStyle(
+ 'div',
+ {
+  className: 'bar'
+ },
+ ImmutableStyles.createStyle(
+  'p',
+  {
+   className: 'foo'
+  },
+  'font-size: 10px;'
+ )
+)
+```
+
+Throws the compile-time error:
+
+```
+[Override Found] "div.bar p.foo" overrides the "font-size" set by "p.foo"
+
+Overidden styles ("p.foo"):
+
+  font-size: 14px;
+
+Overriding styles ("div.bar p.foo"):
+
+  font-size: 10px;
+
+The "font-size" of "p.foo" cannot be overridden
+```
+
+**JSX**
+
+- Immutable Styles can be written using JSX.
+- Which provides syntax sugar for calling `ImmutableStyles.createStyle(element, attrs, ...children)`.
+- The example above re-written in JSX looks like:
+
 
 ```jsx
-<div className="parent">
- <p>
-  font-size: 16px;
+<p className="foo">
+ font-size: 14px;
+</p>,
+
+<div className="bar">
+ <p className="foo">
+  font-size: 10px;
  </p>
 </div>
 ```
 
-We would get the compile time error:
-
-```
-[Override Found] "div.parent p" overrides the "font-size" set by "p"
-
-Overidden styles ("p"):
-
-  font-family: "Operator Mono";
-  font-size: 15px;
-
-Overriding styles ("div.parent p"):
-
-  font-size: 16px;
-
-The "font-size" of "p" cannot be overridden
-```
+- From here onwards the examples will use the JSX notation.
 
 ## Why
 
@@ -597,7 +631,3 @@ p.bar {
 **Solution**
 
 - Immutable Styles counters this by not supporting inheritable properties.
-
-
-
-- Prerequisite: concept of [discrete breakpoints]()
