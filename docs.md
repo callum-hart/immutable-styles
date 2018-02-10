@@ -67,7 +67,7 @@ The "font-size" of "p" cannot be overridden
 	- **Difficult to contain** Global scope permits anyone to override, whilst a lack of encapsulation dampens efforts to protect styles from being overridden.
 	- **Hard to troubleshoot** Overrides operate globally which means their side effects aren't always immediately apparent.
 	- **No escape** It’s hard to escape an overriding system. There is a direct correlation between the number of overrides and the time/energy spent managing them.
-	- **Deadcode** Overrides make it hard to differentiate between styles that are actually used and those that are redundant.
+	- **Dead code** Overrides make it hard to differentiate between styles that are actually used and those that are redundant.
 	- **Self-perpetuating** The more overrides exist the more overriding you do
 - The mutable (overriding) nature of CSS means we cannot confidently make changes.
 - Immutable styles is an attempt to remove overrides from CSS.
@@ -515,9 +515,89 @@ div[class="bar"] > p:not([class]) {
 }
 ```
 
-### Cannot use IDs for styling
-### Inheritable properties
+### No ID Selectors
+
+**What**
+
+- Styles cannot be applied using ID selectors.
+- Styles can only be applied using type or class selectors.
+
+**Why**
+
+- ID selectors *could* sidestep override detection.
+
+**Problem**
+
+```html
+<p class="foo">...</p>
+<p id="bar">...</p>
+```
+
+```css
+p.foo {
+	color: black;
+}
+
+p#bar {
+	color: red;
+}
+```
+
+- Cannot guarantee the color of `p.foo` will always be `black`.
+- Current example assumes paragraphs only have the class `.foo` **or** the ID `#bar`.
+
+```diff
+<p class="foo">...</p>
++<p class="foo" id="bar">...</p>
+```
+
+- Override introduced when paragraph has the class `.foo` **and** the ID `#bar`.
+
+**Solution**
+
+- Immutable Styles counters this by not supporting ID selectors.
+
+### No Property Inheritance
+
+**What**
+
+- Inheritable properties cannot be used by parent elements.
+- They can only be set by the elements that use them.
+
+**Why**
+
+- Cannot determine if an inherited style is overridden.
+
+**Problem**
+
+```html
+<div class="foo">...</div>
+```
+
+```css
+div.foo {
+	color: black;
+}
+
+p.bar {
+	color: red;
+}
+```
+
+- Cannot guarantee the color of elements within `div.foo` will always be `black`.
+
+```diff
+<div class="bar">
++ <p class="foo">...</p>
+</div>
+```
+
+- The color of `p.bar` overrides the color inherited from `div.foo`.
+
+**Solution**
+
+- Immutable Styles counters this by not supporting inheritable properties.
+
+
 
 - Prerequisite: concept of [discrete breakpoints]()
-
-
