@@ -8,12 +8,12 @@
 
 - Immutable styles cannot change once created.
 - A style that is immutable **cannot be overridden**.
-- Immutable styles lead to simpler development since they make CSS predictable and deterministic.
+- Immutable styles lead to simpler development since they make CSS **predictable** and **deterministic**.
 - This reduces time spent coordinating overrides and troubleshooting the side-effects of cascade, specificity and importance.
 
 ## How
 
-- Immutable styles have the same data structure as the DOM - a tree.
+- Immutable styles use the same data structure as the DOM - a tree.
 - Styles as functions that *can* be mapped to JSX.
 - Compiled to CSS (version 2.1+).
 
@@ -21,11 +21,11 @@
 
 ```js
 ImmutableStyles.createStyle(
- 'p',
- {
-  className: 'foo'
- },
- 'font-size: 14px;'
+	'p',
+	{
+		className: 'foo'
+	},
+	'font-size: 14px;'
 )
 ```
 
@@ -33,25 +33,25 @@ Compiles to:
 
 ```css
 p[class="foo"] {
- font-size: 14px;
+	font-size: 14px;
 }
 ```
 
-The `font-size` of `p.foo` is immutable - it cannot change. An attempt to mutate (override) the `font-size`:
+The `font-size` of `p.foo` is immutable meaning it cannot change. Any attempt to mutate (override) the `font-size`:
 
 ```js
 ImmutableStyles.createStyle(
- 'div',
- {
-  className: 'bar'
- },
- ImmutableStyles.createStyle(
-  'p',
-  {
-   className: 'foo'
-  },
-  'font-size: 10px;'
- )
+	'div',
+ 	{
+  	className: 'bar'
+ 	},
+ 	ImmutableStyles.createStyle(
+  	'p',
+  	{
+   		className: 'foo'
+  	},
+  	'font-size: 10px;'
+ 	)
 )
 ```
 
@@ -74,7 +74,7 @@ The "font-size" of "p.foo" cannot be overridden
 **JSX**
 
 - Immutable Styles can be written using JSX.
-- Which provides syntax sugar for calling `ImmutableStyles.createStyle(element, attrs, ...children)`.
+- Provides syntax sugar for calling `ImmutableStyles.createStyle(element, attrs, ...children)`.
 - The example above re-written in JSX looks like:
 
 
@@ -90,47 +90,58 @@ The "font-size" of "p.foo" cannot be overridden
 </div>
 ```
 
-- From here onwards the examples will use the JSX notation.
-
 ## Why
 
 - Overrides = Mutation
-- Issues with overrides:
-	- **Unpredictable** No guarantee who "winning style" is. Overrides rely on cascade, specicifity and importance - all of which are vunerable to change.
-	- **Brittle** Changes bring unforeseen and unwanted side-effects. Re-ordering rules in the cascade, modifying selector specificity, adding/removing !important can break things.
-	- **Difficult to contain** Global scope permits anyone to override, whilst a lack of encapsulation dampens efforts to protect styles from being overridden.
-	- **Hard to troubleshoot** Overrides operate globally which means their side effects aren't always immediately apparent.
-	- **No escape** It’s hard to escape an overriding system. There is a direct correlation between the number of overrides and the time/energy spent managing them.
-	- **Dead code** Overrides make it hard to differentiate between styles that are actually used and those that are redundant.
-	- **Self-perpetuating** The more overrides exist the more overriding you do
 - The mutable (overriding) nature of CSS means we cannot confidently make changes.
-- Immutable styles is an attempt to remove overrides from CSS.
+
+- **Unpredictable** No guarantee who "winning style" is. Overrides rely on cascade, specicifity and importance - all of which are *vunerable* to change.
+- **Brittle** Changes bring unforeseen and unwanted side effects. Re-ordering rules in the cascade, modifying selector specificity, adding/removing !important can break things.
+- **Difficult to contain** Global scope permits anyone to override, whilst a lack of encapsulation dampens efforts to protect styles from being overridden.
+- **Hard to troubleshoot** Overrides operate globally which means their side effects aren't always immediately apparent.
+- **No escape** It’s hard to escape an overriding system. There is a direct correlation between the number of overrides and the time/energy spent managing them.
+- **Dead code** Overrides make it hard to differentiate between styles that are actually used and those that are redundant.
+- **Self-perpetuating** The more overrides exist the more overriding you do
+
+Immutable Styles is an attempt to **remove overrides** (and thus complexity) from CSS.
 
 ## Usage
 
 TODO:
-
 - Install
-- ImmutableStyles entry point
 - Usage with JSX
 
 ## API
 
-### `createStyle`
-**createStyle(element, attrs, ...children)**
+### `ImmutableStyles.createStyle(element, attrs, ...children)`
 
-- `element` HTML tag name
-- `attrs` attribute(s) if any
-- `children` styles and/or child element(s) if any
+- **Arguments:**
+	- `element` HTML tag name
+	- `attrs` attribute(s) if any
+	- `children` styles and/or child element(s) if any
 
-Create and return a new immutable style. Styles written in JSX are converted to `ImmutableStyles.createStyle(element, attrs, ...children)`.
+**Usage:** Create and return a new immutable style.
 
-### `createCSS`
-**createCSS(styles)**
+```js
+const styles = [
+	ImmutableStyle.createStyle(
+		'span',
+		null,
+		'color: cadetblue;'
+	)
+]
+```
 
-- `styles` result returned from `ImmutableStyles.createStyle`
+### `ImmutableStyles.createCSS(styles)`
 
-Generate CSS from the AST returned from `ImmutableStyles.createStyle`.
+**Arguments:**
+	- `styles` result returned from `ImmutableStyles.createStyle`
+
+**Usage:** Convert immutable styles to CSS.
+
+```js
+const result = ImmutableStyles.createCSS(styles);
+```
 
 ### Attrs
 
@@ -139,37 +150,37 @@ Attributes are optional. An element can have zero or more attributes. Available 
 - **`className`** CSS class of a given element
 - **`minWidth`** Minimum size style(s) should apply (px)
 - **`maxWidth`** Maximum size style(s) should apply (px)
-- **`pseudo`** Pseudo class(es) and/or pseudo element(s)
+- **[`pseudo`](https://github.com/callum-hart/immutable-styles/blob/master/tests/pseudoSelectors.test.js)** Pseudo class(es) and/or pseudo element(s)
 
 ## Single Inheritance Model
 
-Usually CSS overrides are used to allow styles to be reused and repurposed across similar but not identical interfaces. In order to achieve the same effect without overrides Immutable Styles implements a single inheritance model. This allows a style to acquire the properties from another style, for example:
+Usually CSS overrides are used to allow styles to be reused and repurposed across *similar* but not identical interfaces. In order to achieve the same effect without overrides Immutable Styles implements a single inheritance model. This allows a style to acquire the properties from another style, for example:
 
 ```jsx
 <form className="form">
-	padding: 20px;
-	background: ivory;
-	border: 1px solid lightgray;
+ padding: 20px;
+ background: ivory;
+ border: 1px solid lightgray;
 </form>,
 
 <form className="form.form--withError">
-	border: 1px solid lightcoral;
+ border: 1px solid lightcoral;
 </form>
 ```
 
-Generates:
+Generated CSS:
 
 ```css
 form[class="form"] {
-  padding: 20px;
-  background: ivory;
-  border: 1px solid lightgray;
+ padding: 20px;
+ background: ivory;
+ border: 1px solid lightgray;
 }
 
 form[class="form form--withError"] {
-  padding: 20px;
-  background: ivory;
-  border: 1px solid lightcoral /* (original value: 1px solid lightgray) */;
+ padding: 20px;
+ background: ivory;
+ border: 1px solid lightcoral /* (original value: 1px solid lightgray) */;
 }
 ```
 
@@ -179,20 +190,20 @@ form[class="form form--withError"] {
 
 ```jsx
 <form className="form">
-	<span className="form__error">
-		display: none;
-	</span>
+ <span className="form__error">
+  display: none;
+ </span>
 </form>,
 
 <form className="form.form--withError">
-	<span className="form__error">
-		display: block;
-		color: indianred;
-	</span>
+ <span className="form__error">
+  display: block;
+  color: indianred;
+ </span>
 </form>
 ```
 
-Generates:
+Generated CSS:
 
 ```css
 form[class="form"] > span[class="form__error"] {
