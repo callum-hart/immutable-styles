@@ -1,15 +1,11 @@
 # Immutable Styles for CSS
 
-
-- Variables and Mixins
-- Prerequisite: concept of discrete breakpoints]()
-
 ## What
 
 - Immutable styles cannot change once created.
 - A style that is immutable **cannot be overridden**.
-- Immutable styles lead to simpler development since they make CSS **predictable** and **deterministic**.
-- This reduces time spent coordinating overrides and troubleshooting the side-effects of cascade, specificity and importance.
+- Immutability leads to simpler development since it makes CSS **predictable** and **deterministic**.
+- This reduces time spent coordinating overrides and troubleshooting the side effects of cascade, specificity and importance.
 
 ## How
 
@@ -37,7 +33,7 @@ p[class="foo"] {
 }
 ```
 
-The `font-size` of `p.foo` is immutable meaning it cannot change. Any attempt to mutate (override) the `font-size`:
+The `font-size` of `p.foo` is immutable meaning it cannot change (be overridden). Any attempt to mutate (override) the `font-size`:
 
 ```js
 ImmutableStyles.createStyle(
@@ -101,7 +97,8 @@ The "font-size" of "p.foo" cannot be overridden
 - **Hard to troubleshoot** Overrides operate globally which means their side effects aren't always immediately apparent.
 - **No escape** It’s hard to escape an overriding system. There is a direct correlation between the number of overrides and the time/energy spent managing them.
 - **Dead code** Overrides make it hard to differentiate between styles that are actually used and those that are redundant.
-- **Self-perpetuating** The more overrides exist the more overriding you do
+- **Self-perpetuating** The more overrides exist the more overriding you do.
+- **Hard to scale** Overrides have an innocuous beginning yet at scale are very challenging to manage.
 
 Immutable Styles is an attempt to **remove overrides** (and thus complexity) from CSS.
 
@@ -115,7 +112,7 @@ TODO:
 
 ### `ImmutableStyles.createStyle(element, attrs, ...children)`
 
-- **Arguments:**
+- **Parameters:**
 	- `element` HTML tag name
 	- `attrs` attribute(s) if any
 	- `children` styles and/or child element(s) if any
@@ -134,7 +131,7 @@ const styles = [
 
 ### `ImmutableStyles.createCSS(styles)`
 
-**Arguments:**
+- **Parameters:**
 	- `styles` result returned from `ImmutableStyles.createStyle`
 
 **Usage:** Convert immutable styles to CSS.
@@ -390,6 +387,8 @@ npm test singleInheritance.test.js
 
 In order to achieve no overrides there are some tradeoffs, some of which may feel unatural - and the rationale not immediately apparent. Each tradeoff is documented below explaining *what* it is, *why* it exists and the *problem* it solves. It should be noted that tradeoffs are subject to change if and when a better solution is found.
 
+Alot of the design decisions make CSS resilient to changes in HTML. This means changes in HTML (structure/attributes) should not introduce new/unforeseen overrides.
+
 ### Class Selectors
 
 **What**
@@ -398,7 +397,7 @@ In order to achieve no overrides there are some tradeoffs, some of which may fee
 
 **Why**
 
-- Prevent overrides when an element uses classes containing competing styles.
+- Prevent overrides when an element uses multiple classes containing competing styles.
 
 **Problem**
 
@@ -642,3 +641,52 @@ p.bar {
 **Solution**
 
 - Immutable Styles counters this by not supporting inheritable properties.
+
+### Discrete Media-queries
+
+**What**
+
+- Styles in one media query cannot override styles in another media query.
+
+**Why**
+
+- Prevent overrides among media queries.
+- Media queries should not rely on cascade/specificty to produce their expected behaviour.
+
+**Problem**
+
+```css
+@media (min-width:300px) {
+	p {
+		color: black;
+	}
+}
+
+@media (min-width:900px) {
+	p {
+		color: red;
+	}
+}
+```
+
+- Cannot guarantee the color of `p.foo` on screens wider than `300px` will always be `black`.
+- The first media query is only effective until an implied max-width of 899px.
+- On screens wider than `900px` the color of `p.foo` is overriden to `red`.
+
+**Solution**
+
+```diff
++@media (min-width:300px) and (max-width:899px) {
+	p {
+		color: black;
+	}
+}
+
+@media (min-width:900px) {
+	p {
+		color: red;
+	}
+}
+```
+
+- Media queries containing competing styles should use discrete screen-sizes to encapsulate styles (and thus prevent overrides).
