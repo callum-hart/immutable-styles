@@ -88,8 +88,7 @@ The "font-size" of "p.foo" cannot be overridden
 
 ## Why
 
-- Overrides = Mutation
-- The mutable (overriding) nature of CSS means we cannot confidently make changes.
+Parallels can be drawn between mutable state in programs and overrides in CSS. The mutable *(overriding)* nature of CSS means we cannot confidently make changes. CSS overrides suffer from the following:
 
 - **Unpredictable** No guarantee who "winning style" is. Overrides rely on cascade, specicifity and importance - all of which are *vunerable* to change.
 - **Brittle** Changes bring unforeseen and unwanted side effects. Re-ordering rules in the cascade, modifying selector specificity, adding/removing !important can break things.
@@ -98,15 +97,47 @@ The "font-size" of "p.foo" cannot be overridden
 - **No escape** It’s hard to escape an overriding system. There is a direct correlation between the number of overrides and the time/energy spent managing them.
 - **Dead code** Overrides make it hard to differentiate between styles that are actually used and those that are redundant.
 - **Self-perpetuating** The more overrides exist the more overriding you do.
-- **Hard to scale** Overrides have an innocuous beginning yet at scale are very challenging to manage.
+- **Hard to scale** Overrides start innocently but at scale become challenging to manage.
 
 Immutable Styles is an attempt to **remove overrides** (and thus complexity) from CSS.
 
 ## Usage
 
-TODO:
-- Install
-- Usage with JSX
+- Install *todo*
+- *Optionally* map `ImmutableStyles` to JSX. Recommend the babel plugin [`transform-react-jsx`](https://www.npmjs.com/package/babel-plugin-transform-react-jsx):
+
+```js
+{
+ "plugins": [
+  ["transform-react-jsx", {
+   "pragma": "ImmutableStyles.createStyle"
+  }]
+ ]
+}
+```
+
+- Include `ImmutableStyles` module in your JavaScript or JSX file:
+
+```jsx
+const ImmutableStyles = require('immutableStyles');
+
+const styles = [
+ <nav>
+  display: flex;
+  align-items: center;
+
+  <img className="nav__icon">
+   padding: 5px;
+  </img>
+
+  <div className="nav__links">
+   justify-content: flex-end;
+  </div>
+ </nav>
+]
+
+const result = ImmutableStyles.createCSS(styles);
+```
 
 ## API
 
@@ -183,7 +214,8 @@ form[class="form form--withError"] {
 
 - `form--withError` inherits the `padding` and `background` from `form`.
 - `form--withError` overrides the `border` at compile-time not run-time.
-- This also works with nested elements:
+
+This also works with nested elements:
 
 ```jsx
 <form className="form">
@@ -504,7 +536,7 @@ section:not([class]) > p:not([class]) {
 **What**
 
 - Element != element (of same type) with a class.
-- For example `span` and `span.icon` are treated disparate (despite sharing the same HTML tag).
+- For example `span` and `span.icon` are treated disparate despite sharing the same HTML tag.
 - This means styles applied to `span` are not applied to `span.icon`.
 
 **Why**
@@ -564,7 +596,7 @@ div[class="bar"] > p:not([class]) {
 **What**
 
 - Styles cannot be applied using ID selectors.
-- Styles can only be applied using type or class selectors.
+- Styles can only be applied using *element* type or class selectors.
 
 **Why**
 
@@ -642,7 +674,7 @@ p.bar {
 
 - Immutable Styles counters this by not supporting inheritable properties.
 
-### Discrete Media-queries
+### Discrete Media Queries
 
 **What**
 
@@ -689,4 +721,4 @@ p.bar {
 }
 ```
 
-- Media queries containing competing styles should use discrete screen-sizes to encapsulate styles (and thus prevent overrides).
+- Media queries containing competing styles should use discrete breakpoints to encapsulate styles (and thus prevent overrides).
