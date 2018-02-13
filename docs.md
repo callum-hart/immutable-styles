@@ -10,7 +10,7 @@
 ## How
 
 - Immutable styles use the same data structure as the DOM - a tree.
-- Styles as functions that *can* be mapped to JSX.
+- Styles are written as functions that *can* be mapped to JSX.
 - Compiled to CSS (version 2.1+).
 
 ## Example
@@ -175,14 +175,14 @@ const result = ImmutableStyles.createCSS(styles);
 
 Attributes are optional. An element can have zero or more attributes. Available attributes are:
 
-- **`className`** CSS class of a given element
+- **`className`** CSS class for a given element
 - **`minWidth`** Minimum size style(s) should apply (px)
 - **`maxWidth`** Maximum size style(s) should apply (px)
 - **[`pseudo`](https://github.com/callum-hart/immutable-styles/blob/master/tests/pseudoSelectors.test.js)** Pseudo class(es) and/or pseudo element(s)
 
 ## Single Inheritance Model
 
-Usually CSS overrides are used to allow styles to be reused and repurposed across *similar* but not identical interfaces. In order to achieve the same effect without overrides Immutable Styles implements a single inheritance model. This allows a style to acquire the properties from another style, for example:
+Usually CSS overrides are used to allow styles to be reused and repurposed across *similar* but not identical interfaces. In order to achieve the same effect without overrides Immutable Styles implements a single inheritance model. This allows a style to acquire the properties from another style (subclass inherits styles from superclass), for example:
 
 ```jsx
 <form className="form">
@@ -215,7 +215,7 @@ form[class="form form--withError"] {
 - `form--withError` inherits the `padding` and `background` from `form`.
 - `form--withError` overrides the `border` at compile-time not run-time.
 
-This also works with nested elements:
+This inheritance model also works with nested elements:
 
 ```jsx
 <form className="form">
@@ -400,8 +400,6 @@ Occurrence found ("div"):
 ```
 
 ## Tests
-
-Immutable styles uses [Jest](https://facebook.github.io/jest/) for testing. The tests are located in the `[tests]()` directory.
 
 Run all tests with:
 
