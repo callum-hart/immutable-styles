@@ -1,5 +1,18 @@
 # Immutable Styles for CSS
 
+## Table of Contents
+
+- [What](#what)
+- [How](#how)
+- [Example](#example)
+- [Why](#why)
+- [Usage](#usage)
+- [API](#api)
+- [Single Inheritance Model](#single-inheritance-model)
+- [Compile-time Errors](#compile-time-errors)
+- [Design Decisions / Tradeoffs](#design-decisions--tradeoffs)
+- [Licence](#licence)
+
 ## What
 
 - Immutable styles cannot change once created.
@@ -417,7 +430,7 @@ npm test singleInheritance.test.js
 
 In order to achieve no overrides there are some tradeoffs, some of which may feel unatural - and the rationale not immediately apparent. Each tradeoff is documented below explaining *what* it is, *why* it exists and the *problem* it solves. It should be noted that tradeoffs are subject to change if and when a better solution is found.
 
-Alot of the design decisions make CSS resilient to changes in HTML. This means changes in HTML (structure/attributes) should not introduce new/unforeseen overrides.
+Alot of the design decisions make CSS resilient to changes in HTML. This means changes in HTML (structure/attributes) should not introduce unforeseen overrides.
 
 ### Class Selectors
 
@@ -720,3 +733,10 @@ p.bar {
 ```
 
 - Media queries containing competing styles should use discrete breakpoints to encapsulate styles (and thus prevent overrides).
+
+
+## Licence
+
+MIT License
+
+Copyright (c) 2017-present, Callum Hart
