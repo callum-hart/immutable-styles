@@ -1,8 +1,8 @@
 {
   "name": "immutable-styles",
   "version": "0.0.1",
-  "description": "Immutable styles for CSS",
-  "main": "index.js",
+  "description": "Immutable Styles for CSS",
+  "main": "src/immutableStyles.js",
   "author": "Callum Hart",
   "license": "MIT",
   "scripts": {
@@ -10,9 +10,6 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "babel-plugin-transform-react-jsx": "^6.24.1",
-    "babel-register": "^6.26.0",
-    "glob": "^7.1.2",
     "jest": "^22.1.4"
   }
 }
