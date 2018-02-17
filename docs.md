@@ -15,10 +15,7 @@
 
 ## What
 
-- Immutable styles cannot change once created.
-- A style that is immutable **cannot be overridden**.
-- Immutability leads to simpler development since it makes CSS **predictable** and **deterministic**.
-- This reduces time spent coordinating overrides and troubleshooting the side effects of cascade, specificity and importance.
+Immutable styles cannot change once created. A style that is immutable **cannot be overridden**. Immutability leads to simpler development since it makes CSS **predictable** and **deterministic**. This reduces time spent coordinating overrides and troubleshooting the side effects of cascade, specificity and importance.
 
 ## Why
 
@@ -26,21 +23,18 @@ Parallels can be drawn between mutable state in programs and overrides in CSS. T
 
 - **Unpredictable** No guarantee who "winning style" is. Overrides rely on cascade, specificity and importance - all of which are *vulnerable* to change.
 - **Brittle** Changes bring unforeseen and unwanted side effects. Re-ordering rules in the cascade, modifying selector specificity, adding/removing !important can break things.
-- **Difficult to contain** Global scope permits anyone to override, whilst a lack of encapsulation dampens efforts to protect styles from being overridden.
-- **Hard to troubleshoot** Overrides operate globally which means their side effects aren't always immediately apparent.
-- **No escape** It’s hard to escape an overriding system. There is a direct correlation between the number of overrides and the time/energy spent managing them.
-- **Dead code** Overrides make it hard to differentiate between styles that are actually used and those that are redundant.
+- **Difficult to Contain** Global scope permits anyone to override, whilst a lack of encapsulation dampens efforts to protect styles from being overridden.
+- **Hard to Troubleshoot** Overrides operate globally which means their side effects aren't always immediately apparent.
+- **No Escape** It’s hard to escape an overriding system. There is a direct correlation between the number of overrides and the time/energy spent managing them.
+- **Dead Code** Overrides make it hard to differentiate between styles that are actually used and those that are redundant.
 - **Self-perpetuating** The more overrides exist the more overriding you do.
-- **Hard to scale** Overrides start innocently but at scale become challenging to manage.
+- **Hard to Scale** Overrides appear harmless at first but become challenging to manage at scale.
 
 Immutable Styles is an attempt to **remove overrides** (and thus complexity) from CSS.
 
 ## How
 
-- Immutable styles use the same data structure as the DOM - a tree.
-- Styles are written as functions that *can* be mapped to JSX.
-- Markup agnostic - works with any templating/view library.
-- Compiled to CSS (version 2.1+).
+Immutable Styles use the same data structure as the DOM - **a tree**. Styles are written as **functions** that *can* be mapped to JSX. Immutable Styles are **markup agnostic** - working with any templating/view library, and are compatible with CSS 2.1 and up.
 
 ## Example
 
@@ -98,9 +92,7 @@ The "font-size" of "p.foo" cannot be overridden
 
 **JSX**
 
-- Immutable Styles can be written using JSX.
-- Provides syntax sugar for calling `ImmutableStyles.createStyle(element, attrs, ...children)`.
-- The example above re-written in JSX looks like:
+Immutable Styles can be written using JSX - which provides syntax sugar for calling `ImmutableStyles.createStyle(element, attrs, ...children)`. The example above re-written in JSX looks like:
 
 
 ```jsx
@@ -130,7 +122,7 @@ The "font-size" of "p.foo" cannot be overridden
 }
 ```
 
-- Include `ImmutableStyles` module in your JavaScript or JSX file:
+Include `ImmutableStyles` module in your JavaScript or JSX file:
 
 ```jsx
 const ImmutableStyles = require('immutableStyles');
