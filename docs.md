@@ -34,7 +34,7 @@ Immutable Styles is an attempt to **remove overrides** (and thus complexity) fro
 
 ## How
 
-Immutable Styles use the same data structure as the DOM - **a tree**. Styles are written as **functions** that *can* be mapped to JSX. Immutable Styles are **markup agnostic** - working with any templating/view library, and are compatible with CSS 2.1 and up.
+Immutable Styles use the same data structure as the DOM - **a tree**. Styles are written as **functions** that *can* be mapped to JSX. Immutable Styles are **markup agnostic** - working with any templating/view library, and are compatible with CSS 2.1 and up :v:
 
 ## Example
 
@@ -149,12 +149,11 @@ const result = ImmutableStyles.createCSS(styles);
 
 ### `ImmutableStyles.createStyle(element, attrs, ...children)`
 
-- **Parameters:**
-	- `element` HTML tag name
-	- `attrs` attribute(s) if any
-	- `children` styles and/or child element(s) if any
+Create and return a new immutable style.
 
-**Usage:** Create and return a new immutable style.
+- **`element`** HTML tag name `String`
+- **`attrs`** attribute(s) if any `Object|null`
+- **`children`** styles and/or child element(s) if any `String|Object`
 
 ```js
 const styles = [
@@ -168,10 +167,9 @@ const styles = [
 
 ### `ImmutableStyles.createCSS(styles)`
 
-- **Parameters:**
-	- `styles` result returned from `ImmutableStyles.createStyle`
+Convert immutable styles to CSS.
 
-**Usage:** Convert immutable styles to CSS.
+- **`styles`** result returned from `ImmutableStyles.createStyle`
 
 ```js
 const result = ImmutableStyles.createCSS(styles);
@@ -648,7 +646,7 @@ We cannot guarantee the color of elements within `div.foo` will always be `black
 
 We cannot guarantee the color of `p.foo` on screens wider than `300px` will always be `black`. The first media query is only effective until an implied max-width of 899px. On screens wider than `900px` the color of `p.foo` is overriden to `red`.
 
-**Solution**
+**Solution:** Partition media queries containing competing styles into discrete boundaries:
 
 ```diff
 +@media (min-width:300px) and (max-width:899px) {
@@ -663,9 +661,6 @@ We cannot guarantee the color of `p.foo` on screens wider than `300px` will alwa
  }
 }
 ```
-
-Media queries containing competing styles should use discrete breakpoints to encapsulate styles (and thus prevent overrides).
-
 
 ## Licence
 
