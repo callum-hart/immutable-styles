@@ -37,14 +37,14 @@ const chunkArray = (array, chunk = 10) => {
 
 
 /**
- * Unkown attribute is used.
+ * Unknown attribute is used.
  *
  * @param  {String} attr           - Invalid attribute
  * @param  {String} attrValue      - Value of the invalid attribute
  * @param  {Array} permittedAttrs  - List of attributes that can be used
  */
-const UNKOWN_ATTRIBUTE = (attr, attrValue, permittedAttrs) => {
-  console.log(`\n[Unkown Attribute] "${attr}" is not a valid attribute`);
+const UNKNOWN_ATTRIBUTE = (attr, attrValue, permittedAttrs) => {
+  console.log(`\n[Unknown Attribute] "${attr}" is not a valid attribute`);
   console.log(`\nOccurrence found:`);
   console.log(`\n${TAB}${attr}="${attrValue}"`);
   console.log("\nOnly the following attributes are permitted:\n");
@@ -99,7 +99,7 @@ const OVERRIDE_FOUND = (ref, offendingRef, property, styles, offendingStyles) =>
     );
 
   if (ref !== offendingRef) {
-    console.log(`\nOveridden styles ("${ref}"):`);
+    console.log(`\nOverridden styles ("${ref}"):`);
     logStyles(styles);
     console.log(`Overriding styles ("${offendingRef}"):`);
     logStyles(offendingStyles);
@@ -133,13 +133,13 @@ const NESTED_MEDIA_QUERY = (ref, inheritedMedia, minWidth, maxWidth) => {
 
 
 /**
- * Subclass extends an unkown base class.
+ * Subclass extends an Unknown base class.
  *
  * @param  {String} ref       - Style ID
- * @param  {String} baseClass - The unkown base class
+ * @param  {String} baseClass - The Unknown base class
  */
-const UNKOWN_BASE_CLASS = (ref, baseClass) => {
-  console.log(`\n[Unkown Base Class] The base class "${baseClass}" does not exist`);
+const UNKNOWN_BASE_CLASS = (ref, baseClass) => {
+  console.log(`\n[Unknown Base Class] The base class "${baseClass}" does not exist`);
   console.log(`\nOccurrence found:`);
   console.log(`\n${TAB}"${ref}"\n`);
 }
@@ -159,10 +159,10 @@ const DUPLICATE_PROPERTY = (ref, property, styles) => {
 
 
 module.exports = {
-  UNKOWN_ATTRIBUTE,
+  UNKNOWN_ATTRIBUTE,
   ELEMENT_CANNOT_USE_PROPERTY,
   OVERRIDE_FOUND,
   NESTED_MEDIA_QUERY,
-  UNKOWN_BASE_CLASS,
+  UNKNOWN_BASE_CLASS,
   DUPLICATE_PROPERTY
 }

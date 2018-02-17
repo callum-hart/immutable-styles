@@ -47,7 +47,7 @@ const attrsValid = attrs => {
 
     Object.keys(attrs).forEach(attr => {
       if (!permittedAttrs.includes(attr)) {
-        log.UNKOWN_ATTRIBUTE(attr, attrs[attr], permittedAttrs);
+        log.UNKNOWN_ATTRIBUTE(attr, attrs[attr], permittedAttrs);
         throw Error(`\`${attr}\` is not a valid attribute`);
       }
     });
@@ -89,7 +89,7 @@ const parseStyles = (block, parentRef = null, inheritedMedia = null) => {
       cloneBaseStyles(baseRef, fullyQualifiedRef);
       // todo: generate run-time validations
     } else {
-      log.UNKOWN_BASE_CLASS(fullyQualifiedRef, baseRef);
+      log.UNKNOWN_BASE_CLASS(fullyQualifiedRef, baseRef);
       throw new Error(`The base class \`${baseRef}\` does not exist`);
     }
   }

@@ -24,7 +24,7 @@
 
 Parallels can be drawn between mutable state in programs and overrides in CSS. The mutable *(overriding)* nature of CSS means we cannot confidently make changes. CSS overrides suffer from the following:
 
-- **Unpredictable** No guarantee who "winning style" is. Overrides rely on cascade, specicifity and importance - all of which are *vunerable* to change.
+- **Unpredictable** No guarantee who "winning style" is. Overrides rely on cascade, specificity and importance - all of which are *vulnerable* to change.
 - **Brittle** Changes bring unforeseen and unwanted side effects. Re-ordering rules in the cascade, modifying selector specificity, adding/removing !important can break things.
 - **Difficult to contain** Global scope permits anyone to override, whilst a lack of encapsulation dampens efforts to protect styles from being overridden.
 - **Hard to troubleshoot** Overrides operate globally which means their side effects aren't always immediately apparent.
@@ -85,7 +85,7 @@ Throws the compile-time error:
 ```
 [Override Found] "div.bar p.foo" overrides the "font-size" set by "p.foo"
 
-Overidden styles ("p.foo"):
+Overridden styles ("p.foo"):
 
   font-size: 14px;
 
@@ -166,7 +166,7 @@ const result = ImmutableStyles.createCSS(styles);
 
 ```js
 const styles = [
- ImmutableStyle.createStyle(
+ ImmutableStyles.createStyle(
   'span',
   null,
   'color: cadetblue;'
@@ -263,9 +263,9 @@ form[class="form form--withError"] > span[class="form__error"] {
 
 ## Compile-time Errors
 
-### :warning: Unkown Attribute
+### :warning: Unknown Attribute
 
-When an unkown attribute is found, for example:
+When an unknown attribute is found, for example:
 
 ```jsx
 <p foo="invalidAttr">
@@ -276,7 +276,7 @@ When an unkown attribute is found, for example:
 Throws:
 
 ```
-[Unkown Attribute] "foo" is not a valid attribute
+[Unknown Attribute] "foo" is not a valid attribute
 
 Occurrence found:
 
@@ -331,7 +331,7 @@ Throws:
 ```
 [Override Found] "div.parent p.child" overrides the "color" set by "p.child"
 
-Overidden styles ("p.child"):
+Overridden styles ("p.child"):
 
   color: darksalmon;
 
@@ -370,7 +370,7 @@ Inner media query ("footer p"):
   min-width of 300
 ```
 
-### :warning: Unkown Base Class
+### :warning: Unknown Base Class
 
 When a subclass extends a superclass that hasn't been defined.
 
@@ -383,7 +383,7 @@ When a subclass extends a superclass that hasn't been defined.
 Throws:
 
 ```
-[Unkown Base Class] The base class "div.baseClass" does not exist
+[Unknown Base Class] The base class "div.baseClass" does not exist
 
 Occurrence found:
 
@@ -431,17 +431,17 @@ npm test singleInheritance.test.js
 
 ## Design Decisions / Tradeoffs
 
-In order to achieve no overrides there are some tradeoffs, some of which may feel unatural - and the rationale not immediately apparent. Each tradeoff is documented below explaining *what* it is, *why* it exists and the *problem* it solves. It should be noted that tradeoffs are subject to change if and when a better solution is found.
+In order to achieve no overrides there are some tradeoffs, some of which may feel unnatural - and the rationale not immediately apparent. Each tradeoff is documented below explaining *what* it is, *why* it exists and the *problem* it solves. It should be noted that tradeoffs are subject to change if and when a better solution is found.
 
-Alot of the design decisions make CSS resilient to changes in HTML. This means changes in HTML (structure/attributes) should not introduce unforeseen overrides.
+A lot of the design decisions make CSS resilient to changes in HTML. This means changes in HTML (structure/attributes) should not introduce unforeseen overrides.
 
 ### Class Selectors
 
-**What** All classes are matched via *exact* attribute selectors `[class=className]`.
+**What:** All classes are matched via *exact* attribute selectors `[class=className]`.
 
-**Why** Prevent overrides when an element uses multiple classes containing competing styles.
+**Why:** To prevent overrides when an element uses multiple classes containing competing styles.
 
-**Problem**
+**Problem:**
 
 ```html
 <p class="foo">...</p>
@@ -478,16 +478,11 @@ p[class="bar"] {
 
 ### Child Selectors
 
-**What**
+**What:** All child nodes are matched via *direct* child selectors `A < B`.
 
-- All child nodes are matched via *direct* child selectors `A < B`.
+**Why:** The structure of HTML is unknown. Prevent overrides when nested HTML structures contain competing styles.
 
-**Why**
-
-- Structure of HTML is an unkown.
-- Prevent overrides when nested HTML structures contain competing styles.
-
-**Problem**
+**Problem:**
 
 ```html
 <div>
@@ -509,8 +504,7 @@ section p {
 }
 ```
 
-- Cannot guarantee the color of `p.foo` will always be `black`.
-- Current example assumes paragraphs are only nested within `div` **or** `section`.
+We cannot guarantee the color of `p.foo` will always be `black`. The current example assumes paragraphs are only nested within `div` **or** `section`. Override introduced when a paragraph is nested within `div` **and** `section`:
 
 ```diff
 <div>
@@ -521,11 +515,7 @@ section p {
 </div>
 ```
 
-- Override introduced when a paragraph is nested within `div` **and** `section`.
-
-**Solution**
-
-- To counter this Immutable Styles treats all child nodes as direct children - the generated CSS for this example is:
+**Solution:** Immutable Styles treats all child nodes as direct children - the generated CSS for this example is:
 
 ```css
 div:not([class]) > p:not([class]) {
@@ -538,18 +528,11 @@ section:not([class]) > p:not([class]) {
 
 ### Element Equality
 
-**What**
+**What:** Element != element (of same type) with a class. For example `span` and `span.icon` are treated disparate despite sharing the same HTML tag. This means styles applied to `span` are not applied to `span.icon`.
 
-- Element != element (of same type) with a class.
-- For example `span` and `span.icon` are treated disparate despite sharing the same HTML tag.
-- This means styles applied to `span` are not applied to `span.icon`.
+**Why:** If elements (of same type) were treated equally overrides *could* go undetected. Cannot determine what class(es) an element has/will have in HTML.
 
-**Why**
-
-- If elements (of same type) were treated equally overrides *could* go undetected.
-- Cannot determine what class(es) an element has/will have in HTML.
-
-**Problem**
+**Problem:**
 
 ```html
 <p class="foo">...</p>
@@ -569,8 +552,7 @@ div.bar p {
 }
 ```
 
-- Cannot guarantee the color of `p.foo` will always be `black`.
-- Current example assumes paragraphs within `div.bar` will never use the class `foo`.
+We cannot guarantee the color of `p.foo` will always be `black`. The current example assumes paragraphs within `div.bar` will never use the class `foo`. Override introduced when the class `foo` is added:
 
 ```diff
 <div class="bar">
@@ -579,12 +561,7 @@ div.bar p {
 </div>
 ```
 
-- Override introduced when the class `foo` is added.
-- The color of paragraphs within `div.bar` is nondeterministic.
-
-**Solution**
-
-- To counter this Immutable Styles treats `p` and `p.foo` differently - the generated CSS for this example is:
+**Solution:** Immutable Styles treats `p` and `p.foo` differently - the generated CSS for this example is:
 
 ```css
 p[class="foo"] {
@@ -598,16 +575,11 @@ div[class="bar"] > p:not([class]) {
 
 ### No ID Selectors
 
-**What**
+**What:** Styles cannot be applied using ID selectors. Styles can only be applied using *element* type or class selectors.
 
-- Styles cannot be applied using ID selectors.
-- Styles can only be applied using *element* type or class selectors.
+**Why:** ID selectors *could* sidestep override detection.
 
-**Why**
-
-- ID selectors *could* sidestep override detection.
-
-**Problem**
+**Problem:**
 
 ```html
 <p class="foo">...</p>
@@ -624,32 +596,22 @@ p#bar {
 }
 ```
 
-- Cannot guarantee the color of `p.foo` will always be `black`.
-- Current example assumes paragraphs only have the class `.foo` **or** the ID `#bar`.
+We cannot guarantee the color of `p.foo` will always be `black`. The current example assumes paragraphs only have the class `.foo` **or** the ID `#bar`. Override introduced when paragraph has the class `.foo` **and** the ID `#bar`:
 
 ```diff
 <p class="foo">...</p>
 +<p class="foo" id="bar">...</p>
 ```
 
-- Override introduced when paragraph has the class `.foo` **and** the ID `#bar`.
-
-**Solution**
-
-- Immutable Styles counters this by not supporting ID selectors.
+**Solution:** Immutable Styles does not support ID selectors.
 
 ### No Property Inheritance
 
-**What**
+**What:** Inheritable properties cannot be used by parent elements. They can only be set by the elements that use them.
 
-- Inheritable properties cannot be used by parent elements.
-- They can only be set by the elements that use them.
+**Why:** Cannot determine if an inherited style is overridden.
 
-**Why**
-
-- Cannot determine if an inherited style is overridden.
-
-**Problem**
+**Problem:**
 
 ```html
 <div class="foo">...</div>
@@ -665,7 +627,7 @@ p.bar {
 }
 ```
 
-- Cannot guarantee the color of elements within `div.foo` will always be `black`.
+We cannot guarantee the color of elements within `div.foo` will always be `black`. Override introduced when paragraph has the class `.foo` **and** the ID `#bar`:
 
 ```diff
 <div class="bar">
@@ -673,24 +635,15 @@ p.bar {
 </div>
 ```
 
-- The color of `p.bar` overrides the color inherited from `div.foo`.
-
-**Solution**
-
-- Immutable Styles counters this by not supporting inheritable properties.
+**Solution:** Immutable Styles counters this by not supporting inheritable properties.
 
 ### Discrete Media Queries
 
-**What**
+**What:** Styles in one media query cannot override styles in another media query.
 
-- Styles in one media query cannot override styles in another media query.
+**Why:** To prevent overrides among media queries. Media queries should not rely on cascade/specificity to produce their expected behaviour.
 
-**Why**
-
-- Prevent overrides among media queries.
-- Media queries should not rely on cascade/specificty to produce their expected behaviour.
-
-**Problem**
+**Problem:**
 
 ```css
 @media (min-width:300px) {
@@ -706,9 +659,7 @@ p.bar {
 }
 ```
 
-- Cannot guarantee the color of `p.foo` on screens wider than `300px` will always be `black`.
-- The first media query is only effective until an implied max-width of 899px.
-- On screens wider than `900px` the color of `p.foo` is overriden to `red`.
+We cannot guarantee the color of `p.foo` on screens wider than `300px` will always be `black`. The first media query is only effective until an implied max-width of 899px. On screens wider than `900px` the color of `p.foo` is overriden to `red`.
 
 **Solution**
 
@@ -726,7 +677,7 @@ p.bar {
 }
 ```
 
-- Media queries containing competing styles should use discrete breakpoints to encapsulate styles (and thus prevent overrides).
+Media queries containing competing styles should use discrete breakpoints to encapsulate styles (and thus prevent overrides).
 
 
 ## Licence
