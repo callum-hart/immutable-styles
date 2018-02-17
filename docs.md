@@ -3,9 +3,9 @@
 ## Table of Contents
 
 - [What](#what)
+- [Why](#why)
 - [How](#how)
 - [Example](#example)
-- [Why](#why)
 - [Usage](#usage)
 - [API](#api)
 - [Single Inheritance Model](#single-inheritance-model)
@@ -20,21 +20,37 @@
 - Immutability leads to simpler development since it makes CSS **predictable** and **deterministic**.
 - This reduces time spent coordinating overrides and troubleshooting the side effects of cascade, specificity and importance.
 
+## Why
+
+Parallels can be drawn between mutable state in programs and overrides in CSS. The mutable *(overriding)* nature of CSS means we cannot confidently make changes. CSS overrides suffer from the following:
+
+- **Unpredictable** No guarantee who "winning style" is. Overrides rely on cascade, specicifity and importance - all of which are *vunerable* to change.
+- **Brittle** Changes bring unforeseen and unwanted side effects. Re-ordering rules in the cascade, modifying selector specificity, adding/removing !important can break things.
+- **Difficult to contain** Global scope permits anyone to override, whilst a lack of encapsulation dampens efforts to protect styles from being overridden.
+- **Hard to troubleshoot** Overrides operate globally which means their side effects aren't always immediately apparent.
+- **No escape** It’s hard to escape an overriding system. There is a direct correlation between the number of overrides and the time/energy spent managing them.
+- **Dead code** Overrides make it hard to differentiate between styles that are actually used and those that are redundant.
+- **Self-perpetuating** The more overrides exist the more overriding you do.
+- **Hard to scale** Overrides start innocently but at scale become challenging to manage.
+
+Immutable Styles is an attempt to **remove overrides** (and thus complexity) from CSS.
+
 ## How
 
 - Immutable styles use the same data structure as the DOM - a tree.
 - Styles are written as functions that *can* be mapped to JSX.
+- Markup agnostic - works with any templating/view library.
 - Compiled to CSS (version 2.1+).
 
 ## Example
 
 ```js
 ImmutableStyles.createStyle(
-	'p',
-	{
-		className: 'foo'
-	},
-	'font-size: 14px;'
+ 'p',
+ {
+  className: 'foo'
+  },
+ 'font-size: 14px;'
 )
 ```
 
@@ -42,25 +58,25 @@ Compiles to:
 
 ```css
 p[class="foo"] {
-	font-size: 14px;
+ font-size: 14px;
 }
 ```
 
-The `font-size` of `p.foo` is immutable meaning it cannot change (be overridden). Any attempt to mutate (override) the `font-size`:
+The `font-size` of `p.foo` is immutable meaning it cannot change (be overridden). Any attempt to mutate (override) the `font-size` is not allowed:
 
 ```js
 ImmutableStyles.createStyle(
-	'div',
- 	{
-  	className: 'bar'
- 	},
- 	ImmutableStyles.createStyle(
-  	'p',
-  	{
-   		className: 'foo'
-  	},
-  	'font-size: 10px;'
- 	)
+ 'div',
+ {
+  className: 'bar'
+ },
+ ImmutableStyles.createStyle(
+  'p',
+  {
+   className: 'foo'
+  },
+  'font-size: 10px;'
+ )
 )
 ```
 
@@ -98,21 +114,6 @@ The "font-size" of "p.foo" cannot be overridden
  </p>
 </div>
 ```
-
-## Why
-
-Parallels can be drawn between mutable state in programs and overrides in CSS. The mutable *(overriding)* nature of CSS means we cannot confidently make changes. CSS overrides suffer from the following:
-
-- **Unpredictable** No guarantee who "winning style" is. Overrides rely on cascade, specicifity and importance - all of which are *vunerable* to change.
-- **Brittle** Changes bring unforeseen and unwanted side effects. Re-ordering rules in the cascade, modifying selector specificity, adding/removing !important can break things.
-- **Difficult to contain** Global scope permits anyone to override, whilst a lack of encapsulation dampens efforts to protect styles from being overridden.
-- **Hard to troubleshoot** Overrides operate globally which means their side effects aren't always immediately apparent.
-- **No escape** It’s hard to escape an overriding system. There is a direct correlation between the number of overrides and the time/energy spent managing them.
-- **Dead code** Overrides make it hard to differentiate between styles that are actually used and those that are redundant.
-- **Self-perpetuating** The more overrides exist the more overriding you do.
-- **Hard to scale** Overrides start innocently but at scale become challenging to manage.
-
-Immutable Styles is an attempt to **remove overrides** (and thus complexity) from CSS.
 
 ## Usage
 
@@ -165,11 +166,11 @@ const result = ImmutableStyles.createCSS(styles);
 
 ```js
 const styles = [
-	ImmutableStyle.createStyle(
-		'span',
-		null,
-		'color: cadetblue;'
-	)
+ ImmutableStyle.createStyle(
+  'span',
+  null,
+  'color: cadetblue;'
+ )
 ]
 ```
 
@@ -191,7 +192,7 @@ Attributes are optional. An element can have zero or more attributes. Available 
 - **`className`** CSS class for a given element
 - **`minWidth`** Minimum size style(s) should apply (px)
 - **`maxWidth`** Maximum size style(s) should apply (px)
-- **[`pseudo`](https://github.com/callum-hart/immutable-styles/blob/master/tests/pseudoSelectors.test.js)** Pseudo class(es) and/or pseudo element(s)
+- **`pseudo`** Pseudo class(es) and/or pseudo element(s)
 
 ## Single Inheritance Model
 
@@ -224,6 +225,8 @@ form[class="form form--withError"] {
  border: 1px solid lightcoral /* (original value: 1px solid lightgray) */;
 }
 ```
+
+Notice that:
 
 - `form--withError` inherits the `padding` and `background` from `form`.
 - `form--withError` overrides the `border` at compile-time not run-time.
@@ -260,13 +263,13 @@ form[class="form form--withError"] > span[class="form__error"] {
 
 ## Compile-time Errors
 
-### Unkown Attribute
+### :warning: Unkown Attribute
 
 When an unkown attribute is found, for example:
 
 ```jsx
 <p foo="invalidAttr">
-	font-size: 20px;
+ font-size: 20px;
 </p>
 ```
 
@@ -284,15 +287,15 @@ Only the following attributes are permitted:
   className, minWidth, maxWidth, pseudo
 ```
 
-### Duplicate CSS Property
+### :warning: Duplicate CSS Property
 
 When a CSS property is defined more than once in same block.
 
 ```jsx
 <h1 className="title">
-  color: darkslategray;
-  font-size: 20px;
-  color: burlywood;
+ color: darkslategray;
+ font-size: 20px;
+ color: burlywood;
 </h1>
 ```
 
@@ -306,20 +309,20 @@ Throws:
   color: burlywood;
 ```
 
-### Override Found
+### :warning: Override Found
 
 When one style overrides another style.
 
 ```jsx
 <p className="child">
-  color: darksalmon;
+ color: darksalmon;
 </p>,
 
 <div className="parent">
-  <p className="child">
-    font-size: 10px;
-    color: lightsalmon;
-  </p>
+ <p className="child">
+  font-size: 10px;
+  color: lightsalmon;
+ </p>
 </div>
 ```
 
@@ -340,16 +343,16 @@ Overriding styles ("div.parent p.child"):
 The "color" of "p.child" cannot be overridden
 ```
 
-### Nested Media Query
+### :warning: Nested Media Query
 
 When a media query is nested inside another media query.
 
 ```jsx
 <footer minWidth="900">
-  padding: 0 30px;
-  <p minWidth="300">
-    font-size: 12px;
-  </p>
+ padding: 0 30px;
+ <p minWidth="300">
+  font-size: 12px;
+ </p>
 </footer>
 ```
 
@@ -367,13 +370,13 @@ Inner media query ("footer p"):
   min-width of 300
 ```
 
-### Unkown Base Class
+### :warning: Unkown Base Class
 
 When a subclass extends a superclass that hasn't been defined.
 
 ```jsx
 <div className="baseClass.subClass">
-  padding: 30px;
+ padding: 30px;
 </div>
 ```
 
@@ -387,13 +390,13 @@ Occurrence found:
   "div.baseClass.subClass"
 ```
 
-### Element Property Mismatch
+### :warning: Element Property Mismatch
 
 When an element uses a whitelisted CSS property.
 
 ```jsx
 <div>
-  font-size: 20px;
+ font-size: 20px;
 </div>
 ```
 
@@ -434,13 +437,9 @@ Alot of the design decisions make CSS resilient to changes in HTML. This means c
 
 ### Class Selectors
 
-**What**
+**What** All classes are matched via *exact* attribute selectors `[class=className]`.
 
-- All classes are matched via *exact* attribute selectors `[class=className]`
-
-**Why**
-
-- Prevent overrides when an element uses multiple classes containing competing styles.
+**Why** Prevent overrides when an element uses multiple classes containing competing styles.
 
 **Problem**
 
@@ -451,34 +450,29 @@ Alot of the design decisions make CSS resilient to changes in HTML. This means c
 
 ```css
 p.foo {
-	color: black;
+ color: black;
 }
 
 p.bar {
-	color: red;
+ color: red;
 }
 ```
 
-- Cannot guarantee the color of `p.foo` will always be `black`.
-- Current example assumes paragraphs will never use both classes `foo bar`.
+We cannot guarantee the color of `p.foo` will always be `black`. The current example assumes paragraphs will never use both classes `foo bar`. Override introduced when both classes are used:
 
 ```html
 <p class="foo bar">...</p>
 ```
 
-- Override introduced when both classes are used.
-
-**Solution**
-
-- To counter this Immutable Styles treats `foo` and `bar` as distinct values - the generated CSS for this example is:
+**Solution:** Immutable Styles treats `foo` and `bar` as distinct values - the generated CSS for this example is:
 
 ```css
 p[class="foo"] {
-  color: black;
+ color: black;
 }
 
 p[class="bar"] {
-  color: red;
+ color: red;
 }
 ```
 
@@ -507,11 +501,11 @@ p[class="bar"] {
 
 ```css
 div p {
-	color: black;
+ color: black;
 }
 
 section p {
-	color: red
+ color: red
 }
 ```
 
@@ -535,10 +529,10 @@ section p {
 
 ```css
 div:not([class]) > p:not([class]) {
-  color: black;
+ color: black;
 }
 section:not([class]) > p:not([class]) {
-  color: red;
+ color: red;
 }
 ```
 
@@ -567,11 +561,11 @@ section:not([class]) > p:not([class]) {
 
 ```css
 p.foo {
-	color: black;
+ color: black;
 }
 
 div.bar p {
-	color: red;
+ color: red;
 }
 ```
 
@@ -594,11 +588,11 @@ div.bar p {
 
 ```css
 p[class="foo"] {
-  color: black;
+ color: black;
 }
 
 div[class="bar"] > p:not([class]) {
-  color: red;
+ color: red;
 }
 ```
 
@@ -622,11 +616,11 @@ div[class="bar"] > p:not([class]) {
 
 ```css
 p.foo {
-	color: black;
+ color: black;
 }
 
 p#bar {
-	color: red;
+ color: red;
 }
 ```
 
@@ -663,11 +657,11 @@ p#bar {
 
 ```css
 div.foo {
-	color: black;
+ color: black;
 }
 
 p.bar {
-	color: red;
+ color: red;
 }
 ```
 
@@ -700,15 +694,15 @@ p.bar {
 
 ```css
 @media (min-width:300px) {
-	p {
-		color: black;
-	}
+ p {
+  color: black;
+ }
 }
 
 @media (min-width:900px) {
-	p {
-		color: red;
-	}
+ p {
+  color: red;
+ }
 }
 ```
 
@@ -720,15 +714,15 @@ p.bar {
 
 ```diff
 +@media (min-width:300px) and (max-width:899px) {
-	p {
-		color: black;
-	}
+ p {
+  color: black;
+ }
 }
 
 @media (min-width:900px) {
-	p {
-		color: red;
-	}
+ p {
+  color: red;
+ }
 }
 ```
 
@@ -739,4 +733,4 @@ p.bar {
 
 MIT License
 
-Copyright (c) 2017-present, Callum Hart
+Copyright (c) 2018-present, Callum Hart
