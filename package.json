@@ -8,6 +8,10 @@
   "scripts": {
     "test": "jest"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/callum-hart/immutable-styles.git"
+  },
   "dependencies": {},
   "devDependencies": {
     "jest": "^22.1.4"

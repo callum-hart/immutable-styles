@@ -34,7 +34,7 @@ Immutable Styles is an attempt to **remove overrides** (and thus complexity) fro
 
 ## How
 
-Immutable Styles use the same data structure as the DOM - **a tree**. Styles are written as **functions** that *can* be mapped to JSX. Immutable Styles are **markup agnostic** - working with any templating/view library, and are compatible with CSS 2.1 and up :v:
+Immutable Styles use the same data structure as the DOM - a tree. Styles are written as **functions** that *can* be mapped to JSX. Immutable Styles are **markup agnostic** so work with any templating/view library, and are compatible with CSS version 2.1 and up :v:
 
 ## Example
 
@@ -109,8 +109,11 @@ Immutable Styles can be written using JSX - which provides syntax sugar for call
 
 ## Usage
 
-- Install *todo*
-- *Optionally* map `ImmutableStyles` to JSX. Recommend the babel plugin [`transform-react-jsx`](https://www.npmjs.com/package/babel-plugin-transform-react-jsx):
+Install from npm:
+
+`npm i immutable-styles`
+
+*Optionally* map `ImmutableStyles` to JSX. I recommend the babel plugin [`transform-react-jsx`](https://www.npmjs.com/package/babel-plugin-transform-react-jsx):
 
 ```js
 {
