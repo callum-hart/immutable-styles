@@ -128,7 +128,7 @@ Install from npm:
 Include `ImmutableStyles` module in your JavaScript or JSX file:
 
 ```jsx
-const ImmutableStyles = require('immutableStyles');
+const ImmutableStyles = require('immutable-styles');
 
 const styles = [
  <nav>
