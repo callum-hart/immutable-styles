@@ -202,7 +202,7 @@ Usually CSS overrides are used to allow styles to be reused and repurposed acros
 </form>
 ```
 
-Generated CSS:
+`form--withError` extends `form` so inherits the `padding` and `background` properties. `form--withError` provides its own implementation of `border` overriding the color from `lightgray` to `lightcoral`. *Note:* this override happens at compile-time not run-time. The generated CSS is:
 
 ```css
 form[class="form"] {
@@ -218,12 +218,7 @@ form[class="form form--withError"] {
 }
 ```
 
-Notice that:
-
-- `form--withError` inherits the `padding` and `background` from `form`.
-- `form--withError` overrides the `border` at compile-time not run-time.
-
-This inheritance model also works with nested elements:
+The single inheritance model also works with nested elements:
 
 ```jsx
 <form className="form">
