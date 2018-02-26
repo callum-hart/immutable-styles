@@ -2,79 +2,92 @@
 
 ## What
 
-Immutable styles cannot change once created. A style that is immutable **cannot be overridden**. Immutability leads to simpler development since it makes CSS **predictable** and **deterministic**. This reduces time spent coordinating overrides and troubleshooting the side effects of cascade, specificity and importance.
+Immutable styles cannot change once created. A style that is immutable **can never be overridden**. Immutability leads to simpler development since it makes CSS **predictable** and **deterministic**. This reduces time spent coordinating overrides, and troubleshooting the side effects of cascade, specificity and importance.
 
 ## Why
 
 Parallels can be drawn between mutable state in programs and overrides in CSS. The mutable *(overriding)* nature of CSS means we cannot confidently make changes. CSS overrides suffer from the following:
 
 - **Unpredictable** No guarantee who "winning style" is. Overrides rely on cascade, specificity and importance - all of which are *vulnerable* to change.
-- **Brittle** Changes bring unforeseen and unwanted side effects. Re-ordering rules in the cascade, modifying selector specificity, adding/removing !important can break things.
+- **Volatile** The longevity of an override is unknown. Just because a style wins today doesn’t mean it always will.
+- **Brittle** Changes bring unforeseen and unwanted side effects. Re-ordering rules in the cascade, modifying selector specificity, adding or removing !important can break things.
 - **Difficult to Contain** Global scope permits anyone to override, whilst a lack of encapsulation dampens efforts to protect styles from being overridden.
-- **Hard to Troubleshoot** Overrides operate globally which means their side effects aren't always immediately apparent.
-- **No Escape** It’s hard to escape an overriding system. There is a direct correlation between the number of overrides and the time/energy spent managing them.
-- **Dead Code** Overrides make it hard to differentiate between styles that are actually used and those that are redundant.
-- **Self-perpetuating** The more overrides exist the more overriding you do.
+- **Hard to Troubleshoot** Side effects aren't always immediately apparent.
+- **Obfuscate Developer Intent** It’s hard to differentiate between an intentional and unintentional override - which can be left to interpretation.
+- **No Escape** It’s hard to escape an overriding system. There is a correlation between the number of overrides and the time/energy spent managing them.
+- **Self-perpetuating** The more overrides exist the more overriding you need to do.
 - **Hard to Scale** Overrides appear harmless at first but become challenging to manage at scale.
 
 Immutable Styles is an attempt to **remove overrides** (and thus complexity) from CSS.
 
+Futher reading: [The End of CSS Overrides?](http://www.callumhart.com/blog/the-end-of-css-overrides).
+
 ## How
 
-Immutable Styles use the same data structure as the DOM - a tree. Styles are written as **functions** that *can* be mapped to JSX. Immutable Styles are **markup agnostic** so work with any templating/view library, and are compatible with CSS version 2.1 and up :v:
+Immutable Styles...
+
+- Use the same data structure as the DOM - a **tree**.
+- Are written as **functions** that *can* be mapped to JSX.
+- Are compiled to CSS version 2.1 and up :v:
+- Are **markup agnostic** so work with any templating/view library (React, Angular, Vue, Plain ol'HTML).
 
 ## Example
 
 ```js
-ImmutableStyles.createStyle(
- 'p',
- {
-  className: 'foo'
-  },
- 'font-size: 14px;'
-)
+const im = require('immutable-styles');
+
+const styles = [
+ im.createStyle(
+  'p',
+   {
+    className: 'foo'
+   },
+   'color: cadetblue;'
+  )
+];
+
+const CSS = im.createCSS(styles);
 ```
 
-Compiles to:
+The `color` of `p.foo` is immutable meaning it cannot change (be overridden). Any attempt to mutate (override) the `color` is not allowed:
 
-```css
-p[class="foo"] {
- font-size: 14px;
-}
-```
-
-The `font-size` of `p.foo` is immutable meaning it cannot change (be overridden). Any attempt to mutate (override) the `font-size` is not allowed:
-
-```js
-ImmutableStyles.createStyle(
- 'div',
- {
-  className: 'bar'
- },
- ImmutableStyles.createStyle(
+```diff
+const styles = [
+ im.createStyle(
   'p',
   {
    className: 'foo'
   },
-  'font-size: 10px;'
- )
-)
+  'color: cadetblue;'
+ ),
++im.createStyle(
++ 'div',
++ null,
++ im.createStyle(
++  'p',
++  {
++   className: 'foo'
++  },
++  'color: transparent /* attempted override */;'
++ )
++)
+];
 ```
 
 Throws the compile-time error:
 
 ```
-[Override Found] "div.bar p.foo" overrides the "font-size" set by "p.foo"
+[Override Found] "div p.foo" overrides the "color" set by "p.foo"
 
 Overridden styles ("p.foo"):
 
-  font-size: 14px;
+  color: cadetblue;
 
-Overriding styles ("div.bar p.foo"):
+Overriding styles ("div p.foo"):
 
-  font-size: 10px;
+  color: transparent /* attempted override */;
 
-The "font-size" of "p.foo" cannot be overridden
+The "color" of "p.foo" cannot be overridden
 ```
 
 **JSX**
@@ -190,6 +203,6 @@ npm test singleInheritance.test.js
 
 ## Licence
 
-MIT(https://github.com/callum-hart/immutable-styles/blob/master/LICENSE)
+[MIT](https://github.com/callum-hart/immutable-styles/blob/master/LICENSE)
 
 Copyright (c) 2018-present, Callum Hart
