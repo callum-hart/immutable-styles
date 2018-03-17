@@ -1,4 +1,4 @@
-<h1 align="center"><img src="./docs/logo.png" /><br>Immutable Styles</h1>
+<h1 align="center"><img src="./docs/logo.png" width="130px" height="135px" /><br>Immutable Styles</h1>
 <p align="center">
   <b>A JavaScript library for styling web interfaces with a focus on predictability and robustness. It uses immutability to remove side effects often tied to CSS.</b>
 </p>
