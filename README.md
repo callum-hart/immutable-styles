@@ -5,11 +5,11 @@
 <p align="center">
   <sub>
     <a href="">Link One</a> |
-    <a href="">Link Two</a> |
     <b>Active Link</b> |
-    <a href="">Link Four</a>
+    <a href="">Link Two</a>
   </sub>
 </p>
+---
 
 ### What is Immutable Styles?
 
@@ -80,11 +80,11 @@ Creates and returns the AST for an Immutable Style. This is the equivalent of a 
 
 **`children`** Styles for the current element and/or nested child elements.
 
-**Returns:** An AST representing Immutable Styles.
+**Returns:** A object representing the Immutable Styles AST.
 
 #### createCSS `createCSS(styles)`
 
-Takes the Immutable Styles AST returned from `createStyle` and turns it into CSS.
+Takes the object returned from `createStyle` and turns it into CSS.
 
 **Parameters:**
 
@@ -245,7 +245,7 @@ function borderRadius(radius) {
 createStyle(
   "button",
   null,
-  `padding: 10px 20px; ${borderRadius(4px)}`
+  `padding: 10px 20px; ${borderRadius('4px')}`
 )
 ```
 
@@ -349,15 +349,241 @@ createStyle(                          | /* inherited styles */
 ------------------------------------------------------------------------
 ```
 
-
 ### Compile Time Errors
 
-- Immutable Styles are compiled
-- CSS is only generated if the compiler doesn't find any errors.
-- The different compile time errors are documented [here]().
+Immutable Styles are compiled from JavaScript to CSS (using the method [`createCSS`]()). The library ships with a friendly compiler that helps assist development, rather than bark at you. If the compiler finds an error, such as a CSS override the compilation process is terminated and an error is thrown.
+
+Each error is documented below including the problem code and the error thrown.
+
+#### Unknown Attribute
+
+When an unknown attribute is found:
+
+```js
+createStyle(
+  "p",
+  {
+    foo: "invalidAttr"
+  },
+  'font-size: 20px;'
+)
+```
+
+Throws:
+
+```
+[Unknown Attribute] "foo" is not a valid attribute
+
+Occurrence found:
+
+  foo="invalidAttr"
+
+Only the following attributes are permitted:
+
+  className, minWidth, maxWidth, pseudo
+```
+
+#### Duplicate CSS Property
+
+When a CSS property is defined more than once in same block.
+
+```js
+createStyle(
+  "h1",
+  {
+    className: "title"
+  },
+  `color: darkslategray;
+  font-size: 20px;
+  color: burlywood;`
+)
+```
+
+Throws:
+
+```
+[Duplicate CSS Property] The property "color" has been defined more than once by "h1.title"
+
+  color: darkslategray;
+  font-size: 20px;
+  color: burlywood;
+```
+
+#### Override Found
+
+When one style overrides another style.
+
+```js
+createStyle(
+  "p",
+  {
+    className: "child"
+  },
+  'color: darksalmon;'
+),
+createStyle(
+  "div",
+  {
+    className: "parent"
+  },
+  createStyle(
+    "p",
+    {
+      className: "child"
+    },
+    `font-size: 10px;
+    color: lightsalmon;`
+  )
+)
+```
+
+Throws:
+
+```
+[Override Found] "div.parent p.child" overrides the "color" set by "p.child"
+
+Overridden styles ("p.child"):
+
+  color: darksalmon;
+
+Overriding styles ("div.parent p.child"):
+
+  font-size: 10px;
+  color: lightsalmon;
+
+The "color" of "p.child" cannot be overridden
+```
+
+#### Nested Media Query
+
+When a media query is nested inside another media query.
+
+```js
+createStyle(
+  "footer",
+  {
+    minWidth: 900
+  },
+  'padding: 0 30px;',
+  createStyle(
+    "p",
+    {
+      minWidth: 300
+    },
+    'font-size: 12px;'
+  )
+)
+```
+
+Throws:
+
+```
+[Nested Media Query] Nested media query found in "footer"
+
+Outer media query ("footer"):
+
+  min-width of 900
+
+Inner media query ("footer p"):
+
+  min-width of 300
+```
+
+#### Unknown Base Class
+
+When a subclass extends a superclass that hasn't been defined.
+
+```js
+createStyle(
+  "div",
+  {
+    className: "baseClass.subClass"
+  },
+  'padding: 30px;'
+)
+```
+
+Throws:
+
+```
+[Unknown Base Class] The base class "div.baseClass" does not exist
+
+Occurrence found:
+
+  "div.baseClass.subClass"
+```
+
+#### Element Property Mismatch
+
+Immutable Styles does not allow child elements to inherit styles from parent elements. This means inheritable CSS properties can only be applied directly to a given element. Otherwise it wouldn't be possible for the compiler to detect a child element overriding an inherited style.
+
+The use of inheritable CSS properties are whitelisted to certain elements, for example `font-size` can be used by a `p` but not a `div`:
+
+```js
+createStyle(
+  "div",
+  null,
+  'font-size: 20px;'
+)
+```
+
+Throws:
+
+```
+[Element Property Mismatch] The element <div> cannot use the property "font-size"
+
+Occurrence found ("div"):
+
+  font-size: 20px;
+
+"font-size" can only be used by the following elements:
+
+  <h1>, <h2>, <h3>, <h4>, <h5>, <h6>, <p>, <a>, <strong>, <span>
+  <li>, <input>, <button>
+```
 
 ### FAQ
 
+#### Why choose Immutable Styles over something more established?
+
+The most popular CSS strategies around today share one thing in common:
+
+They all **reduce overrides**.
+
+[BEM]() uses naming conventions to modularise CSS, leveraging name-spaces to encapsulate styles. [CSS Modules]() implements local scope, where styles in one file cannot override styles in another. CSS-in-JS solutions such as [styled components]() generate unique classes to avoid selectors clashing.
+
+Despite the implementation differences each approach converges in regards to overrides; fewer overrides make CSS more robust and easier to maintain.
+
+The theory behind Immutable Styles is: if fewer overrides are better, why override at all?
+
+#### Can I use Immutable Styles with React/AngularJS/Vue/Backbone/Elm/Clojure...?
+
+Immutable Styles is markup agnostic, which means it isn’t coupled or biased to a specific way of generating HTML. Just like a CSS pre-processor Immutable Styles spits out CSS which can be used on any website, rendered server or client-side.
+
+#### Is Immutable Styles production ready?
+
+Technically yes, but I think it needs better tooling first.
+
+#### Have any websites been built without overrides?
+
+Yes. Immutable Styles evolved from an earlier open-source project of mine called [mono](). As part of monos R&D I built three proof of concept websites without any CSS overrides. You can see them [here](), [here]() and [here]().
+
+#### Can I Contribute?
+
+YES. The project is very welcome to feedback, fresh perspectives, feature requests, pull requests, and of course, contributors 🙂
+
 ### Roadmap
 
+- A CLI to generate CSS
+- Integrations / plugins with build tools
+- Seemless usage with JSX (`createStyle` can be mapped to JSX in the same way `createElement` is in React)
+- Better error messages that include file & line number
+- Allow modules to expose styles that can be changed at compile-time (similar to single inheritance model)
+- Runtime validations during development
+- `createCSS` should also accept an object (currently assumes param is always an array)
+
 ### Licence
+
+[MIT]()
+
+Copyright (c) 2018-present, Callum Hart
