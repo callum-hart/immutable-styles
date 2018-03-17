@@ -1,4 +1,4 @@
-<h1 align="center"><img src="logo.png" /><br>Immutable Styles</h1>
+<h1 align="center"><img src="./docs/logo.png" /><br>Immutable Styles</h1>
 <p align="center">
   <b>A JavaScript library for styling web interfaces with a focus on predictability and robustness. It uses immutability to remove side effects often tied to CSS.</b>
 </p>
@@ -9,6 +9,7 @@
     <a href="">Link Two</a>
   </sub>
 </p>
+
 ---
 
 ### What is Immutable Styles?
@@ -172,30 +173,6 @@ createStyle(              |
 --------------------------------------------------------
 ```
 
-All together now:
-
-```js
-// Define Immutable Styles
-const styles = [
- createStyle(
-  "p",
-  null,
-  "color: cadetblue;"
- ),
- createStyle(
-  "button",
-  {
-   className: "btn",
-   pseudo: ":hover"
-  },
-  "opacity: 0.75;"
- )
-]
-
-// Generate CSS
-const CSS = createCSS(styles);
-```
-
 ### Features
 
 Since Immutable Styles is just JavaScript we get the niceties of CSS pre-processors for free. Leveraging ES6 template literals enables variables, detached rule-sets, mixins, and theming with little to no extra cost.
@@ -291,9 +268,9 @@ createStyle(
 )
 ```
 
-Dot notation is used to indicate that a subclass extends a superclass (`className: <superclass>.<subclass>`). In the following examples each subclass will extend `baseForm`.
+Dot notation is used to indicate that a subclass extends a superclass (`className: <superclass>.<subclass>`). In the following examples each subclass extends `baseForm`.
 
-A subclass inherits all styles from its superclass:
+A subclass **inherits all styles** from its superclass:
 
 ```
 ------------------------------------------------------------------------
@@ -310,7 +287,7 @@ createStyle(                          | /* inherited styles */
 ------------------------------------------------------------------------
 ```
 
-A subclass can define its own styles which get merged with the styles it inherits:
+A subclass can **define its own styles** which get merged with the styles it inherits:
 
 ```
 ------------------------------------------------------------------------
@@ -331,7 +308,7 @@ createStyle(                          | /* inherited styles */
 ------------------------------------------------------------------------
 ```
 
-A subclass can redefine any styles it inherits from its superclass:
+A subclass can **redefine any styles it inherits** from its superclass:
 
 ```
 ------------------------------------------------------------------------
@@ -517,7 +494,7 @@ Occurrence found:
 
 Immutable Styles does not allow child elements to inherit styles from parent elements. This means inheritable CSS properties can only be applied directly to a given element. Otherwise it wouldn't be possible for the compiler to detect a child element overriding an inherited style.
 
-The use of inheritable CSS properties are whitelisted to certain elements, for example `font-size` can be used by a `p` but not a `div`:
+The usage of inheritable CSS properties are whitelisted to certain elements, for example `font-size` can be used by a `p` but not a `div`:
 
 ```js
 createStyle(
