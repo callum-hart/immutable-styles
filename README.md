@@ -77,34 +77,36 @@ const { createStyle, createCSS } = require('immutable-styles');
 
 Immutable Styles are written using functions. They are represented using the same data structure as the DOM - a tree. The library exposes two methods:
 
-### createStyle `createStyle(element, attrs, ...children)`
+### createStyle
 
-Creates and returns the AST for an Immutable Style. This is the equivalent of a CSS rule-set.
+```
+createStyle(element, attrs, ...children)
+```
 
-**Parameters:**
+- **Description:**
+  - Creates and returns the AST for an Immutable Style. This is the equivalent of a CSS rule-set.
+- **Parameters:**
+  - `element`: The HTML tag name, for example "div".
+  - `attrs`: Attributes (if any), can be one of the following:
+    - `className`: CSS class for the current element.
+    - `minWidth`: Minimum width styles should apply.
+    - `maxWidth`: Maximum width styles should apply.
+    - `pseudo`: Pseudo classes and/or elements.
+  - `children`: Styles for the current element and/or nested child elements.
+- **Returns:**
+  - An object representing the Immutable Styles AST.
 
-**`element`** The HTML tag name, for example "div".
+### createCSS
 
-**`attrs`** Attributes if any, can be one of the following:
+```
+createCSS(styles)
+```
 
-- `className` CSS class for the current element.
-- `minWidth` Minimum width styles should apply. `minWidth: 900` is the equivalent of the CSS media query: `@media (min-width: 900px)`
-- `maxWidth` Maximum width styles should apply. `maxWidth: 600` is the equivalent of the CSS media query: `@media (max-width: 600)`
-- `pseudo` Pseudo classes and/or elements. `pseudo: ":hover"` is the equivalent of the psuedo selector: `:hover`
-
-**`children`** Styles for the current element and/or nested child elements.
-
-**Returns:** A object representing the Immutable Styles AST.
-
-### createCSS `createCSS(styles)`
-
-Takes the object returned from `createStyle` and turns it into CSS.
-
-**Parameters:**
-
-**`styles`** The result returned from `createStyle`.
-
-**Returns:** Semantic CSS (version 2.1 and up).
+- **Description:**
+  - Takes the object returned from `createStyle` and turns it into CSS.
+- **Parameters:**
+  - `styles`: The result returned from `createStyle`.
+- **Returns:** Semantic CSS (version 2.1 and up).
 
 ## FAQ
 
