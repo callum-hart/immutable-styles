@@ -55,7 +55,7 @@ But why should the way we build applications be different to how we style them? 
 
 ## Install
 
-Install Immutable Styles using npm:
+Install Immutable Styles using [npm](https://www.npmjs.com/package/immutable-styles):
 
 ```
 npm install immutable-styles
@@ -82,7 +82,9 @@ createStyle(element, attrs, ...children)
 ```
 
 - **Description:**
-  - Creates and returns the AST for an Immutable Style. This is the equivalent of a CSS rule-set.
+
+...Creates and returns the AST for an Immutable Style. This is the equivalent of a CSS rule-set.
+
 - **Parameters:**
   - `element`: The HTML tag name, for example "div".
   - `attrs`: Attributes (if any), can be one of the following:
@@ -92,7 +94,8 @@ createStyle(element, attrs, ...children)
     - `pseudo`: Pseudo classes and/or elements.
   - `children`: Styles for the current element and/or nested child elements.
 - **Returns:**
-  - An object representing the Immutable Styles AST.
+
+...An object representing the Immutable Styles AST.
 
 ### createCSS
 
@@ -101,10 +104,14 @@ createCSS(styles)
 ```
 
 - **Description:**
-  - Takes the object returned from `createStyle` and turns it into CSS.
+
+...Takes the object returned from `createStyle` and turns it into CSS.
+
 - **Parameters:**
   - `styles`: The result returned from `createStyle`.
-- **Returns:** Semantic CSS (version 2.1 and up).
+- **Returns:**
+
+...Semantic CSS (version 2.1 and up).
 
 ## FAQ
 
