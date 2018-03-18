@@ -1,61 +1,75 @@
 ## Single Inheritance Model
 
-Usually CSS overrides are used to allow styles to be reused and repurposed across *similar* but not identical interfaces. In order to achieve the same effect without overrides Immutable Styles implements a single inheritance model. This allows a style to acquire the properties from another style (subclass inherits styles from superclass), for example:
+Usually CSS overrides are used to allow styles to be reused and repurposed across similar but not identical interfaces. In order to achieve the same effect without permitting overrides Immutable Styles implements a **[single inheritance model](https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)#Types)**. This allows a style to acquire the properties from another style, where the subclass inherits all styles from its superclass.
 
-```jsx
-<form className="form">
- padding: 20px;
- background: ivory;
- border: 1px solid lightgray;
-</form>,
+Superclasses look like any other Immutable Style:
 
-<form className="form.form--withError">
- border: 1px solid lightcoral;
-</form>
+```js
+createStyle(
+  "form",
+  {
+    className: "baseForm"
+  },
+  `padding: 20px;
+  background: ivory;
+  border: 1px solid lightgray;`
+)
 ```
 
-`form--withError` extends `form` so inherits the `padding` and `background` properties. `form--withError` provides its own implementation of `border` overriding the color from `lightgray` to `lightcoral`. *Note:* this override happens at compile-time not run-time. The generated CSS is:
+Dot notation is used to indicate that a subclass extends a superclass (`className: <superclass>.<subclass>`). In the following examples each subclass extends `baseForm`.
 
-```css
-form[class="form"] {
- padding: 20px;
- background: ivory;
- border: 1px solid lightgray;
-}
+A subclass **inherits all styles** from its superclass:
 
-form[class="form form--withError"] {
- padding: 20px;
- background: ivory;
- border: 1px solid lightcoral /* (original value: 1px solid lightgray) */;
-}
+```
+------------------------------------------------------------------------
+Subclass                              | Applied Styles
+------------------------------------------------------------------------
+                                      |
+createStyle(                          | /* inherited styles */
+  "form",                             | padding: 20px
+  {                                   | background: ivory
+    className: "baseForm.loginForm"   | border: 1px solid lightgray
+  }                                   |
+)                                     |
+                                      |
+------------------------------------------------------------------------
 ```
 
-The single inheritance model also works with nested elements:
+A subclass can **define its own styles** which get merged with the styles it inherits:
 
-```jsx
-<form className="form">
- <span className="form__error">
-  display: none;
- </span>
-</form>,
-
-<form className="form.form--withError">
- <span className="form__error">
-  display: block;
-  color: indianred;
- </span>
-</form>
+```
+------------------------------------------------------------------------
+Subclass                              | Applied Styles
+------------------------------------------------------------------------
+                                      |
+createStyle(                          | /* inherited styles */
+  "form",                             | padding: 20px
+  {                                   | background: ivory
+    className: "baseForm.loginForm"   | border: 1px solid lightgray
+  },                                  | /* own styles */
+  `width: 60%;                        | width: 60%
+  display: block;                     | display: block
+  margin: 0 auto;                     | margin: 0 auto
+  border-radius: 4px;`                | border-radius: 4px
+)                                     |
+                                      |
+------------------------------------------------------------------------
 ```
 
-Generated CSS:
+A subclass can **redefine any styles it inherits** from its superclass:
 
-```css
-form[class="form"] > span[class="form__error"] {
-  display: none;
-}
-
-form[class="form form--withError"] > span[class="form__error"] {
-  display: block /* (original value: none) */;
-  color: indianred;
-}
+```
+------------------------------------------------------------------------
+Subclass                              | Applied Styles
+------------------------------------------------------------------------
+                                      |
+createStyle(                          | /* inherited styles */
+  "form",                             | padding: 20px
+  {                                   | border: 1px solid lightgray
+    className: "baseForm.loginForm"   |
+  },                                  | /* redefined styles */
+  'background: cornflowerblue;'       | background: cornflowerblue
+)                                     |
+                                      |
+------------------------------------------------------------------------
 ```

@@ -1,13 +1,21 @@
-## Compile-time Errors
+## Compile Time Errors
 
-### :warning: Unknown Attribute
+Immutable Styles are compiled from JavaScript to CSS (using the method `createCSS`). The library ships with a friendly compiler that helps assist development, rather than bark at you. If the compiler finds an error, such as a CSS override the compilation process is terminated and an error is thrown.
 
-When an unknown attribute is found, for example:
+Each error is documented below including the problem code and the error thrown.
 
-```jsx
-<p foo="invalidAttr">
- font-size: 20px;
-</p>
+### Unknown Attribute
+
+When an unknown attribute is found:
+
+```js
+createStyle(
+  "p",
+  {
+    foo: "invalidAttr"
+  },
+  'font-size: 20px;'
+)
 ```
 
 Throws:
@@ -24,16 +32,20 @@ Only the following attributes are permitted:
   className, minWidth, maxWidth, pseudo
 ```
 
-### :warning: Duplicate CSS Property
+### Duplicate CSS Property
 
 When a CSS property is defined more than once in same block.
 
-```jsx
-<h1 className="title">
- color: darkslategray;
- font-size: 20px;
- color: burlywood;
-</h1>
+```js
+createStyle(
+  "h1",
+  {
+    className: "title"
+  },
+  `color: darkslategray;
+  font-size: 20px;
+  color: burlywood;`
+)
 ```
 
 Throws:
@@ -46,21 +58,32 @@ Throws:
   color: burlywood;
 ```
 
-### :warning: Override Found
+### Override Found
 
 When one style overrides another style.
 
-```jsx
-<p className="child">
- color: darksalmon;
-</p>,
-
-<div className="parent">
- <p className="child">
-  font-size: 10px;
-  color: lightsalmon;
- </p>
-</div>
+```js
+createStyle(
+  "p",
+  {
+    className: "child"
+  },
+  'color: darksalmon;'
+),
+createStyle(
+  "div",
+  {
+    className: "parent"
+  },
+  createStyle(
+    "p",
+    {
+      className: "child"
+    },
+    `font-size: 10px;
+    color: lightsalmon;`
+  )
+)
 ```
 
 Throws:
@@ -80,17 +103,25 @@ Overriding styles ("div.parent p.child"):
 The "color" of "p.child" cannot be overridden
 ```
 
-### :warning: Nested Media Query
+### Nested Media Query
 
 When a media query is nested inside another media query.
 
-```jsx
-<footer minWidth="900">
- padding: 0 30px;
- <p minWidth="300">
-  font-size: 12px;
- </p>
-</footer>
+```js
+createStyle(
+  "footer",
+  {
+    minWidth: 900
+  },
+  'padding: 0 30px;',
+  createStyle(
+    "p",
+    {
+      minWidth: 300
+    },
+    'font-size: 12px;'
+  )
+)
 ```
 
 Throws:
@@ -107,14 +138,18 @@ Inner media query ("footer p"):
   min-width of 300
 ```
 
-### :warning: Unknown Base Class
+### Unknown Base Class
 
 When a subclass extends a superclass that hasn't been defined.
 
-```jsx
-<div className="baseClass.subClass">
- padding: 30px;
-</div>
+```js
+createStyle(
+  "div",
+  {
+    className: "baseClass.subClass"
+  },
+  'padding: 30px;'
+)
 ```
 
 Throws:
@@ -127,14 +162,18 @@ Occurrence found:
   "div.baseClass.subClass"
 ```
 
-### :warning: Element Property Mismatch
+### Element Property Mismatch
 
-When an element uses a whitelisted CSS property.
+Immutable Styles does not allow child elements to inherit styles from parent elements. This means inheritable CSS properties can only be applied directly to a given element. Otherwise it wouldn't be possible for the compiler to detect a child element overriding an inherited style.
 
-```jsx
-<div>
- font-size: 20px;
-</div>
+The usage of inheritable CSS properties are whitelisted to certain elements, for example `font-size` can be used by a `p` but not a `div`:
+
+```js
+createStyle(
+  "div",
+  null,
+  'font-size: 20px;'
+)
 ```
 
 Throws:
