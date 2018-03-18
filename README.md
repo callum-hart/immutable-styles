@@ -137,7 +137,7 @@ Technically yes, but I think it needs better tooling first.
 
 ### Have any websites been built without overrides?
 
-Yes. Immutable Styles evolved from an earlier open-source project of mine called [mono](). As part of monos R&D I built three proof of concept websites without any CSS overrides. You can see them [here](), [here]() and [here]().
+Yes. Immutable Styles evolved from an earlier open-source project of mine called [mono](https://callum-hart.gitbooks.io/mono/). As part of monos R&D I built three proof of concept websites without any CSS overrides. You can see them [here](https://callum-hart.github.io/mono/examples/facebook/facebook.html), [here](https://callum-hart.github.io/mono/examples/youtube/youtube.html) and [here](https://callum-hart.github.io/mono/examples/youtube/youtube.html?theme=dark).
 
 ### Can I Contribute?
 
