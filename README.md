@@ -10,8 +10,8 @@
     <a href="https://github.com/callum-hart/immutable-styles/blob/master/docs/features.md">Features</a> |
     <a href="https://github.com/callum-hart/immutable-styles/blob/master/docs/compileTimeErrors.md">Compile Time Errors</a> |
     <a href="https://github.com/callum-hart/immutable-styles/blob/master/docs/singleInheritanceModel.md">Single Inheritance Model</a> |
-    <a href="#install">FAQ</a> |
-    <a href="#install">Licence</a>
+    <a href="#faq">FAQ</a> |
+    <a href="#licence">Licence</a>
   </sub>
 </p>
 
