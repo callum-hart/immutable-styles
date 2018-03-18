@@ -31,7 +31,7 @@ If you have ever encountered styles that were neither expected nor desired you p
 - c) Styles overriding other styles
 - d) Elements inheriting undesirable styles
 
-As the name suggests the library uses immutability to help remove these side effects. With Immutable Styles all CSS rules are immutable. An immutable style cannot change once created, which means it can **never** be overridden. This alone solves a, b and c (we will see the solution to d later).
+As the name suggests the library uses immutability to help remove these side effects. With Immutable Styles all CSS rules are immutable. An immutable rule cannot change once created, which means it can **never** be overridden. This alone solves a, b and c (we will see the solution to d later).
 
 ## The case for Immutable Styles
 
@@ -141,7 +141,7 @@ Yes. Immutable Styles evolved from an earlier open-source project of mine called
 
 ### Can I Contribute?
 
-YES. The project is very welcome to feedback, fresh perspectives, feature requests, pull requests, and of course, contributors 🙂
+Absolutely. The project is very welcome to feedback, fresh perspectives, feature requests, pull requests, and of course, contributors 🙂
 
 ## Roadmap
 
@@ -149,7 +149,7 @@ YES. The project is very welcome to feedback, fresh perspectives, feature reques
 - Integrations / plugins with build tools
 - Seemless usage with JSX (`createStyle` can be mapped to JSX in the same way `createElement` does in React)
 - Better error messages that include file & line number
-- Allow modules to expose styles that can be changed at compile-time (similar to single inheritance model)
+- Allow modules to expose styles that can be redefined at compile-time (similar to single inheritance model)
 - Runtime validations during development
 - `createCSS` should also accept an object (currently assumes param is always an array)
 
