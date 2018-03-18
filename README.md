@@ -83,7 +83,7 @@ createStyle(element, attrs, ...children)
 
 - **Description:**
 
-...Creates and returns the AST for an Immutable Style. This is the equivalent of a CSS rule-set.
+  Creates and returns the AST for an Immutable Style. This is the equivalent of a CSS rule-set.
 
 - **Parameters:**
   - `element`: The HTML tag name, for example "div".
@@ -95,7 +95,7 @@ createStyle(element, attrs, ...children)
   - `children`: Styles for the current element and/or nested child elements.
 - **Returns:**
 
-...An object representing the Immutable Styles AST.
+  An object representing the Immutable Styles AST.
 
 ### createCSS
 
@@ -105,13 +105,13 @@ createCSS(styles)
 
 - **Description:**
 
-...Takes the object returned from `createStyle` and turns it into CSS.
+  Takes the object returned from `createStyle` and turns it into CSS.
 
 - **Parameters:**
   - `styles`: The result returned from `createStyle`.
 - **Returns:**
 
-...Semantic CSS (version 2.1 and up).
+  Semantic CSS (version 2.1 and up).
 
 ## FAQ
 
