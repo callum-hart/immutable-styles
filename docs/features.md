@@ -53,7 +53,7 @@ createStyle(
 )
 ```
 
-Or use an existing library such as [polished-styles](https://github.com/styled-components/polished):
+Or use a library such as [polished-styles](https://github.com/styled-components/polished):
 
 ```js
 const { lighten } = require('polished');
