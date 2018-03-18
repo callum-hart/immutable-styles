@@ -4,14 +4,14 @@
 </p>
 <p align="center">
   <sub>
-    <a href="">Install</a> |
-    <a href="">Usage</a> |
-    <a href="">Syntax</a> |
-    <a href="">Features</a> |
-    <a href="">Compile Time Errors</a> |
-    <a href="">Single Inheritance Model</a> |
-    <a href="">FAQ</a> |
-    <a href="">Licence</a>
+    <a href="#install">Install</a> |
+    <a href="#api">API</a> |
+    <a href="https://github.com/callum-hart/immutable-styles/blob/master/docs/syntax.md">Syntax</a> |
+    <a href="https://github.com/callum-hart/immutable-styles/blob/master/docs/features.md">Features</a> |
+    <a href="https://github.com/callum-hart/immutable-styles/blob/master/docs/compileTimeErrors.md">Compile Time Errors</a> |
+    <a href="https://github.com/callum-hart/immutable-styles/blob/master/docs/singleInheritanceModel.md">Single Inheritance Model</a> |
+    <a href="#install">FAQ</a> |
+    <a href="#install">Licence</a>
   </sub>
 </p>
 
@@ -73,9 +73,7 @@ Then require it in any module:
 const { createStyle, createCSS } = require('immutable-styles');
 ```
 
-## Usage
-
-Immutable Styles are written using functions. They are represented using the same data structure as the DOM - a tree. The library exposes two methods:
+## API
 
 ### createStyle
 

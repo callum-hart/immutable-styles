@@ -35,6 +35,8 @@ createStyle(
 
 ### Mixins
 
+You can create your own:
+
 ```js
 function borderRadius(radius) {
   return `
@@ -48,6 +50,18 @@ createStyle(
   "button",
   null,
   `padding: 10px 20px; ${borderRadius('4px')}`
+)
+```
+
+Or use an existing library such as [polished-styles](https://github.com/styled-components/polished):
+
+```js
+const { lighten } = require('polished');
+
+createStyle(
+  "p",
+  null,
+  `color: ${lighten(0.3, '#000000')}`
 )
 ```
 
@@ -73,4 +87,10 @@ createStyle(
 )
 ```
 
-If Immutable Styles were compiled server-side - and of course architecture permitting - additional features such as: conditional styles based on experiments, styles specific to locale, and even styles based on different component versioning would be possible.
+### Server-Side
+
+Compiling Immutable Styles server-side (and of course architecture permitting) would enable more features such as:
+
+- Styles based on experiments
+- Styles specific to locale
+- Styles specific to platform

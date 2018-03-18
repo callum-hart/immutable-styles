@@ -1,6 +1,8 @@
 ## Syntax
 
-A simple rule-set:
+Immutable Styles are written using functions, and are represented using a [tree](https://en.wikipedia.org/wiki/Tree_(data_structure)) (the same data structure as the DOM).
+
+### A simple rule-set:
 
 ```
 --------------------------------------------------------
@@ -16,7 +18,7 @@ createStyle(              |
 --------------------------------------------------------
 ```
 
-A rule-set with attributtes:
+### A rule-set with attributtes:
 
 ```
 --------------------------------------------------------
@@ -35,7 +37,7 @@ createStyle(              |
 --------------------------------------------------------
 ```
 
-A rule-set with child element:
+### A rule-set with child element:
 
 ```
 --------------------------------------------------------
@@ -60,7 +62,7 @@ createStyle(              |
 --------------------------------------------------------
 ```
 
-A rule-set with media query:
+### A rule-set with media query:
 
 ```
 --------------------------------------------------------
