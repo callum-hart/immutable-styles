@@ -89,7 +89,7 @@ createStyle(
 
 ### Server-Side
 
-Compiling Immutable Styles server-side (and of course architecture permitting) would enable more features such as:
+Compiling Immutable Styles server-side (and of course infrastructure permitting) would enable more features such as:
 
 - Styles based on experiments
 - Styles specific to locale
