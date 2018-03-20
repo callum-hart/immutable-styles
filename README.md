@@ -37,7 +37,7 @@ As the name suggests the library uses immutability to help remove these side eff
 
 Those familiar with CSS will have heard the term "winning style"; in which CSS rules compete against one another. Importance, specificity and cascade decide which styles win via overrides.
 
-Much of what makes CSS development difficult is ensuring the styles we want, win; and the styles we don’t want, lose. Anytime we edit a CSS file we risk changing the conditions that influence which override wins. This makes CSS incredibly fragile and unpredictable.
+Much of what makes CSS development difficult is ensuring the styles we want, win; and the styles we don’t want, lose. Anytime we edit a CSS file we risk changing the conditions that influence which overrides win. This makes CSS incredibly fragile and unpredictable.
 
 Overrides make CSS **fragile** since what they rely on (importance, specificity, and cascade) are all vulnerable to change. Changes to HTML structure and attributes (classes) can introduce previously non-existent overrides.
 
@@ -137,7 +137,7 @@ Technically yes, but I think it needs better tooling first.
 
 ### Have any websites been built without overrides?
 
-Yes. Immutable Styles evolved from an earlier open-source project of mine called [mono](https://callum-hart.gitbooks.io/mono/). As part of monos R&D I built three proof of concept websites without any CSS overrides:
+Yes. Immutable Styles evolved from an earlier open-source project of mine called [mono](https://callum-hart.gitbooks.io/mono/). As part of monos R&D I built three websites without using any CSS overrides:
 
 | Facebook | YouTube | YouTube (Dark) |
 | --- | --- | --- |
