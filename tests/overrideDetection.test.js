@@ -211,15 +211,13 @@ test('Override not found when equal child nodes have different parent', () => {
 
 
 test('Override found in same rule-set', () => {
-  const input = [
-    createStyle(
-      'h1',
-      {
-        className: 'pageTitle'
-      },
-      'font-family: "Fira Code"; font-size: 30px; font-weight: bold; font-size: 20px;'
-    )
-  ];
+  const input = createStyle(
+    'h1',
+    {
+      className: 'pageTitle'
+    },
+    'font-family: "Fira Code"; font-size: 30px; font-weight: bold; font-size: 20px;'
+  );
 
   const overrideNotFound = () => createCSS(input);
   expect(overrideNotFound).toThrow('The CSS property `font-size` is defined twice by `h1.pageTitle`');
@@ -228,16 +226,13 @@ test('Override found in same rule-set', () => {
 
 test('Override found in detached CSS rule-set', () => {
   const headingStyles = 'font-family: "Fira Code"; font-size: 30px; font-weight: bold;';
-
-  const input = [
-    createStyle(
-      'h1',
-      {
-        className: 'pageTitle'
-      },
-      `${headingStyles} font-size: 20px;`
-    )
-  ];
+  const input = createStyle(
+    'h1',
+    {
+      className: 'pageTitle'
+    },
+    `${headingStyles} font-size: 20px;`
+  );
 
   const overrideNotFound = () => createCSS(input);
   expect(overrideNotFound).toThrow('The CSS property `font-size` is defined twice by `h1.pageTitle`');

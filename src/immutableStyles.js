@@ -57,7 +57,12 @@ function attrsValid(attrs) {
 }
 
 function createCSS(styles) {
-  styles.forEach(block => parseStyles(block));
+  if (Array.isArray(styles)) {
+    styles.forEach(block => parseStyles(block));
+  } else {
+    parseStyles(styles);
+  }
+
   parseAst();
   return makeCSS();
 }

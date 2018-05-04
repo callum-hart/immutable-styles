@@ -12,15 +12,13 @@ beforeEach(() => tearDown());
 
 
 test('[createCSS] Single node', () => {
-  const input = [
-    createStyle(
-      'h1',
-      {
-        className: 'pageTitle'
-      },
-      'font-size: 30px;'
-    )
-  ];
+  const input = createStyle(
+    'h1',
+    {
+      className: 'pageTitle'
+    },
+    'font-size: 30px;'
+  );
 
   const output = `h1[class="pageTitle"] {
   font-size: 30px;
@@ -172,16 +170,14 @@ nav[class="navBar"] > ul[class="navLinks"] > li[class="navLink"] {
 
 
 test('[createCSS] Media min-width', () => {
-  const input = [
-    createStyle(
-      'section',
-      {
-        className: 'sideBar',
-        minWidth: 900
-      },
-      'display: block;'
-    )
-  ];
+  const input = createStyle(
+    'section',
+    {
+      className: 'sideBar',
+      minWidth: 900
+    },
+    'display: block;'
+  );
 
   const output = `@media (min-width:900px) {
   section[class="sideBar"] {
@@ -195,16 +191,14 @@ test('[createCSS] Media min-width', () => {
 
 
 test('[createCSS] Media max-width', () => {
-  const input = [
-    createStyle(
-      'section',
-      {
-        className: 'sideBar',
-        maxWidth: 899
-      },
-      'display: none;'
-    )
-  ];
+  const input = createStyle(
+    'section',
+    {
+      className: 'sideBar',
+      maxWidth: 899
+    },
+    'display: none;'
+  );
 
   const output = `@media (max-width:899px) {
   section[class="sideBar"] {
@@ -218,17 +212,15 @@ test('[createCSS] Media max-width', () => {
 
 
 test('[createCSS] Media min-width and max-width', () => {
-  const input = [
-    createStyle(
-      'h1',
-      {
-        className: 'pageTitle',
-        minWidth: 768,
-        maxWidth: 1024
-      },
-      'font-size: 26px;'
-    )
-  ];
+  const input = createStyle(
+    'h1',
+    {
+      className: 'pageTitle',
+      minWidth: 768,
+      maxWidth: 1024
+    },
+    'font-size: 26px;'
+  );
 
   const output = `@media (min-width:768px) and (max-width:1024px) {
   h1[class="pageTitle"] {
@@ -242,13 +234,11 @@ test('[createCSS] Media min-width and max-width', () => {
 
 
 test('[createCSS] Node without attributes', () => {
-  const input = [
-    createStyle(
-      'p',
-      null,
-      'color: darkslategray;'
-    )
-  ];
+  const input = createStyle(
+    'p',
+    null,
+    'color: darkslategray;'
+  );
 
   const output = `p:not([class]) {
   color: darkslategray;
@@ -260,14 +250,12 @@ test('[createCSS] Node without attributes', () => {
 
 
 test('[createCSS] Node without styles', () => {
-  const input = [
-    createStyle(
-      'div',
-      {
-        className: 'titleBar'
-      }
-    )
-  ];
+  const input = createStyle(
+    'div',
+    {
+      className: 'titleBar'
+    }
+  );
 
   const output = '';
 
@@ -276,12 +264,10 @@ test('[createCSS] Node without styles', () => {
 
 
 test('[createCSS] Node without attributes or styles', () => {
-  const input = [
-    createStyle(
-      'div',
-      null
-    )
-  ];
+  const input = createStyle(
+    'div',
+    null
+  );
 
   const output = '';
 

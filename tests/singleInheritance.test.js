@@ -236,15 +236,13 @@ form[class="baseForm subForm"] > input:not([class]) {
 
 
 test('[composition] Cannot extend a non-existent base-class', () => {
-  const input = [
-    createStyle(
-      'div',
-      {
-        className: 'modal.subModal'
-      },
-      ''
-    )
-  ];
+  const input = createStyle(
+    'div',
+    {
+      className: 'modal.subModal'
+    },
+    ''
+  );
 
   const unknownBaseClass = () => createCSS(input);
   expect(unknownBaseClass).toThrow('The base class `div.modal` does not exist');
