@@ -18,7 +18,7 @@ const MEDIA_UNIT        = 'px';
 const AST = new Map();
 
 
-const createStyle = (element, attrs, ...children) => {
+function createStyle(element, attrs, ...children) {
   if (attrsValid(attrs)) {
     let styles = BLANK;
     const childNodes = [];
@@ -41,7 +41,7 @@ const createStyle = (element, attrs, ...children) => {
   }
 }
 
-const attrsValid = attrs => {
+function attrsValid(attrs) {
   if (attrs) {
     const permittedAttrs = ['className', 'minWidth', 'maxWidth', 'pseudo'];
 
@@ -56,13 +56,13 @@ const attrsValid = attrs => {
   return true;
 }
 
-const createCSS = (styles) => {
+function createCSS(styles) {
   styles.forEach(block => parseStyles(block));
   parseAst();
   return makeCSS();
 }
 
-const parseStyles = (block, parentRef = null, inheritedMedia = null) => {
+function parseStyles(block, parentRef = null, inheritedMedia = null) {
   const ref = makeRef(block);
   const fullyQualifiedRef = parentRef ? `${parentRef}${SPACE}${ref}` : ref;
   const { minWidth, maxWidth, className } = block.attrs;
@@ -118,7 +118,7 @@ const parseStyles = (block, parentRef = null, inheritedMedia = null) => {
   }
 }
 
-const cloneBaseStyles = (baseRef, clonedRef) => {
+function cloneBaseStyles(baseRef, clonedRef) {
   for (var ref of AST.keys()) {
     // thought: could potentially clone all styles that include (not just start with) baseRef
     // i.e: `div.container form.base-form` => `div.container form.base-form.base-form--saving`
@@ -133,7 +133,7 @@ const cloneBaseStyles = (baseRef, clonedRef) => {
   }
 }
 
-const isSubclass = (parentRef, className) => {
+function isSubclass(parentRef, className) {
   // for now only support inheritance for:
   //  - top level nodes
   //  - single inheritance
@@ -142,7 +142,7 @@ const isSubclass = (parentRef, className) => {
          className.includes(DOT);
 }
 
-const parseAst = () => {
+function parseAst() {
   for (var ref of AST.keys()) {
     const paths = ref.split(SPACE);
     let i = paths.length - 1;
@@ -171,7 +171,7 @@ const parseAst = () => {
   }
 }
 
-const makeCSS = () => {
+function makeCSS() {
   let CSS = BLANK;
 
   for (var ref of AST.keys()) {
@@ -208,7 +208,7 @@ const makeCSS = () => {
   return CSS;
 }
 
-const saveRef = (ref, {element, attrs, styles}) => {
+function saveRef(ref, {element, attrs, styles}) {
   if (stylesValid(ref, element, styles)) {
     if (AST.has(ref)) {
       // ref already exists
@@ -235,12 +235,12 @@ const saveRef = (ref, {element, attrs, styles}) => {
   }
 }
 
-const stylesValid = (ref, element, styles) => {
+function stylesValid(ref, element, styles) {
   return elementCanUseProperty(ref, element, styles) &&
          propertiesAreUnique(ref, element, styles);
 }
 
-const elementCanUseProperty = (ref, element, styles) => {
+function elementCanUseProperty(ref, element, styles) {
   propertyWhitelist.forEach(({elements, properties}) => {
     const whitelistedProperty = properties.find(property => styles.includes(property));
 
@@ -253,7 +253,7 @@ const elementCanUseProperty = (ref, element, styles) => {
   return true;
 }
 
-const propertiesAreUnique = (ref, element, styles) => {
+function propertiesAreUnique(ref, element, styles) {
   try {
     stylesAsMap(styles, ref);
   } catch (e) {
@@ -263,7 +263,7 @@ const propertiesAreUnique = (ref, element, styles) => {
   return true;
 }
 
-const saveNewStyleForExistingRef = (newStyle, ref) => {
+function saveNewStyleForExistingRef(newStyle, ref) {
   AST.get(ref).forEach(existingStyle => {
     try {
       areStylesUnique(existingStyle, newStyle);
@@ -276,7 +276,7 @@ const saveNewStyleForExistingRef = (newStyle, ref) => {
   AST.get(ref).push(newStyle); // save styles
 }
 
-const mergeNewStyleWithEquivalentStyle = (newStyle, equivalentStyle) => {
+function mergeNewStyleWithEquivalentStyle(newStyle, equivalentStyle) {
   const newStyles = stylesAsMap(newStyle.styles);
   const equivalentStyles = stylesAsMap(equivalentStyle.styles);
 
@@ -293,7 +293,7 @@ const mergeNewStyleWithEquivalentStyle = (newStyle, equivalentStyle) => {
   equivalentStyle.styles = stylesToString(equivalentStyles);
 }
 
-const createStyleEntry = (styles, {minWidth, maxWidth}) => {
+function createStyleEntry(styles, {minWidth, maxWidth}) {
   return {
     styles,
     minWidth: minWidth ? minWidth : ZERO,
@@ -302,7 +302,7 @@ const createStyleEntry = (styles, {minWidth, maxWidth}) => {
 }
 
 // todo: needs to handle short-hands (margin vs margin-top) or validate against short-hand usage
-const areStylesUnique = (control, comparison) => {
+function areStylesUnique(control, comparison) {
   if (breakpointsOverlap(control, comparison)) {
     for (var property of stylesAsMap(comparison.styles).keys()) {
       if (stylesAsMap(control.styles).get(property)) {
@@ -321,7 +321,7 @@ const areStylesUnique = (control, comparison) => {
   return true;
 }
 
-const breakpointsOverlap = (controlRange, comparisonRange) => {
+function breakpointsOverlap(controlRange, comparisonRange) {
   const rangeBelow = (comparisonRange.minWidth < controlRange.minWidth) &&
                      (comparisonRange.maxWidth < controlRange.minWidth);
   const rangeAbove = (comparisonRange.minWidth > controlRange.maxWidth) &&
@@ -334,7 +334,7 @@ const breakpointsOverlap = (controlRange, comparisonRange) => {
   }
 }
 
-const stylesAsMap = (stylesAsString, ref = null) => {
+function stylesAsMap(stylesAsString, ref = null) {
   const styles = new Map();
 
   stylesAsString.split(SEMI_COLON)
@@ -354,61 +354,54 @@ const stylesAsMap = (stylesAsString, ref = null) => {
   return styles;
 }
 
-const stylesToString = stylesAsMap => {
-  let styles = BLANK;
-
-  stylesAsMap.forEach((value, property) => {
-    styles += `${property}${COLON}${value}${SEMI_COLON}`;
-  });
-
-  return styles;
+function stylesToString(stylesAsMap) {
+  return [...stylesAsMap].reduce((acc, [property, value]) => {
+    return acc += `${property}${COLON}${value}${SEMI_COLON}`;
+  }, BLANK);
 }
 
-const makeRef = ({element, attrs}) => {
+function makeRef({element, attrs}) {
   const { className, pseudo } = attrs;
 
   return element.concat(className ? `${DOT}${className}` : BLANK)
                 .concat(pseudo ? pseudo : BLANK);
 }
 
-const makeSelectorFromRef = ref => {
-  const finalSelector = [];
+function makeSelectorFromRef(ref) {
+  return ref.split(SPACE)
+    .reduce((acc, selector) => {
+      let pseudoSelector = BLANK;
 
-  ref.split(SPACE).forEach(part => {
-    let selector = part;
-    let pseudoSelector = BLANK;
-
-    if (selector.includes(COLON)) {
-      pseudoSelector = selector.match(/:.+/)[0];
-      selector = selector.replace(pseudoSelector, BLANK);
-    }
-
-    if (selector.includes(DOT)) {
-      const isSubclass = selector.split(DOT).length === 3; // [element, baseClass, subClass]
-
-      if (isSubclass) {
-        finalSelector.push(`${makeSubclassSelector(selector)}${pseudoSelector}`);
-      } else {
-        finalSelector.push(`${makeClassSelector(selector)}${pseudoSelector}`);
+      if (selector.includes(COLON)) {
+        pseudoSelector = selector.match(/:.+/)[0];
+        selector = selector.replace(pseudoSelector, BLANK);
       }
-    } else {
-      finalSelector.push(`${makeTagOnlySelector(selector)}${pseudoSelector}`);
-    }
-  });
 
-  return(finalSelector.join(`${SPACE}${CHILD_COMBINATOR}${SPACE}`));
+      if (selector.includes(DOT)) {
+        const isSubclass = selector.split(DOT).length === 3; // [element, baseClass, subClass]
+
+        if (isSubclass) {
+          return acc.concat(`${makeSubclassSelector(selector)}${pseudoSelector}`);
+        } else {
+          return acc.concat(`${makeClassSelector(selector)}${pseudoSelector}`);
+        }
+      } else {
+        return acc.concat(`${makeTagOnlySelector(selector)}${pseudoSelector}`);
+      }
+    }, [])
+    .join(`${SPACE}${CHILD_COMBINATOR}${SPACE}`);
 }
 
-const makeTagOnlySelector = element => {
+function makeTagOnlySelector(element) {
   return `${element}:not([class])`;
 }
 
-const makeClassSelector = elementWithClass => {
+function makeClassSelector(elementWithClass) {
   const [element, cssClass] = elementWithClass.split(DOT);
   return `${element}[class="${cssClass}"]`;
 }
 
-const makeSubclassSelector = elementWithSubclass => {
+function makeSubclassSelector(elementWithSubclass) {
   const [element, baseClass, subClass] = elementWithSubclass.split(DOT);
   return `${element}[class="${baseClass}${SPACE}${subClass}"]`;
 }
@@ -421,7 +414,7 @@ class ErrorWithData {
 }
 
 // for testing
-const tearDown = () => {
+function tearDown() {
   AST.clear();
 }
 
