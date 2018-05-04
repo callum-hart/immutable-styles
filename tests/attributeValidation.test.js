@@ -2,14 +2,14 @@
  Testing attributes are validated
 */
 
-const ImmutableStyles = require('../src/immutableStyles');
+const { createStyle, tearDown } = require('../src/immutableStyles');
 
-beforeEach(() => ImmutableStyles.tearDown());
+beforeEach(() => tearDown());
 
 
 test('[Attr Validation] Invalid attribute found', () => {
   const invalidAttr = () => {
-    ImmutableStyles.createStyle(
+    createStyle(
       'h1',
       {
         id: 'anElementID'
@@ -24,7 +24,7 @@ test('[Attr Validation] Invalid attribute found', () => {
 
 test('[Attr Validation] Node without attributes is valid', () => {
   const invalidAttr = () => {
-    ImmutableStyles.createStyle(
+    createStyle(
       'h1',
       null,
       'font-size: 30px;'
@@ -37,7 +37,7 @@ test('[Attr Validation] Node without attributes is valid', () => {
 
 test('[Attr Validation] Node with className is valid', () => {
   const invalidAttr = () => {
-    ImmutableStyles.createStyle(
+    createStyle(
       'h1',
       {
         className: 'heading'
@@ -52,7 +52,7 @@ test('[Attr Validation] Node with className is valid', () => {
 
 test('[Attr Validation] Node with minWidth is valid', () => {
   const invalidAttr = () => {
-    ImmutableStyles.createStyle(
+    createStyle(
       'h1',
       {
         minWidth: 360
@@ -67,7 +67,7 @@ test('[Attr Validation] Node with minWidth is valid', () => {
 
 test('[Attr Validation] Node with maxWidth is valid', () => {
   const invalidAttr = () => {
-    ImmutableStyles.createStyle(
+    createStyle(
       'h1',
       {
         maxWidth: 900
@@ -82,7 +82,7 @@ test('[Attr Validation] Node with maxWidth is valid', () => {
 
 test('[Attr Validation] Node with pseudo selector is valid', () => {
   const invalidAttr = () => {
-    ImmutableStyles.createStyle(
+    createStyle(
       'a',
       {
         pseudo: ':hover'
@@ -97,7 +97,7 @@ test('[Attr Validation] Node with pseudo selector is valid', () => {
 
 test('[Attr Validation] Node with multiple attributes is valid', () => {
   const invalidAttr = () => {
-    ImmutableStyles.createStyle(
+    createStyle(
       'a',
       {
         className: 'link',

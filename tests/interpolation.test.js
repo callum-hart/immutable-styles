@@ -2,15 +2,15 @@
  Testing interpolation for things such as variables, detached rule-sets.
 */
 
-const ImmutableStyles = require('../src/immutableStyles');
+const { createStyle, tearDown } = require('../src/immutableStyles');
 
-beforeEach(() => ImmutableStyles.tearDown());
+beforeEach(() => tearDown());
 
 
 test('[interpolation] Variable used by class name', () => {
   const dynamicClass = 'pageSubTitle';
 
-  const input = ImmutableStyles.createStyle(
+  const input = createStyle(
     'h2',
     {
       className: `${dynamicClass}`
@@ -34,7 +34,7 @@ test('[interpolation] Variable used by class name', () => {
 test('[interpolation] Variable used by element type', () => {
   const elementType = 'div';
 
-  const input = ImmutableStyles.createStyle(
+  const input = createStyle(
     `${elementType}`,
     {
       className: 'grid'
@@ -58,7 +58,7 @@ test('[interpolation] Variable used by element type', () => {
 test('[interpolation] Variable used by property name', () => {
   const property = 'font-size';
 
-  const input = ImmutableStyles.createStyle(
+  const input = createStyle(
     'h1',
     {
       className: 'pageTitle'
@@ -82,7 +82,7 @@ test('[interpolation] Variable used by property name', () => {
 test('[interpolation] Variable used by property value', () => {
   const headingSize = '30px';
 
-  const input = ImmutableStyles.createStyle(
+  const input = createStyle(
     'h1',
     {
       className: 'pageTitle'
@@ -106,7 +106,7 @@ test('[interpolation] Variable used by property value', () => {
 test('[interpolation] Detached CSS rule-set', () => {
   const headingStyles = 'font-family: "Fira Code"; font-size: 30px; font-weight: bold;';
 
-  const input = ImmutableStyles.createStyle(
+  const input = createStyle(
     'h1',
     {
       className: 'pageTitle'

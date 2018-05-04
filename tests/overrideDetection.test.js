@@ -2,21 +2,25 @@
  Testing override detection among immutable styles
 */
 
-const ImmutableStyles = require('../src/immutableStyles');
+const {
+  createStyle,
+  createCSS,
+  tearDown
+} = require('../src/immutableStyles');
 
-beforeEach(() => ImmutableStyles.tearDown());
+beforeEach(() => tearDown());
 
 
 test('Override found from adjacent node', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'h1',
       {
         className: 'pageTitle'
       },
       'font-size: 30px;'
     ),
-    ImmutableStyles.createStyle(
+    createStyle(
       'h1',
       {
         className: 'pageTitle'
@@ -25,27 +29,27 @@ test('Override found from adjacent node', () => {
     )
   ];
 
-  const overrideFound = () => ImmutableStyles.createCSS(input);
+  const overrideFound = () => createCSS(input);
   expect(overrideFound).toThrow('Override found. The property `font-size` has already been defined');
 });
 
 
 test('Override found from child node', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'h1',
       {
         className: 'pageTitle'
       },
       'font-size: 30px;'
     ),
-    ImmutableStyles.createStyle(
+    createStyle(
       'div',
       {
         className: 'titleBar'
       },
       '',
-      ImmutableStyles.createStyle(
+      createStyle(
         'h1',
         {
           className: 'pageTitle'
@@ -55,20 +59,20 @@ test('Override found from child node', () => {
     )
   ];
 
-  const overrideFound = () => ImmutableStyles.createCSS(input);
+  const overrideFound = () => createCSS(input);
   expect(overrideFound).toThrow('Override found. The property `font-size` has already been defined');
 });
 
 
 test('Override found from adjacent child nodes', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'div',
       {
         className: 'parent'
       },
       '',
-      ImmutableStyles.createStyle(
+      createStyle(
         'span',
         {
           className: 'child'
@@ -76,13 +80,13 @@ test('Override found from adjacent child nodes', () => {
         'color: cadetblue;'
       )
     ),
-    ImmutableStyles.createStyle(
+    createStyle(
       'div',
       {
         className: 'parent'
       },
       '',
-      ImmutableStyles.createStyle(
+      createStyle(
         'span',
         {
           className: 'child'
@@ -92,19 +96,19 @@ test('Override found from adjacent child nodes', () => {
     )
   ];
 
-  const overrideFound = () => ImmutableStyles.createCSS(input);
+  const overrideFound = () => createCSS(input);
   expect(overrideFound).toThrow('Override found. The property `color` has already been defined');
 });
 
 
 test('Override not found when elements are not equal', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'h1',
       null,
       'font-size: 30px;'
     ),
-    ImmutableStyles.createStyle(
+    createStyle(
       'h1',
       {
         className: 'pageTitle'
@@ -113,14 +117,14 @@ test('Override not found when elements are not equal', () => {
     )
   ];
 
-  const overrideNotFound = () => ImmutableStyles.createCSS(input);
+  const overrideNotFound = () => createCSS(input);
   expect(overrideNotFound).not.toThrow();
 });
 
 
 test('Override found when breakpoints are indiscrete', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'section',
       {
         className: 'sideBar',
@@ -128,7 +132,7 @@ test('Override found when breakpoints are indiscrete', () => {
       },
       'display: block;'
     ),
-    ImmutableStyles.createStyle(
+    createStyle(
       'section',
       {
         className: 'sideBar',
@@ -138,14 +142,14 @@ test('Override found when breakpoints are indiscrete', () => {
     )
   ];
 
-  const overrideFound = () => ImmutableStyles.createCSS(input);
+  const overrideFound = () => createCSS(input);
   expect(overrideFound).toThrow('Override found. The property `display` has already been defined');
 });
 
 
 test('Override not found when breakpoints are discrete', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'section',
       {
         className: 'sideBar',
@@ -154,7 +158,7 @@ test('Override not found when breakpoints are discrete', () => {
       },
       'display: block;'
     ),
-    ImmutableStyles.createStyle(
+    createStyle(
       'section',
       {
         className: 'sideBar',
@@ -164,20 +168,20 @@ test('Override not found when breakpoints are discrete', () => {
     )
   ];
 
-  const overrideNotFound = () => ImmutableStyles.createCSS(input);
+  const overrideNotFound = () => createCSS(input);
   expect(overrideNotFound).not.toThrow();
 });
 
 
 test('Override not found when equal child nodes have different parent', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'div',
       {
         className: 'parentOne'
       },
       '',
-      ImmutableStyles.createStyle(
+      createStyle(
         'span',
         {
           className: 'child'
@@ -185,13 +189,13 @@ test('Override not found when equal child nodes have different parent', () => {
         'color: cadetblue;'
       )
     ),
-    ImmutableStyles.createStyle(
+    createStyle(
       'div',
       {
         className: 'parentTwo'
       },
       '',
-      ImmutableStyles.createStyle(
+      createStyle(
         'span',
         {
           className: 'child'
@@ -201,14 +205,14 @@ test('Override not found when equal child nodes have different parent', () => {
     )
   ];
 
-  const overrideNotFound = () => ImmutableStyles.createCSS(input);
+  const overrideNotFound = () => createCSS(input);
   expect(overrideNotFound).not.toThrow();
 });
 
 
 test('Override found in same rule-set', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'h1',
       {
         className: 'pageTitle'
@@ -217,7 +221,7 @@ test('Override found in same rule-set', () => {
     )
   ];
 
-  const overrideNotFound = () => ImmutableStyles.createCSS(input);
+  const overrideNotFound = () => createCSS(input);
   expect(overrideNotFound).toThrow('The CSS property `font-size` is defined twice by `h1.pageTitle`');
 });
 
@@ -226,7 +230,7 @@ test('Override found in detached CSS rule-set', () => {
   const headingStyles = 'font-family: "Fira Code"; font-size: 30px; font-weight: bold;';
 
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'h1',
       {
         className: 'pageTitle'
@@ -235,6 +239,6 @@ test('Override found in detached CSS rule-set', () => {
     )
   ];
 
-  const overrideNotFound = () => ImmutableStyles.createCSS(input);
+  const overrideNotFound = () => createCSS(input);
   expect(overrideNotFound).toThrow('The CSS property `font-size` is defined twice by `h1.pageTitle`');
 });

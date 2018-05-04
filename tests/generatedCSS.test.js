@@ -1,15 +1,19 @@
 /*
- Testing CSS returned by `ImmutableStyles.createCSS`
+ Testing CSS returned by `createCSS`
 */
 
-const ImmutableStyles = require('../src/immutableStyles');
+const {
+  createStyle,
+  createCSS,
+  tearDown
+} = require('../src/immutableStyles');
 
-beforeEach(() => ImmutableStyles.tearDown());
+beforeEach(() => tearDown());
 
 
 test('[createCSS] Single node', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'h1',
       {
         className: 'pageTitle'
@@ -23,20 +27,20 @@ test('[createCSS] Single node', () => {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[createCSS] Adjacent nodes', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'h1',
       {
         className: 'pageTitle'
       },
       'font-size: 30px;'
     ),
-    ImmutableStyles.createStyle(
+    createStyle(
       'h2',
       {
         className: 'pageSubTitle'
@@ -53,19 +57,19 @@ h2[class="pageSubTitle"] {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[createCSS] Child node', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'div',
       {
         className: 'grid'
       },
       'display: flex;',
-      ImmutableStyles.createStyle(
+      createStyle(
         'span',
         {
           className: 'col'
@@ -83,26 +87,26 @@ div[class="grid"] > span[class="col"] {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[createCSS] Child nodes', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'section',
       {
         className: 'container'
       },
       'display: flex;',
-      ImmutableStyles.createStyle(
+      createStyle(
         'div',
         {
           className: 'sideBar'
         },
         'flex: 1;'
       ),
-      ImmutableStyles.createStyle(
+      createStyle(
         'div',
         {
           className: 'content'
@@ -123,25 +127,25 @@ section[class="container"] > div[class="content"] {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[createCSS] Child nodes deep', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'nav',
       {
         className: 'navBar'
       },
       'display: flex; height: 80px;',
-      ImmutableStyles.createStyle(
+      createStyle(
         'ul',
         {
           className: 'navLinks'
         },
         'justify-content: flex-end;',
-        ImmutableStyles.createStyle(
+        createStyle(
           'li',
           {
             className: 'navLink'
@@ -163,13 +167,13 @@ nav[class="navBar"] > ul[class="navLinks"] > li[class="navLink"] {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[createCSS] Media min-width', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'section',
       {
         className: 'sideBar',
@@ -186,13 +190,13 @@ test('[createCSS] Media min-width', () => {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[createCSS] Media max-width', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'section',
       {
         className: 'sideBar',
@@ -209,13 +213,13 @@ test('[createCSS] Media max-width', () => {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[createCSS] Media min-width and max-width', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'h1',
       {
         className: 'pageTitle',
@@ -233,13 +237,13 @@ test('[createCSS] Media min-width and max-width', () => {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[createCSS] Node without attributes', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'p',
       null,
       'color: darkslategray;'
@@ -251,13 +255,13 @@ test('[createCSS] Node without attributes', () => {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[createCSS] Node without styles', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'div',
       {
         className: 'titleBar'
@@ -267,13 +271,13 @@ test('[createCSS] Node without styles', () => {
 
   const output = '';
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[createCSS] Node without attributes or styles', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'div',
       null
     )
@@ -281,5 +285,5 @@ test('[createCSS] Node without attributes or styles', () => {
 
   const output = '';
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });

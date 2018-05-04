@@ -2,14 +2,18 @@
  Testing pseudo selectors for pseudo-classes and pseudo-elements
 */
 
-const ImmutableStyles = require('../src/immutableStyles');
+const {
+  createStyle,
+  createCSS,
+  tearDown
+} = require('../src/immutableStyles');
 
-beforeEach(() => ImmutableStyles.tearDown());
+beforeEach(() => tearDown());
 
 
 test('[pseudo] Node with pseudo-class', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'a',
       {
         pseudo: ':hover'
@@ -23,13 +27,13 @@ test('[pseudo] Node with pseudo-class', () => {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[pseudo] Node with pseudo-element (CSS2)', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'a',
       {
         pseudo: ':after'
@@ -43,13 +47,13 @@ test('[pseudo] Node with pseudo-element (CSS2)', () => {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[pseudo] Node with pseudo-element (CSS3)', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'a',
       {
         pseudo: '::after'
@@ -63,13 +67,13 @@ test('[pseudo] Node with pseudo-element (CSS3)', () => {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[pseudo] Node with class and pseudo-class', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'a',
       {
         className: 'btn',
@@ -84,13 +88,13 @@ test('[pseudo] Node with class and pseudo-class', () => {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 // node with class and pseudo-element
 test('[pseudo] Node with class and pseudo-element', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'a',
       {
         className: 'btn--withIcon',
@@ -105,13 +109,13 @@ test('[pseudo] Node with class and pseudo-element', () => {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[pseudo] Node with pseudo-class and pseudo-element', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'a',
       {
         pseudo: ':hover::before'
@@ -125,13 +129,13 @@ test('[pseudo] Node with pseudo-class and pseudo-element', () => {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[pseudo] Node with psuedo-classes and pseudo-element', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'a',
       {
         pseudo: ':visited:hover::before'
@@ -145,13 +149,13 @@ test('[pseudo] Node with psuedo-classes and pseudo-element', () => {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[pseudo] Node with class, psuedo-class and pseudo-element', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'a',
       {
         className: 'btn--withIcon',
@@ -166,13 +170,13 @@ test('[pseudo] Node with class, psuedo-class and pseudo-element', () => {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[pseudo] Node with class, psuedo-class and pseudo-element', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'a',
       {
         className: 'btn--withIcon',
@@ -187,19 +191,19 @@ test('[pseudo] Node with class, psuedo-class and pseudo-element', () => {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[pseudo] Node with psuedo-class and child node', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'div',
       {
         className: 'parent',
         pseudo: ':hover'
       },
-      ImmutableStyles.createStyle(
+      createStyle(
         'a',
         {
           className: 'child',
@@ -214,18 +218,18 @@ test('[pseudo] Node with psuedo-class and child node', () => {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[pseudo] Child node with psuedo-class', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'div',
       {
         className: 'parent'
       },
-      ImmutableStyles.createStyle(
+      createStyle(
         'a',
         {
           className: 'child',
@@ -241,5 +245,5 @@ test('[pseudo] Child node with psuedo-class', () => {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });

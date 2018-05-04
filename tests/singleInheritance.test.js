@@ -2,21 +2,25 @@
  Testing that styles can extend from a base class.
 */
 
-const ImmutableStyles = require('../src/immutableStyles');
+const {
+  createStyle,
+  createCSS,
+  tearDown
+} = require('../src/immutableStyles');
 
-beforeEach(() => ImmutableStyles.tearDown());
+beforeEach(() => tearDown());
 
 
 test('[composition] Subclass inherits styles from base-class', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'form',
       {
         className: 'baseForm'
       },
       'padding:20px;background:ivory;border:1px solid lightgrey;'
     ),
-    ImmutableStyles.createStyle(
+    createStyle(
       'form',
       {
         className: 'baseForm.subForm'
@@ -33,20 +37,20 @@ form[class="baseForm subForm"] {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[composition] Subclass can add its own styles to inherited styles', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'form',
       {
         className: 'baseForm'
       },
       'padding:20px;background:ivory;border:1px solid lightgrey;'
     ),
-    ImmutableStyles.createStyle(
+    createStyle(
       'form',
       {
         className: 'baseForm.subForm'
@@ -63,20 +67,20 @@ form[class="baseForm subForm"] {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[composition] Subclass can override an inherited style', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'form',
       {
         className: 'baseForm'
       },
       'padding:20px;background:ivory;border:1px solid lightgrey;'
     ),
-    ImmutableStyles.createStyle(
+    createStyle(
       'form',
       {
         className: 'baseForm.subForm'
@@ -93,25 +97,25 @@ form[class="baseForm subForm"] {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[composition] Subclass inherits child node styles from base-class', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'form',
       {
         className: 'baseForm'
       },
       'padding:20px;background:ivory;border:1px solid lightgrey;',
-      ImmutableStyles.createStyle(
+      createStyle(
         'input',
         null,
         'font-size:16px;'
       )
     ),
-    ImmutableStyles.createStyle(
+    createStyle(
       'form',
       {
         className: 'baseForm.subForm'
@@ -134,32 +138,32 @@ form[class="baseForm subForm"] > input:not([class]) {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 
 test('[composition] Subclass can add its own styles to child nodes', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'form',
       {
         className: 'baseForm'
       },
       'padding:20px;background:ivory;border:1px solid lightgrey;',
-      ImmutableStyles.createStyle(
+      createStyle(
         'input',
         null,
         'font-size:16px;'
       )
     ),
-    ImmutableStyles.createStyle(
+    createStyle(
       'form',
       {
         className: 'baseForm.subForm'
       },
       '',
-      ImmutableStyles.createStyle(
+      createStyle(
         'input',
         null,
         'border:1px solid slategray;'
@@ -181,31 +185,31 @@ form[class="baseForm subForm"] > input:not([class]) {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[composition] Subclass can override inherited child node styles', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'form',
       {
         className: 'baseForm'
       },
       'padding:20px;background:ivory;border:1px solid lightgrey;',
-      ImmutableStyles.createStyle(
+      createStyle(
         'input',
         null,
         'font-size:16px;'
       )
     ),
-    ImmutableStyles.createStyle(
+    createStyle(
       'form',
       {
         className: 'baseForm.subForm'
       },
       '',
-      ImmutableStyles.createStyle(
+      createStyle(
         'input',
         null,
         'font-size:18px;'
@@ -227,13 +231,13 @@ form[class="baseForm subForm"] > input:not([class]) {
 }
 `;
 
-  expect(ImmutableStyles.createCSS(input)).toEqual(output);
+  expect(createCSS(input)).toEqual(output);
 });
 
 
 test('[composition] Cannot extend a non-existent base-class', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'div',
       {
         className: 'modal.subModal'
@@ -242,6 +246,6 @@ test('[composition] Cannot extend a non-existent base-class', () => {
     )
   ];
 
-  const unknownBaseClass = () => ImmutableStyles.createCSS(input);
+  const unknownBaseClass = () => createCSS(input);
   expect(unknownBaseClass).toThrow('The base class `div.modal` does not exist');
 });

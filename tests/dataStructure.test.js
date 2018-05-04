@@ -1,14 +1,14 @@
 /*
- Testing data structure returned by `ImmutableStyles.createStyle`
+ Testing data structure returned by `createStyle`
 */
 
-const ImmutableStyles = require('../src/immutableStyles');
+const { createStyle, tearDown } = require('../src/immutableStyles');
 
-beforeEach(() => ImmutableStyles.tearDown());
+beforeEach(() => tearDown());
 
 
 test('[createStyle] Single node', () => {
-  const input = ImmutableStyles.createStyle(
+  const input = createStyle(
     'h1',
     {
       className: 'pageTitle'
@@ -31,14 +31,14 @@ test('[createStyle] Single node', () => {
 
 test('[createStyle] Adjacent nodes', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'h1',
       {
         className: 'pageTitle'
       },
       'font-size: 30px;'
     ),
-    ImmutableStyles.createStyle(
+    createStyle(
       'h2',
       {
         className: 'pageSubTitle'
@@ -71,13 +71,13 @@ test('[createStyle] Adjacent nodes', () => {
 
 
 test('[createStyle] Child node', () => {
-  const input = ImmutableStyles.createStyle(
+  const input = createStyle(
     'div',
     {
       className: 'grid'
     },
     'display: flex;',
-    ImmutableStyles.createStyle(
+    createStyle(
       'span',
       {
         className: 'col'
@@ -109,20 +109,20 @@ test('[createStyle] Child node', () => {
 
 
 test('[createStyle] Child nodes', () => {
-  const input = ImmutableStyles.createStyle(
+  const input = createStyle(
     'section',
     {
       className: 'container'
     },
     'display: flex;',
-    ImmutableStyles.createStyle(
+    createStyle(
       'div',
       {
         className: 'sideBar'
       },
       'flex: 1;'
     ),
-    ImmutableStyles.createStyle(
+    createStyle(
       'div',
       {
         className: 'content'
@@ -162,19 +162,19 @@ test('[createStyle] Child nodes', () => {
 
 
 test('[createStyle] Child nodes deep', () => {
-  const input = ImmutableStyles.createStyle(
+  const input = createStyle(
     'nav',
     {
       className: 'navBar'
     },
     'display: flex; height: 80px;',
-    ImmutableStyles.createStyle(
+    createStyle(
       'ul',
       {
         className: 'navLinks'
       },
       'justify-content: flex-end;',
-      ImmutableStyles.createStyle(
+      createStyle(
         'li',
         {
           className: 'navLink'
@@ -216,7 +216,7 @@ test('[createStyle] Child nodes deep', () => {
 
 
 test('[createStyle] Media min-width', () => {
-  const input = ImmutableStyles.createStyle(
+  const input = createStyle(
     'section',
     {
       className: 'sideBar',
@@ -240,7 +240,7 @@ test('[createStyle] Media min-width', () => {
 
 
 test('[createStyle] Media max-width', () => {
-  const input = ImmutableStyles.createStyle(
+  const input = createStyle(
     'section',
     {
       className: 'sideBar',
@@ -264,7 +264,7 @@ test('[createStyle] Media max-width', () => {
 
 
 test('[createStyle] Media min-width and max-width', () => {
-  const input = ImmutableStyles.createStyle(
+  const input = createStyle(
     'h1',
     {
       className: 'pageTitle',
@@ -290,7 +290,7 @@ test('[createStyle] Media min-width and max-width', () => {
 
 
 test('[createStyle] Node without attributes', () => {
-  const input = ImmutableStyles.createStyle(
+  const input = createStyle(
     'p',
     null,
     'color: darkslategray;'
@@ -308,7 +308,7 @@ test('[createStyle] Node without attributes', () => {
 
 
 test('[createStyle] Node without styles', () => {
-  const input = ImmutableStyles.createStyle(
+  const input = createStyle(
     'div',
     {
       className: 'titleBar'
@@ -329,7 +329,7 @@ test('[createStyle] Node without styles', () => {
 
 
 test('[createStyle] Node without attributes or styles', () => {
-  const input = ImmutableStyles.createStyle(
+  const input = createStyle(
     'div'
   );
 

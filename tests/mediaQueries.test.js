@@ -2,21 +2,25 @@
  Testing media queries.
 */
 
-const ImmutableStyles = require('../src/immutableStyles');
+const {
+  createStyle,
+  createCSS,
+  tearDown
+} = require('../src/immutableStyles');
 
-beforeEach(() => ImmutableStyles.tearDown());
+beforeEach(() => tearDown());
 
 
 test('[media] Cannot define nested media query', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'div',
       {
         className: 'parentNode',
         minWidth: 300
       },
       'display: block;',
-      ImmutableStyles.createStyle(
+      createStyle(
         'span',
         {
           className: 'childNode',
@@ -27,21 +31,21 @@ test('[media] Cannot define nested media query', () => {
     )
   ];
 
-  const nestedMediaQuery = () => ImmutableStyles.createCSS(input);
+  const nestedMediaQuery = () => createCSS(input);
   expect(nestedMediaQuery).toThrow('Nested media query found');
 });
 
 
 test('[media] Child nodes inherit breakpoint from parent node', () => {
   const input = [
-    ImmutableStyles.createStyle(
+    createStyle(
       'div',
       {
         className: 'parentNode',
         minWidth: 300
       },
       'display: block;',
-      ImmutableStyles.createStyle(
+      createStyle(
         'span',
         {
           className: 'childNode'
@@ -63,5 +67,5 @@ test('[media] Child nodes inherit breakpoint from parent node', () => {
 }
 `;
 
-    expect(ImmutableStyles.createCSS(input)).toEqual(output);
+    expect(createCSS(input)).toEqual(output);
 });

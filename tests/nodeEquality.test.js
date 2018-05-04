@@ -3,19 +3,19 @@
  of same type with a class, i.e: `span` != `span.icon`
 */
 
-const ImmutableStyles = require('../src/immutableStyles');
+const { createStyle, tearDown } = require('../src/immutableStyles');
 
-beforeEach(() => ImmutableStyles.tearDown());
+beforeEach(() => tearDown());
 
 
 test('[nodeEquality] Elements of different type without class are not equal', () => {
-  const firstElement = ImmutableStyles.createStyle(
+  const firstElement = createStyle(
     'p',
     null,
     'color: darkslategray;'
   );
 
-  const secondElement = ImmutableStyles.createStyle(
+  const secondElement = createStyle(
     'span',
     null,
     'color: darkslategray;'
@@ -26,13 +26,13 @@ test('[nodeEquality] Elements of different type without class are not equal', ()
 
 
 test('[nodeEquality] Elements of same type without class are equal', () => {
-  const firstElement = ImmutableStyles.createStyle(
+  const firstElement = createStyle(
     'p',
     null,
     'color: darkslategray;'
   );
 
-  const secondElement = ImmutableStyles.createStyle(
+  const secondElement = createStyle(
     'p',
     null,
     'color: darkslategray;'
@@ -43,7 +43,7 @@ test('[nodeEquality] Elements of same type without class are equal', () => {
 
 
 test('[nodeEquality] Elements of different type with same class are not equal', () => {
-  const firstElement = ImmutableStyles.createStyle(
+  const firstElement = createStyle(
     'p',
     {
       className: 'description'
@@ -51,7 +51,7 @@ test('[nodeEquality] Elements of different type with same class are not equal', 
     'color: darkslategray;'
   );
 
-  const secondElement = ImmutableStyles.createStyle(
+  const secondElement = createStyle(
     'span',
     {
       className: 'description'
@@ -64,7 +64,7 @@ test('[nodeEquality] Elements of different type with same class are not equal', 
 
 
 test('[nodeEquality] Elements of same type with same class are equal', () => {
-  const firstElement = ImmutableStyles.createStyle(
+  const firstElement = createStyle(
     'p',
     {
       className: 'description'
@@ -72,7 +72,7 @@ test('[nodeEquality] Elements of same type with same class are equal', () => {
     'color: darkslategray;'
   );
 
-  const secondElement = ImmutableStyles.createStyle(
+  const secondElement = createStyle(
     'p',
     {
       className: 'description'
