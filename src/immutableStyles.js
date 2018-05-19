@@ -22,15 +22,8 @@ function createStyle(element, attrs, ...children) {
   if (attrsValid(attrs)) {
     let styles = BLANK;
     const childNodes = [];
-
     // children can contain styles for current element or child nodes
-    children.forEach(child => {
-      if (child.element) {
-        childNodes.push(child);
-      } else {
-        styles += child;
-      }
-    });
+    children.forEach(child => child.element ? childNodes.push(child) : styles = child);
 
     return {
       element,
@@ -73,7 +66,10 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
   const { minWidth, maxWidth, className } = block.attrs;
 
   if (inheritedMedia) {
-    if (minWidth || maxWidth) {
+    if (
+      minWidth ||
+      maxWidth
+    ) {
       log.NESTED_MEDIA_QUERY(fullyQualifiedRef, inheritedMedia, minWidth, maxWidth);
       throw new Error('Nested media query found');
     } else {
@@ -110,7 +106,10 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
     }
 
     // save inferred media queries if any
-    if (minWidth || maxWidth) {
+    if (
+      minWidth ||
+      maxWidth
+    ) {
       inheritedMedia = {
         setBy: parentRef,
         ...minWidth && { minWidth },
@@ -125,10 +124,10 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
 
 function cloneBaseStyles(baseRef, clonedRef) {
   for (var ref of AST.keys()) {
-    // thought: could potentially clone all styles that include (not just start with) baseRef
-    // i.e: `div.container form.base-form` => `div.container form.base-form.base-form--saving`
-    // this would enable inheritance among nested nodes.
-    if (ref === baseRef || ref.startsWith(`${baseRef}${SPACE}`)) {
+    if (
+      ref === baseRef ||
+      ref.startsWith(`${baseRef}${SPACE}`)
+    ) {
       // clone and save base styles
       const fullyQualifiedClonedRef = ref.replace(baseRef, clonedRef);
       AST.set(fullyQualifiedClonedRef, AST.get(ref).map(style => ({...style})));
@@ -157,7 +156,10 @@ function parseAst() {
     do {
       accumulator = (accumulator === BLANK) ? paths[i] : `${paths[i]}${SPACE}` + accumulator;
 
-      if (ref !== accumulator && AST.has(accumulator)) {
+      if (
+        ref !== accumulator &&
+        AST.has(accumulator)
+      ) {
         // ref exists as part of another ref, check if styles are unique
         AST.get(ref).forEach(existingStyle => {
           AST.get(accumulator).forEach(accumulatedStyle => {
@@ -184,7 +186,10 @@ function makeCSS() {
 
     AST.get(ref).filter(({styles}) => styles !== BLANK)
                 .forEach(({styles, minWidth, maxWidth}) => {
-      if (minWidth === ZERO && maxWidth === Infinity) {
+      if (
+        minWidth === ZERO &&
+        maxWidth === Infinity
+      ) {
         CSS += `${selector}${SPACE}${OPEN_BRACE}\n`;
         CSS += `${SPACE.repeat(2)}${styles}\n`;
       } else {
@@ -249,7 +254,10 @@ function elementCanUseProperty(ref, element, styles) {
   propertyWhitelist.forEach(({elements, properties}) => {
     const whitelistedProperty = properties.find(property => styles.includes(property));
 
-    if (whitelistedProperty && !elements.includes(element)) {
+    if (
+      whitelistedProperty &&
+      !elements.includes(element)
+    ) {
       log.ELEMENT_CANNOT_USE_PROPERTY(ref, whitelistedProperty, styles, element, elements);
       throw new Error(`The HTML element \`${element}\` (${ref}) cannot use the property \`${whitelistedProperty}\``);
     }
@@ -306,7 +314,7 @@ function createStyleEntry(styles, {minWidth, maxWidth}) {
   }
 }
 
-// todo: needs to handle short-hands (margin vs margin-top) or validate against short-hand usage
+// todo: needs to validate against short-hand usage
 function areStylesUnique(control, comparison) {
   if (breakpointsOverlap(control, comparison)) {
     for (var property of stylesAsMap(comparison.styles).keys()) {
@@ -332,7 +340,10 @@ function breakpointsOverlap(controlRange, comparisonRange) {
   const rangeAbove = (comparisonRange.minWidth > controlRange.maxWidth) &&
                      (comparisonRange.maxWidth > controlRange.maxWidth);
 
-  if (rangeBelow || rangeAbove) {
+  if (
+    rangeBelow ||
+    rangeAbove
+  ) {
     return false;
   } else {
     return true;
