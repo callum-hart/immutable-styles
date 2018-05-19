@@ -23,7 +23,7 @@ function createStyle(element, attrs, ...children) {
     let styles = BLANK;
     const childNodes = [];
     // children can contain styles for current element or child nodes
-    children.forEach(child => child.element ? childNodes.push(child) : styles = child);
+    children.forEach(child => child.element ? childNodes.push(child) : styles += child);
 
     return {
       element,
@@ -50,6 +50,8 @@ function attrsValid(attrs) {
 }
 
 function createCSS(styles) {
+  AST.clear();
+
   if (Array.isArray(styles)) {
     styles.forEach(block => parseStyles(block));
   } else {
@@ -429,13 +431,7 @@ class ErrorWithData {
   }
 }
 
-// for testing
-function tearDown() {
-  AST.clear();
-}
-
 module.exports = {
   createStyle,
   createCSS,
-  tearDown
 };

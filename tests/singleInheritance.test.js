@@ -2,13 +2,7 @@
  Testing that styles can extend from a base class.
 */
 
-const {
-  createStyle,
-  createCSS,
-  tearDown
-} = require('../src/immutableStyles');
-
-beforeEach(() => tearDown());
+const { createStyle, createCSS } = require('../src/immutableStyles');
 
 
 test('[composition] Subclass inherits styles from base-class', () => {

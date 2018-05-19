@@ -2,13 +2,7 @@
  Testing media queries.
 */
 
-const {
-  createStyle,
-  createCSS,
-  tearDown
-} = require('../src/immutableStyles');
-
-beforeEach(() => tearDown());
+const { createStyle, createCSS } = require('../src/immutableStyles');
 
 
 test('[media] Cannot define nested media query', () => {

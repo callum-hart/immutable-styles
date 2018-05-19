@@ -2,13 +2,7 @@
  Testing override detection among immutable styles
 */
 
-const {
-  createStyle,
-  createCSS,
-  tearDown
-} = require('../src/immutableStyles');
-
-beforeEach(() => tearDown());
+const { createStyle, createCSS } = require('../src/immutableStyles');
 
 
 test('Override found from adjacent node', () => {

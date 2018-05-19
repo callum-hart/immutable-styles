@@ -2,9 +2,7 @@
  Testing data structure returned by `createStyle`
 */
 
-const { createStyle, tearDown } = require('../src/immutableStyles');
-
-beforeEach(() => tearDown());
+const { createStyle } = require('../src/immutableStyles');
 
 
 test('[createStyle] Single node', () => {
