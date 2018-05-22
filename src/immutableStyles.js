@@ -1,4 +1,3 @@
-const log = require('./log');
 const propertyWhitelist = require('./propertyWhitelist');
 
 
@@ -19,29 +18,40 @@ const AST = new Map();
 
 
 function createStyle(element, attrs, ...children) {
-  if (attrsValid(attrs)) {
-    let styles = BLANK;
-    const childNodes = [];
-    // children can contain styles for current element or child nodes
-    children.forEach(child => child.element ? childNodes.push(child) : styles += child);
+  let styles = BLANK;
+  const childNodes = [];
+  // children can contain styles for current element or child nodes
+  children.forEach(child => child.element ? childNodes.push(child) : styles += child);
 
-    return {
-      element,
-      attrs: attrs || {},
-      styles,
-      children: childNodes
-    }
+  // todo: return Object.freeze({...});
+  return {
+    element,
+    attrs: attrs || {},
+    styles,
+    children: childNodes
   }
 }
 
-function attrsValid(attrs) {
+function attrsValid(ref, attrs) {
   if (attrs) {
-    const permittedAttrs = ['className', 'minWidth', 'maxWidth', 'pseudo'];
+    const permittedAttrs = [
+      'className',
+      'minWidth',
+      'maxWidth',
+      'pseudo'
+    ];
 
     Object.keys(attrs).forEach(attr => {
       if (!permittedAttrs.includes(attr)) {
-        log.UNKNOWN_ATTRIBUTE(attr, attrs[attr], permittedAttrs);
-        throw Error(`\`${attr}\` is not a valid attribute`);
+        throw new ErrorWithData(
+          `\`${attr}\` is not a valid attribute`,
+          {
+            ref,
+            attr,
+            attrValue: attrs[attr],
+            permittedAttrs
+          }
+        );
       }
     });
   }
@@ -52,11 +62,9 @@ function attrsValid(attrs) {
 function createCSS(styles) {
   AST.clear();
 
-  if (Array.isArray(styles)) {
-    styles.forEach(block => parseStyles(block));
-  } else {
-    parseStyles(styles);
-  }
+  Array.isArray(styles)
+    ? styles.forEach(block => parseStyles(block))
+    : parseStyles(styles);
 
   parseAst();
   return makeCSS();
@@ -64,63 +72,82 @@ function createCSS(styles) {
 
 function parseStyles(block, parentRef = null, inheritedMedia = null) {
   const ref = makeRef(block);
-  const fullyQualifiedRef = parentRef ? `${parentRef}${SPACE}${ref}` : ref;
-  const { minWidth, maxWidth, className } = block.attrs;
+  const fullyQualifiedRef = parentRef
+    ? `${parentRef}${SPACE}${ref}`
+    : ref;
+  const {
+    minWidth,
+    maxWidth,
+    className
+  } = block.attrs;
 
-  if (inheritedMedia) {
-    if (
-      minWidth ||
-      maxWidth
-    ) {
-      log.NESTED_MEDIA_QUERY(fullyQualifiedRef, inheritedMedia, minWidth, maxWidth);
-      throw new Error('Nested media query found');
-    } else {
-      // add inherited media queries to child block
-      block.attrs = {
-        ...block.attrs,
-        ...inheritedMedia.minWidth && { minWidth: inheritedMedia.minWidth },
-        ...inheritedMedia.maxWidth && { maxWidth: inheritedMedia.maxWidth }
-      }
-    }
-  }
+  if (attrsValid(ref, block.attrs)) {
+    if (inheritedMedia) {
+      if (
+        minWidth ||
+        maxWidth
+      ) {
+        throw new ErrorWithData(
+          `[Nested Media Query] Nested media query found in "${inheritedMedia.setBy}"`,
+          {
+            fullyQualifiedRef,
+            inheritedMedia,
+            minWidth,
+            maxWidth
+          }
+        );
 
-  if (isSubclass(parentRef, className)) {
-    const baseClass = className.match(/^.+(?=(\.))/)[0]; // upto (but not including) dot
-    const baseRef = `${block.element}${DOT}${baseClass}`;
-
-    if (AST.has(baseRef)) {
-      cloneBaseStyles(baseRef, fullyQualifiedRef);
-      // todo: generate run-time validations
-    } else {
-      log.UNKNOWN_BASE_CLASS(fullyQualifiedRef, baseRef);
-      throw new Error(`The base class \`${baseRef}\` does not exist`);
-    }
-  }
-
-  saveRef(fullyQualifiedRef, block);
-
-  if (block.children.length) {
-    // save parent path for children
-    if (parentRef) {
-      parentRef += `${SPACE}${ref}`;
-    } else {
-      parentRef = ref;
-    }
-
-    // save inferred media queries if any
-    if (
-      minWidth ||
-      maxWidth
-    ) {
-      inheritedMedia = {
-        setBy: parentRef,
-        ...minWidth && { minWidth },
-        ...maxWidth && { maxWidth }
+      } else {
+        // add inherited media queries to child block
+        block.attrs = {
+          ...block.attrs,
+          ...inheritedMedia.minWidth && { minWidth: inheritedMedia.minWidth },
+          ...inheritedMedia.maxWidth && { maxWidth: inheritedMedia.maxWidth }
+        }
       }
     }
 
-    // parse children
-    block.children.forEach(child => parseStyles(child, parentRef, inheritedMedia));
+    if (isSubclass(parentRef, className)) {
+      const baseClass = className.match(/^.+(?=(\.))/)[0]; // upto (but not including) dot
+      const baseRef = `${block.element}${DOT}${baseClass}`;
+
+      if (AST.has(baseRef)) {
+        cloneBaseStyles(baseRef, fullyQualifiedRef);
+        // todo: generate run-time validations
+      } else {
+        throw new ErrorWithData(
+          `The base class \`${baseRef}\` does not exist`,
+          {
+            fullyQualifiedRef,
+            baseRef
+          }
+        );
+      }
+    }
+
+    saveRef(fullyQualifiedRef, block);
+
+    if (block.children.length) {
+      // save parent path for children
+      parentRef
+        ? parentRef += `${SPACE}${ref}`
+        : parentRef = ref;
+
+      // save inferred media queries if any
+      if (
+        minWidth ||
+        maxWidth
+      ) {
+        inheritedMedia = {
+          setBy: parentRef,
+          ...minWidth && { minWidth },
+          ...maxWidth && { maxWidth }
+        }
+      }
+
+      // parse children
+      block.children.forEach(child => parseStyles(child, parentRef, inheritedMedia));
+    }
   }
 }
 
@@ -134,7 +161,6 @@ function cloneBaseStyles(baseRef, clonedRef) {
       const fullyQualifiedClonedRef = ref.replace(baseRef, clonedRef);
       AST.set(fullyQualifiedClonedRef, AST.get(ref).map(style => ({...style})));
       AST.get(fullyQualifiedClonedRef).isCloned = true;
-      AST.get(fullyQualifiedClonedRef)._clonedFrom = ref; // just for debugging
     }
   }
 }
@@ -156,7 +182,9 @@ function parseAst() {
 
     // traverse tree (right to left) to see whether ref exists as part of another ref
     do {
-      accumulator = (accumulator === BLANK) ? paths[i] : `${paths[i]}${SPACE}` + accumulator;
+      accumulator = (accumulator === BLANK)
+        ? paths[i]
+        : `${paths[i]}${SPACE}` + accumulator;
 
       if (
         ref !== accumulator &&
@@ -168,8 +196,24 @@ function parseAst() {
             try {
               areStylesUnique(accumulatedStyle, existingStyle);
             } catch (e) {
-              log.OVERRIDE_FOUND(accumulator, ref, e.data.property, e.data.styles, e.data.offendingStyles);
-              throw e;
+              const {
+                property,
+                styles,
+                offendingStyles
+              } = e.data;
+
+              // todo: the overriding ref could be in a different file, need to be able to show
+              // source for overriding ref and overridden ref...
+              throw new ErrorWithData(
+                `[Override Found] "${ref}" overrides the "${property}" set by "${accumulator}"`,
+                {
+                  overriddenRef: accumulator,
+                  overridingRef: ref,
+                  property,
+                  styles,
+                  offendingStyles
+                }
+              );
             }
           });
         });
@@ -260,8 +304,16 @@ function elementCanUseProperty(ref, element, styles) {
       whitelistedProperty &&
       !elements.includes(element)
     ) {
-      log.ELEMENT_CANNOT_USE_PROPERTY(ref, whitelistedProperty, styles, element, elements);
-      throw new Error(`The HTML element \`${element}\` (${ref}) cannot use the property \`${whitelistedProperty}\``);
+      throw new ErrorWithData(
+        `The HTML element \`${element}\` (${ref}) cannot use the property \`${whitelistedProperty}\``,
+        {
+          ref,
+          whitelistedProperty,
+          styles,
+          element,
+          elements
+        }
+      );
     }
   });
 
@@ -283,8 +335,22 @@ function saveNewStyleForExistingRef(newStyle, ref) {
     try {
       areStylesUnique(existingStyle, newStyle);
     } catch (e) {
-      log.OVERRIDE_FOUND(ref, ref, e.data.property, e.data.styles, e.data.offendingStyles);
-      throw e;
+      const {
+        property,
+        styles,
+        offendingStyles
+      } = e.data;
+
+      throw new ErrorWithData(
+        `[Override Found] the "${property}" of "${ref}" has already been defined`,
+        {
+          overriddenRef: ref,
+          overridingRef: ref,
+          property,
+          styles,
+          offendingStyles
+        }
+      );
     }
   });
 
@@ -362,8 +428,14 @@ function stylesAsMap(stylesAsString, ref = null) {
       const [property, value] = declaration.split(COLON).map(res => res.trim().toLowerCase());
 
       if (styles.has(property)) {
-        log.DUPLICATE_PROPERTY(ref, property, stylesAsString);
-        throw new Error(`The CSS property \`${property}\` is defined twice by \`${ref}\``);
+        throw new ErrorWithData(
+          `The CSS property \`${property}\` is defined twice by \`${ref}\``,
+          {
+            ref,
+            property,
+            stylesAsString
+          }
+        );
       } else {
         styles.set(property, value);
       }
@@ -424,8 +496,9 @@ function makeSubclassSelector(elementWithSubclass) {
   return `${element}[class="${baseClass}${SPACE}${subClass}"]`;
 }
 
-class ErrorWithData {
+class ErrorWithData extends Error {
   constructor(message, data) {
+    super(message);
     this.message = message;
     this.data = data;
   }
