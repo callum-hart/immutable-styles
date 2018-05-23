@@ -2,18 +2,18 @@
  Testing attributes are validated
 */
 
-const { createStyle } = require('../src/immutableStyles');
+const { createCSS, createStyle } = require('../src/immutableStyles');
 
 
 test('[Attr Validation] Invalid attribute found', () => {
   const invalidAttr = () => {
-    createStyle(
+    createCSS(createStyle(
       'h1',
       {
         id: 'anElementID'
       },
       'font-size: 30px;'
-    )
+    ))
   }
 
   expect(invalidAttr).toThrow(`\`id\` is not a valid attribute`);
@@ -22,11 +22,11 @@ test('[Attr Validation] Invalid attribute found', () => {
 
 test('[Attr Validation] Node without attributes is valid', () => {
   const invalidAttr = () => {
-    createStyle(
+    createCSS(createStyle(
       'h1',
       null,
       'font-size: 30px;'
-    )
+    ))
   }
 
   expect(invalidAttr).not.toThrow();
@@ -35,13 +35,13 @@ test('[Attr Validation] Node without attributes is valid', () => {
 
 test('[Attr Validation] Node with className is valid', () => {
   const invalidAttr = () => {
-    createStyle(
+    createCSS(createStyle(
       'h1',
       {
         className: 'heading'
       },
       'font-size: 30px;'
-    )
+    ))
   }
 
   expect(invalidAttr).not.toThrow();
@@ -50,13 +50,13 @@ test('[Attr Validation] Node with className is valid', () => {
 
 test('[Attr Validation] Node with minWidth is valid', () => {
   const invalidAttr = () => {
-    createStyle(
+    createCSS(createStyle(
       'h1',
       {
         minWidth: 360
       },
       'font-size: 30px;'
-    )
+    ))
   }
 
   expect(invalidAttr).not.toThrow();
@@ -65,13 +65,13 @@ test('[Attr Validation] Node with minWidth is valid', () => {
 
 test('[Attr Validation] Node with maxWidth is valid', () => {
   const invalidAttr = () => {
-    createStyle(
+    createCSS(createStyle(
       'h1',
       {
         maxWidth: 900
       },
       'font-size: 30px;'
-    )
+    ))
   }
 
   expect(invalidAttr).not.toThrow();
@@ -80,13 +80,13 @@ test('[Attr Validation] Node with maxWidth is valid', () => {
 
 test('[Attr Validation] Node with pseudo selector is valid', () => {
   const invalidAttr = () => {
-    createStyle(
+    createCSS(createStyle(
       'a',
       {
         pseudo: ':hover'
       },
       'color: slategray;'
-    )
+    ))
   }
 
   expect(invalidAttr).not.toThrow();
@@ -95,7 +95,7 @@ test('[Attr Validation] Node with pseudo selector is valid', () => {
 
 test('[Attr Validation] Node with multiple attributes is valid', () => {
   const invalidAttr = () => {
-    createStyle(
+    createCSS(createStyle(
       'a',
       {
         className: 'link',
@@ -104,7 +104,7 @@ test('[Attr Validation] Node with multiple attributes is valid', () => {
         maxWidth: 900
       },
       'color: slategray;'
-    )
+    ))
   }
 
   expect(invalidAttr).not.toThrow();

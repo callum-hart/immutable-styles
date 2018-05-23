@@ -24,7 +24,7 @@ test('Override found from adjacent node', () => {
   ];
 
   const overrideFound = () => createCSS(input);
-  expect(overrideFound).toThrow('Override found. The property `font-size` has already been defined');
+  expect(overrideFound).toThrow('[Override Found] the "font-size" of "h1.pageTitle" has already been defined');
 });
 
 
@@ -54,7 +54,7 @@ test('Override found from child node', () => {
   ];
 
   const overrideFound = () => createCSS(input);
-  expect(overrideFound).toThrow('Override found. The property `font-size` has already been defined');
+  expect(overrideFound).toThrow('[Override Found] "div.titleBar h1.pageTitle" overrides the "font-size" set by "h1.pageTitle"');
 });
 
 
@@ -91,7 +91,7 @@ test('Override found from adjacent child nodes', () => {
   ];
 
   const overrideFound = () => createCSS(input);
-  expect(overrideFound).toThrow('Override found. The property `color` has already been defined');
+  expect(overrideFound).toThrow('[Override Found] the "color" of "div.parent span.child" has already been defined');
 });
 
 
@@ -137,7 +137,7 @@ test('Override found when breakpoints are indiscrete', () => {
   ];
 
   const overrideFound = () => createCSS(input);
-  expect(overrideFound).toThrow('Override found. The property `display` has already been defined');
+  expect(overrideFound).toThrow('[Override Found] the "display" of "section.sideBar" has already been defined');
 });
 
 
