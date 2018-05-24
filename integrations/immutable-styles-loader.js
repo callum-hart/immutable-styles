@@ -1,29 +1,29 @@
-/*
-Webpack loader
-*/
-
 var { createCSS } = require("immutable-styles");
 
 
 // temp
 function log(name, value) {
-  console.log(`\nstart logging for: ${name}`);
+  console.log(`\nstart logging for: ${name}\n`);
   console.log(value);
-  console.log(`\n end logging for: ${name}`)
+  console.log(`\n end logging for: ${name}\n`)
 }
 
-module.exports = function(source) {
+// @param `sourceMap` only exists when source maps is enabled
+// via `devtool: "source-map"` (in `webpack.config.js`)
+module.exports = function(source, sourceMap) {
   const fileName = this.resourcePath;
   const immutableStylesAST = this.exec(source, fileName);
-
-  // log("source", source);
-  // log("immutableStylesAST", immutableStylesAST);
+  const options = {
+    fileName,
+    buildType: 'WEBPACK',
+    rawContent: sourceMap.sourcesContent,
+    sourceMapping: sourceMap.mappings
+  };
 
   try {
-    createCSS(immutableStylesAST);
+    createCSS(immutableStylesAST, options);
   } catch ({ message, data }) {
     log("message",message);
-    log("data", data);
     this.emitError(message);
   }
 
