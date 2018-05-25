@@ -83,7 +83,8 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
   const {
     minWidth,
     maxWidth,
-    className
+    className,
+    __source
   } = block.attrs;
 
   if (attrsValid(ref, block.attrs)) {
@@ -92,6 +93,8 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
         minWidth ||
         maxWidth
       ) {
+        console.log('parent source', inheritedMedia.__source);
+        console.log('nested source', __source);
         throw new ErrorWithData(
           `[Nested Media Query] Nested media query found in "${inheritedMedia.setBy}"`,
           {
@@ -101,7 +104,6 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
             maxWidth
           }
         );
-
       } else {
         // add inherited media queries to child block
         block.attrs = {
@@ -120,6 +122,7 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
         cloneBaseStyles(baseRef, fullyQualifiedRef);
         // todo: generate run-time validations
       } else {
+        console.log('Base class source', __source);
         throw new ErrorWithData(
           `The base class \`${baseRef}\` does not exist`,
           {
@@ -144,9 +147,10 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
         maxWidth
       ) {
         inheritedMedia = {
-          setBy: parentRef,
           ...minWidth && { minWidth },
-          ...maxWidth && { maxWidth }
+          ...maxWidth && { maxWidth },
+          setBy: parentRef,
+          __source
         }
       }
 
@@ -203,20 +207,18 @@ function parseAst() {
               areStylesUnique(accumulatedStyle, existingStyle);
             } catch (e) {
               const {
-                property,
-                styles,
-                offendingStyles
+                overriddenProperty,
+                overriddenStyles,
+                overridingStyles
               } = e.data;
 
-
+              console.log('overriddenStyles source', overriddenStyles.__source);
+              console.log('overridingStyles source', overridingStyles.__source);
               throw new ErrorWithData(
-                `[Override Found] "${ref}" overrides the "${property}" set by "${accumulator}"`,
+                `[Override Found] "${ref}" overrides the "${overriddenProperty}" set by "${accumulator}"`,
                 {
                   overriddenRef: accumulator,
-                  overridingRef: ref,
-                  property,
-                  styles,
-                  offendingStyles
+                  overridingRef: ref
                 }
               );
             }
@@ -284,11 +286,11 @@ function saveRef(ref, {element, attrs, styles}) {
           mergeNewStyleWithEquivalentStyle(newStyle, equivalentStyle);
         } else {
           // treat new style as a new entry in AST
-          saveNewStyleForExistingRef(newStyle, ref, attrs);
+          saveNewStyleForExistingRef(newStyle, ref);
         }
       } else {
         // merge new styles with existing styles if no overrides present
-        saveNewStyleForExistingRef(newStyle, ref, attrs);
+        saveNewStyleForExistingRef(newStyle, ref);
       }
     } else {
       AST.set(ref, [createStyleEntry(styles, attrs)]);
@@ -309,7 +311,7 @@ function elementCanUseProperty(ref, element, attrs, styles) {
       whitelistedProperty &&
       !elements.includes(element)
     ) {
-      console.log(attrs.__source);
+      console.log('whitelistedProperty source', attrs.__source);
       throw new ErrorWithData(
         `The HTML element \`${element}\` (${ref}) cannot use the property \`${whitelistedProperty}\``,
         {
@@ -336,27 +338,24 @@ function propertiesAreUnique(ref, element, attrs, styles) {
   return true;
 }
 
-function saveNewStyleForExistingRef(newStyle, ref, attrs) {
+function saveNewStyleForExistingRef(newStyle, ref) {
   AST.get(ref).forEach(existingStyle => {
     try {
-      areStylesUnique(existingStyle, newStyle, attrs);
+      areStylesUnique(existingStyle, newStyle);
     } catch (e) {
       const {
-        property,
-        styles,
-        offendingStyles
+        overriddenProperty,
+        overriddenStyles,
+        overridingStyles
       } = e.data;
 
-      console.log('overridden source:', AST.get(ref)); // todo: loop through results and find style that contains `property`
-      console.log('\noverriding source', attrs.__source);
+      console.log('overriddenStyles source', overriddenStyles.__source);
+      console.log('overridingStyles source', overridingStyles.__source);
       throw new ErrorWithData(
-        `[Override Found] the "${property}" of "${ref}" has already been defined`,
+        `[Override Found] the "${overriddenProperty}" of "${ref}" has already been defined`,
         {
           overriddenRef: ref,
-          overridingRef: ref,
-          property,
-          styles,
-          offendingStyles
+          overridingRef: ref
         }
       );
     }
@@ -392,17 +391,16 @@ function createStyleEntry(styles, {minWidth, maxWidth, __source}) {
 }
 
 // todo: needs to validate against short-hand usage
-function areStylesUnique(control, comparison, attrs) {
+function areStylesUnique(control, comparison) {
   if (breakpointsOverlap(control, comparison)) {
     for (var property of stylesAsMap(comparison.styles).keys()) {
       if (stylesAsMap(control.styles).get(property)) {
-        console.log(attrs.__source);
         throw new ErrorWithData(
           `Override found. The property \`${property}\` has already been defined`,
           {
-            property,
-            styles: control.styles,
-            offendingStyles: comparison.styles
+            overriddenProperty: property,
+            overriddenStyles: control,
+            overridingStyles: comparison
           }
         );
       }
@@ -438,7 +436,7 @@ function stylesAsMap(stylesAsString, attrs = null, ref = null) {
       const [property, value] = declaration.split(COLON).map(res => res.trim().toLowerCase());
 
       if (styles.has(property)) {
-        console.log(attrs.__source);
+        console.log('Duplicate property source', attrs.__source);
         throw new ErrorWithData(
           `The CSS property \`${property}\` is defined twice by \`${ref}\``,
           {
