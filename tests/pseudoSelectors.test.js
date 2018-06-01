@@ -2,7 +2,13 @@
  Testing pseudo selectors for pseudo-classes and pseudo-elements
 */
 
-const { createStyle, createCSS } = require('../src/immutableStyles');
+const {
+  createCSS,
+  createStyle,
+  tearDown
+} = require('../src/immutableStyles');
+
+beforeEach(() => tearDown());
 
 
 test('[pseudo] Node with pseudo-class', () => {

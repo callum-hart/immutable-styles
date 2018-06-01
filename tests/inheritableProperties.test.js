@@ -2,7 +2,13 @@
  Testing that inheritable properties only apply to elements that use them.
 */
 
-const { createStyle, createCSS } = require('../src/immutableStyles');
+const {
+  createCSS,
+  createStyle,
+  tearDown
+} = require('../src/immutableStyles');
+
+beforeEach(() => tearDown());
 
 
 test('[inheritance] textual styles can be applied to textual nodes', () => {

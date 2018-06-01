@@ -2,7 +2,13 @@
  Testing attributes are validated
 */
 
-const { createCSS, createStyle } = require('../src/immutableStyles');
+const {
+  createCSS,
+  createStyle,
+  tearDown
+} = require('../src/immutableStyles');
+
+beforeEach(() => tearDown());
 
 
 test('[Attr Validation] Invalid attribute found', () => {

@@ -15,14 +15,15 @@ const ZERO              = 0;
 const MEDIA_UNIT        = 'px';
 
 const AST = new Map();
-const SOURCES = new Map();
 
 
 function createStyle(element, attrs, ...children) {
   let styles = BLANK;
   const childNodes = [];
   // children can contain styles for current element or child nodes
-  children.forEach(child => child.element ? childNodes.push(child) : styles += child);
+  children.forEach(child => child.element
+    ? childNodes.push(child)
+    : styles += child);
 
   // todo: return Object.freeze({...});
   return {
@@ -33,7 +34,7 @@ function createStyle(element, attrs, ...children) {
   }
 }
 
-function attrsValid(ref, attrs) {
+function attrsValid(attrs) {
   if (attrs) {
     const permittedAttrs = [
       'className',
@@ -45,11 +46,11 @@ function attrsValid(ref, attrs) {
 
     Object.keys(attrs).forEach(attr => {
       if (!permittedAttrs.includes(attr)) {
-        console.log(attrs.__source);
+        console.log('invalid attr source', attrs.__source);
+
         throw new ErrorWithData(
           `\`${attr}\` is not a valid attribute`,
           {
-            ref,
             attr,
             attrValue: attrs[attr],
             permittedAttrs
@@ -62,32 +63,28 @@ function attrsValid(ref, attrs) {
   return true;
 }
 
-function createCSS(styles, options) {
-  AST.clear();
-  // console.log(options);
-  // todo: persist options
-
+function createCSS(styles) {
   Array.isArray(styles)
-    ? styles.forEach(block => parseStyles(block))
-    : parseStyles(styles);
+      ? styles.forEach(block => parseStyles(block))
+      : parseStyles(styles);
 
   parseAst();
   return makeCSS();
 }
 
 function parseStyles(block, parentRef = null, inheritedMedia = null) {
-  const ref = makeRef(block);
-  const fullyQualifiedRef = parentRef
-    ? `${parentRef}${SPACE}${ref}`
-    : ref;
-  const {
-    minWidth,
-    maxWidth,
-    className,
-    __source
-  } = block.attrs;
+  if (attrsValid(block.attrs)) {
+    const ref = makeRef(block);
+    const fullyQualifiedRef = parentRef
+      ? `${parentRef}${SPACE}${ref}`
+      : ref;
+    const {
+      minWidth,
+      maxWidth,
+      className,
+      __source
+    } = block.attrs;
 
-  if (attrsValid(ref, block.attrs)) {
     if (inheritedMedia) {
       if (
         minWidth ||
@@ -267,7 +264,7 @@ function makeCSS() {
     });
   }
 
-  console.log(CSS);
+  // console.log(CSS);
   return CSS;
 }
 
@@ -351,6 +348,7 @@ function saveNewStyleForExistingRef(newStyle, ref) {
 
       console.log('overriddenStyles source', overriddenStyles.__source);
       console.log('overridingStyles source', overridingStyles.__source);
+      debugger;
       throw new ErrorWithData(
         `[Override Found] the "${overriddenProperty}" of "${ref}" has already been defined`,
         {
@@ -505,6 +503,11 @@ function makeSubclassSelector(elementWithSubclass) {
   return `${element}[class="${baseClass}${SPACE}${subClass}"]`;
 }
 
+// for testing / build tools
+const tearDown = () => {
+  AST.clear();
+}
+
 class ErrorWithData extends Error {
   constructor(message, data) {
     super(message);
@@ -516,4 +519,5 @@ class ErrorWithData extends Error {
 module.exports = {
   createStyle,
   createCSS,
+  tearDown
 };

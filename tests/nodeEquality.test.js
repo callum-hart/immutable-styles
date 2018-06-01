@@ -3,7 +3,9 @@
  of same type with a class, i.e: `span` != `span.icon`
 */
 
-const { createStyle } = require('../src/immutableStyles');
+const { createStyle, tearDown } = require('../src/immutableStyles');
+
+beforeEach(() => tearDown());
 
 
 test('[nodeEquality] Elements of different type without class are not equal', () => {

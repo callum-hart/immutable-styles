@@ -2,7 +2,13 @@
  Testing CSS returned by `createCSS`
 */
 
-const { createStyle, createCSS } = require('../src/immutableStyles');
+const {
+  createCSS,
+  createStyle,
+  tearDown
+} = require('../src/immutableStyles');
+
+beforeEach(() => tearDown());
 
 
 test('[createCSS] Single node', () => {
