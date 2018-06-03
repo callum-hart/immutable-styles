@@ -316,7 +316,8 @@ function elementCanUseProperty(ref, element, attrs, styles) {
           whitelistedProperty,
           styles,
           element,
-          elements
+          elements,
+          __source: attrs.__source
         }
       );
     }
