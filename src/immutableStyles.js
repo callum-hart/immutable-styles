@@ -63,7 +63,9 @@ function attrsValid(attrs) {
   return true;
 }
 
-function createCSS(styles) {
+function createCSS(styles, sourceMaps = null) {
+  console.log(sourceMaps);
+
   Array.isArray(styles)
       ? styles.forEach(block => parseStyles(block))
       : parseStyles(styles);
@@ -520,5 +522,6 @@ class ErrorWithData extends Error {
 module.exports = {
   createStyle,
   createCSS,
-  tearDown
+  tearDown,
+  ErrorWithData
 };
