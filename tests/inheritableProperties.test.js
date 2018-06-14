@@ -39,7 +39,7 @@ test('[inheritance] list styles can be applied to list nodes', () => {
   const input = createStyle(
     'li',
     null,
-    'list-style: disc;'
+    'list-style-type: disc;'
   );
 
   const styles = () => createCSS(input);
@@ -53,9 +53,9 @@ test('[inheritance] list styles can not be applied to non-list nodes', () => {
     {
       className: 'userList'
     },
-    'list-style: disc;'
+    'list-style-type: disc;'
   );
 
   const styles = () => createCSS(input);
-  expect(styles).toThrow('The HTML element `div` (div.userList) cannot use the property `list-style`');
+  expect(styles).toThrow('The HTML element `div` (div.userList) cannot use the property `list-style-type`');
 });

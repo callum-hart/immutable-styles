@@ -1,4 +1,5 @@
-const propertyWhitelist = require('./propertyWhitelist');
+const elementPropertyWhitelist = require('./elementPropertyWhitelist');
+const shorthandProperties = require('./shorthandProperties');
 
 
 const BLANK             = '';
@@ -295,14 +296,28 @@ function saveRef(ref, {element, attrs, styles}) {
   }
 }
 
-function stylesValid(ref, element, attrs, styles) {
-  return elementCanUseProperty(ref, element, attrs, styles) &&
-         propertiesAreUnique(ref, element, attrs, styles);
+/**
+ * @param reas composed of ref, element, attrs, styles
+ */
+function stylesValid(...reas) {
+  return propertiesAreUnique(...reas) &&
+         elementCanUseProperty(...reas) &&
+         noAmbiguousProperties(...reas);
+}
+
+function propertiesAreUnique(ref, element, attrs, styles) {
+  try {
+    stylesAsMap(styles, attrs, ref);
+  } catch (e) {
+    throw e;
+  }
+
+  return true;
 }
 
 function elementCanUseProperty(ref, element, attrs, styles) {
-  propertyWhitelist.forEach(({elements, properties}) => {
-    const whitelistedProperty = properties.find(property => styles.includes(property));
+  elementPropertyWhitelist.forEach(({elements, properties}) => {
+    const whitelistedProperty = properties.find(property => stylesAsMap(styles).get(property));
 
     if (
       whitelistedProperty &&
@@ -326,11 +341,26 @@ function elementCanUseProperty(ref, element, attrs, styles) {
   return true;
 }
 
-function propertiesAreUnique(ref, element, attrs, styles) {
-  try {
-    stylesAsMap(styles, attrs, ref);
-  } catch (e) {
-    throw e;
+// todo: add tests
+function noAmbiguousProperties(ref, element, attrs, styles) {
+  for (var property of stylesAsMap(styles).keys()) {
+    const ambiguousProperty = Object.keys(shorthandProperties).includes(property);
+
+    if (ambiguousProperty) {
+      console.log('ambiguousProperty source', attrs.__source);
+      console.log('please use unambiguous properties:', shorthandProperties[property]);
+      throw new ErrorWithData(
+        `[Ambiguous property] "${ref}" uses the shorthand property "${property}"`,
+        {
+          ref,
+          property,
+          styles,
+          element,
+          __source: attrs.__source
+        }
+      );
+    }
+    
   }
 
   return true;
@@ -392,7 +422,6 @@ function createStyleEntry(styles, {minWidth, maxWidth, __source}) {
   }
 }
 
-// todo: needs to validate against short-hand usage
 function areStylesUnique(control, comparison) {
   if (breakpointsOverlap(control, comparison)) {
     for (var property of stylesAsMap(comparison.styles).keys()) {
@@ -522,7 +551,7 @@ class ErrorWithData extends Error {
     super(message);
     this.message = message;
     this.data = data;
-    console.log(SOURCE_MAPS);
+    // console.log(SOURCE_MAPS);
   }
 }
 

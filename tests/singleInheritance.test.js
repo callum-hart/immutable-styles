@@ -18,7 +18,7 @@ test('[composition] Subclass inherits styles from base-class', () => {
       {
         className: 'baseForm'
       },
-      'padding:20px;background:ivory;border:1px solid lightgrey;'
+      'padding-top:20px;background-color:ivory;'
     ),
     createStyle(
       'form',
@@ -30,10 +30,10 @@ test('[composition] Subclass inherits styles from base-class', () => {
   ];
 
   const output = `form[class="baseForm"] {
-  padding:20px;background:ivory;border:1px solid lightgrey;
+  padding-top:20px;background-color:ivory;
 }
 form[class="baseForm subForm"] {
-  padding:20px;background:ivory;border:1px solid lightgrey;
+  padding-top:20px;background-color:ivory;
 }
 `;
 
@@ -48,22 +48,22 @@ test('[composition] Subclass can add its own styles to inherited styles', () => 
       {
         className: 'baseForm'
       },
-      'padding:20px;background:ivory;border:1px solid lightgrey;'
+      'padding-top:20px;background-color:ivory;'
     ),
     createStyle(
       'form',
       {
         className: 'baseForm.subForm'
       },
-      'margin:15px;'
+      'margin-top:15px;'
     )
   ];
 
   const output = `form[class="baseForm"] {
-  padding:20px;background:ivory;border:1px solid lightgrey;
+  padding-top:20px;background-color:ivory;
 }
 form[class="baseForm subForm"] {
-  padding:20px;background:ivory;border:1px solid lightgrey;margin:15px;
+  padding-top:20px;background-color:ivory;margin-top:15px;
 }
 `;
 
@@ -78,22 +78,22 @@ test('[composition] Subclass can override an inherited style', () => {
       {
         className: 'baseForm'
       },
-      'padding:20px;background:ivory;border:1px solid lightgrey;'
+      'padding-top:20px;background-color:ivory;'
     ),
     createStyle(
       'form',
       {
         className: 'baseForm.subForm'
       },
-      'background:white;'
+      'background-color:white;'
     )
   ];
 
   const output = `form[class="baseForm"] {
-  padding:20px;background:ivory;border:1px solid lightgrey;
+  padding-top:20px;background-color:ivory;
 }
 form[class="baseForm subForm"] {
-  padding:20px;background:white /* (original value: ivory) */;border:1px solid lightgrey;
+  padding-top:20px;background-color:white /* (original value: ivory) */;
 }
 `;
 
@@ -108,7 +108,7 @@ test('[composition] Subclass inherits child node styles from base-class', () => 
       {
         className: 'baseForm'
       },
-      'padding:20px;background:ivory;border:1px solid lightgrey;',
+      'padding-top:20px;background-color:ivory;',
       createStyle(
         'input',
         null,
@@ -125,13 +125,13 @@ test('[composition] Subclass inherits child node styles from base-class', () => 
   ];
 
   const output = `form[class="baseForm"] {
-  padding:20px;background:ivory;border:1px solid lightgrey;
+  padding-top:20px;background-color:ivory;
 }
 form[class="baseForm"] > input:not([class]) {
   font-size:16px;
 }
 form[class="baseForm subForm"] {
-  padding:20px;background:ivory;border:1px solid lightgrey;
+  padding-top:20px;background-color:ivory;
 }
 form[class="baseForm subForm"] > input:not([class]) {
   font-size:16px;
@@ -150,7 +150,7 @@ test('[composition] Subclass can add its own styles to child nodes', () => {
       {
         className: 'baseForm'
       },
-      'padding:20px;background:ivory;border:1px solid lightgrey;',
+      'padding-top:20px;background-color:ivory;',
       createStyle(
         'input',
         null,
@@ -166,22 +166,22 @@ test('[composition] Subclass can add its own styles to child nodes', () => {
       createStyle(
         'input',
         null,
-        'border:1px solid slategray;'
+        'color: lightgrey;'
       )
     )
   ];
 
   const output = `form[class="baseForm"] {
-  padding:20px;background:ivory;border:1px solid lightgrey;
+  padding-top:20px;background-color:ivory;
 }
 form[class="baseForm"] > input:not([class]) {
   font-size:16px;
 }
 form[class="baseForm subForm"] {
-  padding:20px;background:ivory;border:1px solid lightgrey;
+  padding-top:20px;background-color:ivory;
 }
 form[class="baseForm subForm"] > input:not([class]) {
-  font-size:16px;border:1px solid slategray;
+  font-size:16px;color:lightgrey;
 }
 `;
 
@@ -196,7 +196,7 @@ test('[composition] Subclass can override inherited child node styles', () => {
       {
         className: 'baseForm'
       },
-      'padding:20px;background:ivory;border:1px solid lightgrey;',
+      'padding-top:20px;background-color:ivory;',
       createStyle(
         'input',
         null,
@@ -218,13 +218,13 @@ test('[composition] Subclass can override inherited child node styles', () => {
   ];
 
   const output = `form[class="baseForm"] {
-  padding:20px;background:ivory;border:1px solid lightgrey;
+  padding-top:20px;background-color:ivory;
 }
 form[class="baseForm"] > input:not([class]) {
   font-size:16px;
 }
 form[class="baseForm subForm"] {
-  padding:20px;background:ivory;border:1px solid lightgrey;
+  padding-top:20px;background-color:ivory;
 }
 form[class="baseForm subForm"] > input:not([class]) {
   font-size:18px /* (original value: 16px) */;

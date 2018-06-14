@@ -72,7 +72,7 @@ test('[createCSS] Child node', () => {
         {
           className: 'col'
         },
-        'flex: 1;'
+        'flex-grow: 1;'
       )
     )
   ];
@@ -81,7 +81,7 @@ test('[createCSS] Child node', () => {
   display: flex;
 }
 div[class="grid"] > span[class="col"] {
-  flex: 1;
+  flex-grow: 1;
 }
 `;
 
@@ -102,14 +102,14 @@ test('[createCSS] Child nodes', () => {
         {
           className: 'sideBar'
         },
-        'flex: 1;'
+        'flex-grow: 1;'
       ),
       createStyle(
         'div',
         {
           className: 'content'
         },
-        'flex: 3;'
+        'flex-grow: 3;'
       )
     )
   ];
@@ -118,10 +118,10 @@ test('[createCSS] Child nodes', () => {
   display: flex;
 }
 section[class="container"] > div[class="sideBar"] {
-  flex: 1;
+  flex-grow: 1;
 }
 section[class="container"] > div[class="content"] {
-  flex: 3;
+  flex-grow: 3;
 }
 `;
 
@@ -148,7 +148,7 @@ test('[createCSS] Child nodes deep', () => {
           {
             className: 'navLink'
           },
-          'padding: 10px 20px;'
+          'padding-top: 10px;'
         )
       )
     )
@@ -161,7 +161,7 @@ nav[class="navBar"] > ul[class="navLinks"] {
   justify-content: flex-end;
 }
 nav[class="navBar"] > ul[class="navLinks"] > li[class="navLink"] {
-  padding: 10px 20px;
+  padding-top: 10px;
 }
 `;
 

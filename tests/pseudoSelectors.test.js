@@ -190,13 +190,13 @@ test('[pseudo] Node with psuedo-class and child node', () => {
         {
           className: 'child',
         },
-        'text-decoration: underline;'
+        'text-decoration-line: underline;'
       )
     )
   ];
 
   const output = `div[class="parent"]:hover > a[class="child"] {
-  text-decoration: underline;
+  text-decoration-line: underline;
 }
 `;
 
