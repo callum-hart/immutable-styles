@@ -15,6 +15,7 @@ const ZERO              = 0;
 const MEDIA_UNIT        = 'px';
 
 const AST = new Map();
+const SOURCE_MAPS = new Map();
 
 
 function createStyle(element, attrs, ...children) {
@@ -63,9 +64,7 @@ function attrsValid(attrs) {
   return true;
 }
 
-function createCSS(styles, sourceMaps = null) {
-  console.log(sourceMaps);
-
+function createCSS(styles) {
   Array.isArray(styles)
       ? styles.forEach(block => parseStyles(block))
       : parseStyles(styles);
@@ -159,7 +158,6 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
   }
 }
 
-// todo: return cloned styles
 function cloneBaseStyles(baseRef, clonedRef) {
   for (var ref of AST.keys()) {
     if (
@@ -372,7 +370,10 @@ function mergeNewStyleWithEquivalentStyle(newStyle, equivalentStyle) {
   for (var property of newStyles.keys()) {
     if (equivalentStyles.has(property)) {
       // style already exists, override it
-      equivalentStyles.set(property, `${newStyles.get(property)} /* (original value: ${equivalentStyles.get(property)}) */`);
+      equivalentStyles.set(
+        property,
+        `${newStyles.get(property)} /* (original value: ${equivalentStyles.get(property)}) */`
+      );
     } else {
       // add style
       equivalentStyles.set(property, `${newStyles.get(property)}`);
@@ -506,9 +507,14 @@ function makeSubclassSelector(elementWithSubclass) {
   return `${element}[class="${baseClass}${SPACE}${subClass}"]`;
 }
 
+function saveSourceMap(fileName, fileSource) {
+  SOURCE_MAPS.set(fileName, fileSource);
+}
+
 // for testing / build tools
-const tearDown = () => {
+function tearDown() {
   AST.clear();
+  SOURCE_MAPS.clear();
 }
 
 class ErrorWithData extends Error {
@@ -516,12 +522,14 @@ class ErrorWithData extends Error {
     super(message);
     this.message = message;
     this.data = data;
+    console.log(SOURCE_MAPS);
   }
 }
 
 module.exports = {
   createStyle,
   createCSS,
+  saveSourceMap,
   tearDown,
   ErrorWithData
 };
