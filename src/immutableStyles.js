@@ -1,5 +1,6 @@
 const elementPropertyWhitelist = require('./elementPropertyWhitelist');
-const shorthandProperties = require('./shorthandProperties');
+const shorthandProperties = require('./shorthandProperties')
+const shorthandHelpers = require('./shorthandHelpers');
 
 
 const BLANK             = '';
@@ -341,14 +342,18 @@ function elementCanUseProperty(ref, element, attrs, styles) {
   return true;
 }
 
-// todo: add tests
 function noAmbiguousProperties(ref, element, attrs, styles) {
   for (var property of stylesAsMap(styles).keys()) {
     const ambiguousProperty = Object.keys(shorthandProperties).includes(property);
 
     if (ambiguousProperty) {
       console.log('ambiguousProperty source', attrs.__source);
-      console.log('please use unambiguous properties:', shorthandProperties[property]);
+      console.log('please use unambiguous properties:', shorthandProperties[property].suggestions);
+      if (shorthandProperties[property].helper) {
+        const { name, example} = shorthandProperties[property].helper;
+        console.log('or use the helper:', name, example);
+      }
+
       throw new ErrorWithData(
         `[Ambiguous property] "${ref}" uses the shorthand property "${property}"`,
         {
@@ -360,7 +365,6 @@ function noAmbiguousProperties(ref, element, attrs, styles) {
         }
       );
     }
-    
   }
 
   return true;
@@ -560,5 +564,6 @@ module.exports = {
   createCSS,
   saveSourceMap,
   tearDown,
-  ErrorWithData
+  ErrorWithData,
+  ...shorthandHelpers
 };

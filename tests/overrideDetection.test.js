@@ -5,7 +5,8 @@
 const {
   createCSS,
   createStyle,
-  tearDown
+  tearDown,
+  margin
 } = require('../src/immutableStyles');
 
 beforeEach(() => tearDown());
@@ -236,4 +237,16 @@ test('Override found in detached CSS rule-set', () => {
 
   const overrideNotFound = () => createCSS(input);
   expect(overrideNotFound).toThrow('The CSS property `font-size` is defined twice by `h1.pageTitle`');
+});
+
+
+test('Override found when shorthand helper is used', () => {
+  const input = createStyle(
+    'div',
+    null,
+    `${margin('10px')} margin-top: 20px;`
+  );
+
+  const overrideNotFound = () => createCSS(input);
+  expect(overrideNotFound).toThrow('The CSS property `margin-top` is defined twice by `div`');
 });
