@@ -51,6 +51,14 @@ function attrsValid(attrs) {
       if (!permittedAttrs.includes(attr)) {
         console.log('invalid attr source', attrs.__source);
 
+        const { fileName, lineNumber } = attrs.__source;
+        const sourceCode = SOURCE_MAPS.get(fileName);
+        const codeFromLineNumber = sourceCode.split(/\n/)
+          .slice(lineNumber - 1)
+          .join('\n');
+        const chunk = codeFromLineNumber.match(/<([\s\S]*?)>/)[0];
+        console.log(chunk);
+
         throw new ErrorWithData(
           `\`${attr}\` is not a valid attribute`,
           {
@@ -353,6 +361,15 @@ function noAmbiguousProperties(ref, element, attrs, styles) {
         const { name, example} = shorthandProperties[property].helper;
         console.log('or use the helper:', name, example);
       }
+
+      const { fileName, lineNumber } = attrs.__source;
+      const sourceCode = SOURCE_MAPS.get(fileName);
+      const codeFromLineNumber = sourceCode.split(/\n/)
+        .slice(lineNumber - 1)
+        .join('\n');
+      const problemCodeLine = codeFromLineNumber.match(new RegExp('^\\s*>*.*' + property + '\\s*:([\\s\\S]*?).+;', 'gm'))[0];
+      const chunk = codeFromLineNumber.match(new RegExp('[\\s\\S]*?' + problemCodeLine))[0];
+      console.log('chunk:\n', chunk);
 
       throw new ErrorWithData(
         `[Ambiguous property] "${ref}" uses the shorthand property "${property}"`,
