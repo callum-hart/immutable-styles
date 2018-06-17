@@ -7,7 +7,7 @@ const { ErrorWithData } = ImmutableStyles;
 
 function isImmutableStyleModule(resourceName) {
   return typeof(resourceName) !== 'undefined' &&
-    resourceName.endsWith('.is.jsx');
+    resourceName.endsWith('.iss.jsx'); // .iss => Immutable Style Sheet 
 }
 
 function isSoureMapEnabled(moduleSource) {

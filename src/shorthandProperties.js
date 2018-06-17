@@ -90,7 +90,11 @@ module.exports = {
       'border-top-right-radius', 
       'border-bottom-right-radius',
       'border-bottom-left-radius'
-    ]
+    ],
+    helper: {
+      name: 'borderRadius',
+      example: "borderRadius('5px')"
+    }
   },
   'column-rule': {
     suggestions: [
