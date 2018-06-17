@@ -7,14 +7,16 @@ const { ErrorWithData } = ImmutableStyles;
 
 function isImmutableStyleModule(resourceName) {
   return typeof(resourceName) !== 'undefined' &&
-    resourceName.endsWith('.iss.jsx'); // .iss => Immutable Style Sheet 
+    resourceName.endsWith('.iss.jsx'); // .iss => Immutable Styles Sheet 
 }
 
 function isSoureMapEnabled(moduleSource) {
   return typeof(moduleSource._sourceMap) !== 'undefined';
 }
 
-// throws error: when file contains a JavaScript error (i.e: variable is not defined)
+// throws error when file: 
+// - contains a JavaScript error (i.e: variable is not defined)
+// - contains shorthand helper with invalid arity
 function buildAST(modules) {
   return modules.filter(module => isImmutableStyleModule(module.resource))
     .map(module => {

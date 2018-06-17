@@ -19,6 +19,9 @@ const MEDIA_UNIT        = 'px';
 const AST = new Map();
 const SOURCE_MAPS = new Map();
 
+const BETWEEN_ANGLE_BRACKETS = /^\s*<([\s\S]*?)>/;
+const EVERYTHING = '[\\s\\S]*';
+
 
 function createStyle(element, attrs, ...children) {
   let styles = BLANK;
@@ -49,15 +52,9 @@ function attrsValid(attrs) {
 
     Object.keys(attrs).forEach(attr => {
       if (!permittedAttrs.includes(attr)) {
-        console.log('invalid attr source', attrs.__source);
-
-        const { fileName, lineNumber } = attrs.__source;
-        const sourceCode = SOURCE_MAPS.get(fileName);
-        const codeFromLineNumber = sourceCode.split(/\n/)
-          .slice(lineNumber - 1)
-          .join('\n');
-        const chunk = codeFromLineNumber.match(/<([\s\S]*?)>/)[0];
+        const chunk = getCodeFromLineNumber(attrs.__source).match(BETWEEN_ANGLE_BRACKETS)[0];
         console.log(chunk);
+        // TODO: if attr is "id" log extra message, see: log.js:57
 
         throw new ErrorWithData(
           `\`${attr}\` is not a valid attribute`,
@@ -101,8 +98,14 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
         minWidth ||
         maxWidth
       ) {
-        console.log('parent source', inheritedMedia.__source);
-        console.log('nested source', __source);
+        console.log(`\nParent media query (${inheritedMedia.__source.fileName}):`)
+        const chunk1 = getCodeFromLineNumber(inheritedMedia.__source).match(BETWEEN_ANGLE_BRACKETS)[0];
+        console.log(chunk1);
+
+        console.log(`\nNested media query (${__source.fileName}):`)
+        const chunk2 = getCodeFromLineNumber(__source).match(BETWEEN_ANGLE_BRACKETS)[0];
+        console.log(chunk2);
+
         throw new ErrorWithData(
           `[Nested Media Query] Nested media query found in "${inheritedMedia.setBy}"`,
           {
@@ -130,7 +133,9 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
         cloneBaseStyles(baseRef, fullyQualifiedRef);
         // todo: generate run-time validations
       } else {
-        console.log('Base class source', __source);
+        const chunk = getCodeFromLineNumber(__source).match(BETWEEN_ANGLE_BRACKETS)[0];
+        console.log(chunk);
+
         throw new ErrorWithData(
           `The base class \`${baseRef}\` does not exist`,
           {
@@ -219,8 +224,18 @@ function parseAst() {
                 overridingStyles
               } = e.data;
 
-              console.log('overriddenStyles source', overriddenStyles.__source);
-              console.log('overridingStyles source', overridingStyles.__source);
+              console.log(`\nOverridden styles (${overriddenStyles.__source.fileName}):`)
+              const codeFromLineNumber1 = getCodeFromLineNumber(overriddenStyles.__source);
+              const problemProperty1 = findProblemProperty(codeFromLineNumber1, overriddenProperty);
+              const chunk1 = codeFromLineNumber1.match(new RegExp(`${EVERYTHING}?${problemProperty1[0]}`))[0];
+              console.log('chunk:\n', chunk1);
+
+              console.log(`\nOverriding styles (${overridingStyles.__source.fileName}):`)
+              const codeFromLineNumber2 = getCodeFromLineNumber(overridingStyles.__source);
+              const problemProperty2 = findProblemProperty(codeFromLineNumber2, overriddenProperty);
+              const chunk2 = codeFromLineNumber2.match(new RegExp(`${EVERYTHING}?${problemProperty2[0]}`))[0];
+              console.log('chunk:\n', chunk2);
+              
               throw new ErrorWithData(
                 `[Override Found] "${ref}" overrides the "${overriddenProperty}" set by "${accumulator}"`,
                 {
@@ -332,7 +347,11 @@ function elementCanUseProperty(ref, element, attrs, styles) {
       whitelistedProperty &&
       !elements.includes(element)
     ) {
-      console.log('whitelistedProperty source', attrs.__source);
+      const codeFromLineNumber = getCodeFromLineNumber(attrs.__source);
+      const problemProperty = findProblemProperty(codeFromLineNumber, whitelistedProperty);
+      const chunk = codeFromLineNumber.match(new RegExp(`${EVERYTHING}?${problemProperty[0]}`))[0];
+      console.log('chunk:\n', chunk);
+
       throw new ErrorWithData(
         `The HTML element \`${element}\` (${ref}) cannot use the property \`${whitelistedProperty}\``,
         {
@@ -355,21 +374,16 @@ function noAmbiguousProperties(ref, element, attrs, styles) {
     const ambiguousProperty = Object.keys(shorthandProperties).includes(property);
 
     if (ambiguousProperty) {
-      console.log('ambiguousProperty source', attrs.__source);
+      const codeFromLineNumber = getCodeFromLineNumber(attrs.__source);
+      const problemProperty = findProblemProperty(codeFromLineNumber, property);
+      const chunk = codeFromLineNumber.match(new RegExp(`${EVERYTHING}?${problemProperty[0]}`))[0];
+      console.log('chunk:\n', chunk);
+
       console.log('please use unambiguous properties:', shorthandProperties[property].suggestions);
       if (shorthandProperties[property].helper) {
         const { name, example} = shorthandProperties[property].helper;
         console.log('or use the helper:', name, example);
       }
-
-      const { fileName, lineNumber } = attrs.__source;
-      const sourceCode = SOURCE_MAPS.get(fileName);
-      const codeFromLineNumber = sourceCode.split(/\n/)
-        .slice(lineNumber - 1)
-        .join('\n');
-      const problemCodeLine = codeFromLineNumber.match(new RegExp('^\\s*>*.*' + property + '\\s*:([\\s\\S]*?).+;', 'gm'))[0];
-      const chunk = codeFromLineNumber.match(new RegExp('[\\s\\S]*?' + problemCodeLine))[0];
-      console.log('chunk:\n', chunk);
 
       throw new ErrorWithData(
         `[Ambiguous property] "${ref}" uses the shorthand property "${property}"`,
@@ -398,9 +412,18 @@ function saveNewStyleForExistingRef(newStyle, ref) {
         overridingStyles
       } = e.data;
 
-      console.log('overriddenStyles source', overriddenStyles.__source);
-      console.log('overridingStyles source', overridingStyles.__source);
-      debugger;
+      console.log(`\nOverridden styles (${overriddenStyles.__source.fileName}):`)
+      const codeFromLineNumber1 = getCodeFromLineNumber(overriddenStyles.__source);
+      const problemProperty1 = findProblemProperty(codeFromLineNumber1, overriddenProperty);
+      const chunk1 = codeFromLineNumber1.match(new RegExp(`${EVERYTHING}?${problemProperty1[0]}`))[0];
+      console.log('chunk:\n', chunk1);
+
+      console.log(`\nOverriding styles (${overridingStyles.__source.fileName}):`)
+      const codeFromLineNumber2 = getCodeFromLineNumber(overridingStyles.__source);
+      const problemProperty2 = findProblemProperty(codeFromLineNumber2, overriddenProperty);
+      const chunk2 = codeFromLineNumber2.match(new RegExp(`${EVERYTHING}?${problemProperty2[0]}`))[0];
+      console.log('chunk:\n', chunk2);
+
       throw new ErrorWithData(
         `[Override Found] the "${overriddenProperty}" of "${ref}" has already been defined`,
         {
@@ -488,7 +511,11 @@ function stylesAsMap(stylesAsString, attrs = null, ref = null) {
       const [property, value] = declaration.split(COLON).map(res => res.trim().toLowerCase());
 
       if (styles.has(property)) {
-        console.log('Duplicate property source', attrs.__source);
+        const codeFromLineNumber = getCodeFromLineNumber(attrs.__source);
+        const problemProperties = findProblemProperty(codeFromLineNumber, property);
+        const chunk = codeFromLineNumber.match(new RegExp(`${EVERYTHING}?${problemProperties[1]}`))[0];
+        console.log('chunk:\n', chunk);
+        
         throw new ErrorWithData(
           `The CSS property \`${property}\` is defined twice by \`${ref}\``,
           {
@@ -567,12 +594,24 @@ function tearDown() {
   SOURCE_MAPS.clear();
 }
 
+function getCodeFromLineNumber({fileName, lineNumber}) {
+  return SOURCE_MAPS.get(fileName)
+          .split(/\n/)
+          .slice(lineNumber - 1)
+          .join('\n');
+}
+
+function findProblemProperty(codeFromLineNumber, property) {
+  return codeFromLineNumber.match(
+    new RegExp(`^\\s*>*.*${property}\\s*:(${EVERYTHING}?).+;`, 'gm')
+  );
+}
+
 class ErrorWithData extends Error {
   constructor(message, data) {
     super(message);
     this.message = message;
     this.data = data;
-    // console.log(SOURCE_MAPS);
   }
 }
 
