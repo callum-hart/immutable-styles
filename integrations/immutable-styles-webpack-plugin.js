@@ -32,9 +32,10 @@ function buildAST(modules) {
           console.log('source maps not enabled 🙁');
         }
       } catch (err) {
-        // todo: log error to console `ImmutableStyles.logError`
+        const message = err.message.concat(`\n └─ ${fileName}`);
+
         throw new ErrorWithData(
-          err.message,
+          message,
           {
             fileName,
             fileSource
@@ -69,7 +70,6 @@ class ImmutableStylesPlugin {
             if (err) throw err;
           });
         } catch (err) {
-          console.log(err);
           compilation.errors.push(err);
         }
       });

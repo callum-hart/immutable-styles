@@ -5,6 +5,7 @@ const shorthandHelpers = require('./shorthandHelpers');
 
 const BLANK             = '';
 const SPACE             = ' ';
+const TAB               = SPACE.repeat(2);
 const DOT               = '.';
 const COLON             = ':';
 const SEMI_COLON        = ';';
@@ -52,9 +53,15 @@ function attrsValid(attrs) {
 
     Object.keys(attrs).forEach(attr => {
       if (!permittedAttrs.includes(attr)) {
-        const chunk = getCodeFromLineNumber(attrs.__source).match(BETWEEN_ANGLE_BRACKETS)[0];
-        console.log(chunk);
         // TODO: if attr is "id" log extra message, see: log.js:57
+      
+        const chunk = getChunk(
+          getCodeSnippet(attrs.__source).match(BETWEEN_ANGLE_BRACKETS)[0], 
+          attrs.__source.lineNumber, 
+          attr
+        );
+
+        console.log(chunk);
 
         throw new ErrorWithData(
           `\`${attr}\` is not a valid attribute`,
@@ -69,6 +76,28 @@ function attrsValid(attrs) {
   }
 
   return true;
+}
+
+function getChunk(code, startingLineNumber, fragment) {
+  // prefix each loc with line number & point to the error with carets
+  return code.split(/\n/)
+    .map((loc, i) => {
+      const lineNumber = `${startingLineNumber + i}${SPACE}|${SPACE}`;
+
+      // console.log('fragment:', fragment);
+
+      if (loc.match(new RegExp(`.*${fragment}`))) {
+        const line = `>${SPACE}${lineNumber}${loc}`;
+
+        // console.log('line:', line);
+
+        return line.concat(
+          `\n${SPACE.repeat(line.indexOf(fragment))}${'^'.repeat(fragment.length)}`
+        );
+      }
+      return `${TAB}${lineNumber}${loc}`;
+  })
+  .join('\n');
 }
 
 function createCSS(styles) {
@@ -98,13 +127,22 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
         minWidth ||
         maxWidth
       ) {
-        console.log(`\nParent media query (${inheritedMedia.__source.fileName}):`)
-        const chunk1 = getCodeFromLineNumber(inheritedMedia.__source).match(BETWEEN_ANGLE_BRACKETS)[0];
-        console.log(chunk1);
+        const parentChunk = getChunk(
+          getCodeSnippet(inheritedMedia.__source).match(BETWEEN_ANGLE_BRACKETS)[0], 
+          inheritedMedia.__source.lineNumber, 
+          inheritedMedia.minWidth ? 'minWidth' : 'maxWidth'
+        );
 
+        const childChunk = getChunk(
+          getCodeSnippet(__source).match(BETWEEN_ANGLE_BRACKETS)[0], 
+          __source.lineNumber, 
+          minWidth ? 'minWidth' : 'maxWidth'
+        );
+
+        console.log(`\nParent media query (${inheritedMedia.__source.fileName}):`)
+        console.log(parentChunk);
         console.log(`\nNested media query (${__source.fileName}):`)
-        const chunk2 = getCodeFromLineNumber(__source).match(BETWEEN_ANGLE_BRACKETS)[0];
-        console.log(chunk2);
+        console.log(childChunk);
 
         throw new ErrorWithData(
           `[Nested Media Query] Nested media query found in "${inheritedMedia.setBy}"`,
@@ -133,7 +171,12 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
         cloneBaseStyles(baseRef, fullyQualifiedRef);
         // todo: generate run-time validations
       } else {
-        const chunk = getCodeFromLineNumber(__source).match(BETWEEN_ANGLE_BRACKETS)[0];
+        const chunk = getChunk(
+          getCodeSnippet(__source).match(BETWEEN_ANGLE_BRACKETS)[0], 
+          __source.lineNumber, 
+          baseClass
+        );
+
         console.log(chunk);
 
         throw new ErrorWithData(
@@ -225,13 +268,13 @@ function parseAst() {
               } = e.data;
 
               console.log(`\nOverridden styles (${overriddenStyles.__source.fileName}):`)
-              const codeFromLineNumber1 = getCodeFromLineNumber(overriddenStyles.__source);
+              const codeFromLineNumber1 = getCodeSnippet(overriddenStyles.__source);
               const problemProperty1 = findProblemProperty(codeFromLineNumber1, overriddenProperty);
               const chunk1 = codeFromLineNumber1.match(new RegExp(`${EVERYTHING}?${problemProperty1[0]}`))[0];
               console.log('chunk:\n', chunk1);
 
               console.log(`\nOverriding styles (${overridingStyles.__source.fileName}):`)
-              const codeFromLineNumber2 = getCodeFromLineNumber(overridingStyles.__source);
+              const codeFromLineNumber2 = getCodeSnippet(overridingStyles.__source);
               const problemProperty2 = findProblemProperty(codeFromLineNumber2, overriddenProperty);
               const chunk2 = codeFromLineNumber2.match(new RegExp(`${EVERYTHING}?${problemProperty2[0]}`))[0];
               console.log('chunk:\n', chunk2);
@@ -347,10 +390,13 @@ function elementCanUseProperty(ref, element, attrs, styles) {
       whitelistedProperty &&
       !elements.includes(element)
     ) {
-      const codeFromLineNumber = getCodeFromLineNumber(attrs.__source);
-      const problemProperty = findProblemProperty(codeFromLineNumber, whitelistedProperty);
-      const chunk = codeFromLineNumber.match(new RegExp(`${EVERYTHING}?${problemProperty[0]}`))[0];
-      console.log('chunk:\n', chunk);
+      const chunk = getChunk(
+        getCodeSnippet(attrs.__source).match(new RegExp(`${EVERYTHING}?${whitelistedProperty}.+`))[0],
+        attrs.__source.lineNumber, 
+        whitelistedProperty
+      );
+
+      console.log(chunk);
 
       throw new ErrorWithData(
         `The HTML element \`${element}\` (${ref}) cannot use the property \`${whitelistedProperty}\``,
@@ -374,10 +420,17 @@ function noAmbiguousProperties(ref, element, attrs, styles) {
     const ambiguousProperty = Object.keys(shorthandProperties).includes(property);
 
     if (ambiguousProperty) {
-      const codeFromLineNumber = getCodeFromLineNumber(attrs.__source);
+      const codeFromLineNumber = getCodeSnippet(attrs.__source);
       const problemProperty = findProblemProperty(codeFromLineNumber, property);
       const chunk = codeFromLineNumber.match(new RegExp(`${EVERYTHING}?${problemProperty[0]}`))[0];
       console.log('chunk:\n', chunk);
+
+      // const chunk = getChunk(
+      //   getCodeSnippet(attrs.__source).match(new RegExp(`${EVERYTHING}${property}\\s*:.+;`))[0],
+      //   attrs.__source.lineNumber, 
+      //   property
+      // );
+      // console.log(chunk);
 
       console.log('please use unambiguous properties:', shorthandProperties[property].suggestions);
       if (shorthandProperties[property].helper) {
@@ -413,13 +466,13 @@ function saveNewStyleForExistingRef(newStyle, ref) {
       } = e.data;
 
       console.log(`\nOverridden styles (${overriddenStyles.__source.fileName}):`)
-      const codeFromLineNumber1 = getCodeFromLineNumber(overriddenStyles.__source);
+      const codeFromLineNumber1 = getCodeSnippet(overriddenStyles.__source);
       const problemProperty1 = findProblemProperty(codeFromLineNumber1, overriddenProperty);
       const chunk1 = codeFromLineNumber1.match(new RegExp(`${EVERYTHING}?${problemProperty1[0]}`))[0];
       console.log('chunk:\n', chunk1);
 
       console.log(`\nOverriding styles (${overridingStyles.__source.fileName}):`)
-      const codeFromLineNumber2 = getCodeFromLineNumber(overridingStyles.__source);
+      const codeFromLineNumber2 = getCodeSnippet(overridingStyles.__source);
       const problemProperty2 = findProblemProperty(codeFromLineNumber2, overriddenProperty);
       const chunk2 = codeFromLineNumber2.match(new RegExp(`${EVERYTHING}?${problemProperty2[0]}`))[0];
       console.log('chunk:\n', chunk2);
@@ -511,7 +564,7 @@ function stylesAsMap(stylesAsString, attrs = null, ref = null) {
       const [property, value] = declaration.split(COLON).map(res => res.trim().toLowerCase());
 
       if (styles.has(property)) {
-        const codeFromLineNumber = getCodeFromLineNumber(attrs.__source);
+        const codeFromLineNumber = getCodeSnippet(attrs.__source);
         const problemProperties = findProblemProperty(codeFromLineNumber, property);
         const chunk = codeFromLineNumber.match(new RegExp(`${EVERYTHING}?${problemProperties[1]}`))[0];
         console.log('chunk:\n', chunk);
@@ -594,7 +647,7 @@ function tearDown() {
   SOURCE_MAPS.clear();
 }
 
-function getCodeFromLineNumber({fileName, lineNumber}) {
+function getCodeSnippet({fileName, lineNumber}) {
   return SOURCE_MAPS.get(fileName)
           .split(/\n/)
           .slice(lineNumber - 1)
