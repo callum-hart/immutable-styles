@@ -78,18 +78,15 @@ function attrsValid(attrs) {
   return true;
 }
 
-function getChunk(code, startingLineNumber, fragment) {
+function getChunk(code, startingLineNumber, matcher, fragment = matcher) {
   // prefix each loc with line number & point to the error with carets
+
   return code.split(/\n/)
     .map((loc, i) => {
       const lineNumber = `${startingLineNumber + i}${SPACE}|${SPACE}`;
 
-      // console.log('fragment:', fragment);
-
-      if (loc.match(new RegExp(`.*${fragment}`))) {
+      if (loc.match(matcher)) {
         const line = `>${SPACE}${lineNumber}${loc}`;
-
-        // console.log('line:', line);
 
         return line.concat(
           `\n${SPACE.repeat(line.indexOf(fragment))}${'^'.repeat(fragment.length)}`
@@ -420,17 +417,14 @@ function noAmbiguousProperties(ref, element, attrs, styles) {
     const ambiguousProperty = Object.keys(shorthandProperties).includes(property);
 
     if (ambiguousProperty) {
-      const codeFromLineNumber = getCodeSnippet(attrs.__source);
-      const problemProperty = findProblemProperty(codeFromLineNumber, property);
-      const chunk = codeFromLineNumber.match(new RegExp(`${EVERYTHING}?${problemProperty[0]}`))[0];
-      console.log('chunk:\n', chunk);
-
-      // const chunk = getChunk(
-      //   getCodeSnippet(attrs.__source).match(new RegExp(`${EVERYTHING}${property}\\s*:.+;`))[0],
-      //   attrs.__source.lineNumber, 
-      //   property
-      // );
-      // console.log(chunk);
+      const chunk = getChunk(
+        getCodeSnippet(attrs.__source).match(new RegExp(`${EVERYTHING}?${propertyMatcher(property)}`))[0],
+        attrs.__source.lineNumber, 
+        new RegExp(propertyMatcher(property)),
+        property
+      );
+      
+      console.log(chunk);
 
       console.log('please use unambiguous properties:', shorthandProperties[property].suggestions);
       if (shorthandProperties[property].helper) {
@@ -652,6 +646,10 @@ function getCodeSnippet({fileName, lineNumber}) {
           .split(/\n/)
           .slice(lineNumber - 1)
           .join('\n');
+}
+
+function propertyMatcher(property) {
+  return `.*${property}\\s*:.+;`;
 }
 
 function findProblemProperty(codeFromLineNumber, property) {
