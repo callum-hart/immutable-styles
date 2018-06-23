@@ -249,17 +249,25 @@ function parseAst() {
                 overridingStyles
               } = e.data;
 
-              console.log(`\nOverridden styles (${overriddenStyles.__source.fileName}):`)
-              const codeFromLineNumber1 = getCodeFromLine(overriddenStyles.__source);
-              const problemProperty1 = findProblemProperty(codeFromLineNumber1, overriddenProperty);
-              const chunk1 = codeFromLineNumber1.match(new RegExp(`${EVERYTHING}?${problemProperty1[0]}`))[0];
-              console.log('chunk:\n', chunk1);
+              const overriddenChunk = getChunk(
+                getCodeFromLine(overriddenStyles.__source).match(new RegExp(`${EVERYTHING}?${propertyMatcher(overriddenProperty)}`, 'm'))[0],
+                overriddenStyles.__source.lineNumber, 
+                propertyMatcher(overriddenProperty),
+                overriddenProperty
+              );
 
+              console.log(`\nOverridden styles (${overriddenStyles.__source.fileName}):`)
+              console.log(overriddenChunk);
+
+              const overridingChunk = getChunk(
+                getCodeFromLine(overridingStyles.__source).match(new RegExp(`${EVERYTHING}?${propertyMatcher(overriddenProperty)}`, 'm'))[0],
+                overridingStyles.__source.lineNumber, 
+                propertyMatcher(overriddenProperty),
+                overriddenProperty
+              );
+              
               console.log(`\nOverriding styles (${overridingStyles.__source.fileName}):`)
-              const codeFromLineNumber2 = getCodeFromLine(overridingStyles.__source);
-              const problemProperty2 = findProblemProperty(codeFromLineNumber2, overriddenProperty);
-              const chunk2 = codeFromLineNumber2.match(new RegExp(`${EVERYTHING}?${problemProperty2[0]}`))[0];
-              console.log('chunk:\n', chunk2);
+              console.log(overridingChunk);
               
               throw new ErrorWithData(
                 `[Override Found] "${ref}" overrides the "${overriddenProperty}" set by "${accumulator}"`,
@@ -445,17 +453,25 @@ function saveNewStyleForExistingRef(newStyle, ref) {
         overridingStyles
       } = e.data;
 
-      console.log(`\nOverridden styles (${overriddenStyles.__source.fileName}):`)
-      const codeFromLineNumber1 = getCodeFromLine(overriddenStyles.__source);
-      const problemProperty1 = findProblemProperty(codeFromLineNumber1, overriddenProperty);
-      const chunk1 = codeFromLineNumber1.match(new RegExp(`${EVERYTHING}?${problemProperty1[0]}`))[0];
-      console.log('chunk:\n', chunk1);
+      const overriddenChunk = getChunk(
+        getCodeFromLine(overriddenStyles.__source).match(new RegExp(`${EVERYTHING}?${propertyMatcher(overriddenProperty)}`, 'm'))[0],
+        overriddenStyles.__source.lineNumber, 
+        propertyMatcher(overriddenProperty),
+        overriddenProperty
+      );
 
+      console.log(`\nOverridden styles (${overriddenStyles.__source.fileName}):`)
+      console.log(overriddenChunk);
+
+      const overridingChunk = getChunk(
+        getCodeFromLine(overridingStyles.__source).match(new RegExp(`${EVERYTHING}?${propertyMatcher(overriddenProperty)}`, 'm'))[0],
+        overridingStyles.__source.lineNumber, 
+        propertyMatcher(overriddenProperty),
+        overriddenProperty
+      );
+      
       console.log(`\nOverriding styles (${overridingStyles.__source.fileName}):`)
-      const codeFromLineNumber2 = getCodeFromLine(overridingStyles.__source);
-      const problemProperty2 = findProblemProperty(codeFromLineNumber2, overriddenProperty);
-      const chunk2 = codeFromLineNumber2.match(new RegExp(`${EVERYTHING}?${problemProperty2[0]}`))[0];
-      console.log('chunk:\n', chunk2);
+      console.log(overridingChunk);
 
       throw new ErrorWithData(
         `[Override Found] the "${overriddenProperty}" of "${ref}" has already been defined`,
@@ -544,10 +560,15 @@ function stylesAsMap(stylesAsString, attrs = null, ref = null) {
       const [property, value] = declaration.split(COLON).map(res => res.trim().toLowerCase());
 
       if (styles.has(property)) {
-        const codeFromLineNumber = getCodeFromLine(attrs.__source);
-        const problemProperties = findProblemProperty(codeFromLineNumber, property);
-        const chunk = codeFromLineNumber.match(new RegExp(`${EVERYTHING}?${problemProperties[1]}`))[0];
-        console.log('chunk:\n', chunk);
+        // todo: this should point to 2nd occurrencee of property (currently 1st)
+        const chunk = getChunk(
+          getCodeFromLine(attrs.__source).match(new RegExp(`${EVERYTHING}?${propertyMatcher(property)}`, 'm'))[0],
+          attrs.__source.lineNumber, 
+          propertyMatcher(property),
+          property
+        );
+        
+        console.log(chunk);
         
         throw new ErrorWithData(
           `The CSS property \`${property}\` is defined twice by \`${ref}\``,
@@ -656,13 +677,6 @@ function getChunk(code, startingLineNumber, matcher, fragment) {
       return `${TAB}${lineNumber}${loc}`;
   })
   .join('\n');
-}
-
-// TODO: depreciate
-function findProblemProperty(codeFromLineNumber, property) {
-  return codeFromLineNumber.match(
-    new RegExp(`^\\s*>*.*${property}\\s*:(${EVERYTHING}?).+;`, 'gm')
-  );
 }
 
 class ErrorWithData extends Error {
