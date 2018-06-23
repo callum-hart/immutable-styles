@@ -84,12 +84,15 @@ function getChunk(code, startingLineNumber, matcher, fragment = matcher) {
   return code.split(/\n/)
     .map((loc, i) => {
       const lineNumber = `${startingLineNumber + i}${SPACE}|${SPACE}`;
+      const match = loc.match(matcher);
 
-      if (loc.match(matcher)) {
+      if (match) {
         const line = `>${SPACE}${lineNumber}${loc}`;
+        console.log("match[0]:", match[0]);
+        console.log("line:", line);
 
         return line.concat(
-          `\n${SPACE.repeat(line.indexOf(fragment))}${'^'.repeat(fragment.length)}`
+          `\n${SPACE.repeat(line.indexOf(match[0]))}${'^'.repeat(fragment.length)}`
         );
       }
       return `${TAB}${lineNumber}${loc}`;
@@ -171,6 +174,7 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
         const chunk = getChunk(
           getCodeSnippet(__source).match(BETWEEN_ANGLE_BRACKETS)[0], 
           __source.lineNumber, 
+          `${baseClass}\\.`,
           baseClass
         );
 
@@ -416,9 +420,9 @@ function noAmbiguousProperties(ref, element, attrs, styles) {
   for (var property of stylesAsMap(styles).keys()) {
     const ambiguousProperty = Object.keys(shorthandProperties).includes(property);
 
-    if (ambiguousProperty) {
+    if (ambiguousProperty) {      
       const chunk = getChunk(
-        getCodeSnippet(attrs.__source).match(new RegExp(`${EVERYTHING}?${propertyMatcher(property)}`))[0],
+        getCodeSnippet(attrs.__source).match(new RegExp(`${EVERYTHING}${propertyMatcher(property)}`, 'm'))[0],
         attrs.__source.lineNumber, 
         new RegExp(propertyMatcher(property)),
         property
@@ -649,7 +653,7 @@ function getCodeSnippet({fileName, lineNumber}) {
 }
 
 function propertyMatcher(property) {
-  return `.*${property}\\s*:.+;`;
+  return `${property}\\s*:.*[^}]$`;
 }
 
 function findProblemProperty(codeFromLineNumber, property) {
