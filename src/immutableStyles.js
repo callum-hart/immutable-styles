@@ -250,9 +250,9 @@ function parseAst() {
               } = e.data;
 
               const overriddenChunk = getChunk(
-                getCodeFromLine(overriddenStyles.__source).match(new RegExp(`${EVERYTHING}?${propertyMatcher(overriddenProperty)}`, 'm'))[0],
+                getCodeFromLine(overriddenStyles.__source).match(new RegExp(`${EVERYTHING}?${declarationMatcher(overriddenProperty)}`, 'm'))[0],
                 overriddenStyles.__source.lineNumber, 
-                propertyMatcher(overriddenProperty),
+                declarationMatcher(overriddenProperty),
                 overriddenProperty
               );
 
@@ -260,9 +260,9 @@ function parseAst() {
               console.log(overriddenChunk);
 
               const overridingChunk = getChunk(
-                getCodeFromLine(overridingStyles.__source).match(new RegExp(`${EVERYTHING}?${propertyMatcher(overriddenProperty)}`, 'm'))[0],
+                getCodeFromLine(overridingStyles.__source).match(new RegExp(`${EVERYTHING}?${declarationMatcher(overriddenProperty)}`, 'm'))[0],
                 overridingStyles.__source.lineNumber, 
-                propertyMatcher(overriddenProperty),
+                declarationMatcher(overriddenProperty),
                 overriddenProperty
               );
               
@@ -381,9 +381,9 @@ function elementCanUseProperty(ref, element, attrs, styles) {
       !elements.includes(element)
     ) {
       const chunk = getChunk(
-        getCodeFromLine(attrs.__source).match(new RegExp(`${EVERYTHING}?${propertyMatcher(whitelistedProperty)}`, 'm'))[0],
+        getCodeFromLine(attrs.__source).match(new RegExp(`${EVERYTHING}?${declarationMatcher(whitelistedProperty)}`, 'm'))[0],
         attrs.__source.lineNumber, 
-        propertyMatcher(whitelistedProperty),
+        declarationMatcher(whitelistedProperty),
         whitelistedProperty
       );
 
@@ -412,9 +412,9 @@ function noAmbiguousProperties(ref, element, attrs, styles) {
 
     if (ambiguousProperty) {      
       const chunk = getChunk(
-        getCodeFromLine(attrs.__source).match(new RegExp(`${EVERYTHING}?${propertyMatcher(property)}`, 'm'))[0],
+        getCodeFromLine(attrs.__source).match(new RegExp(`${EVERYTHING}?${declarationMatcher(property)}`, 'm'))[0],
         attrs.__source.lineNumber, 
-        propertyMatcher(property),
+        declarationMatcher(property),
         property
       );
       
@@ -454,9 +454,9 @@ function saveNewStyleForExistingRef(newStyle, ref) {
       } = e.data;
 
       const overriddenChunk = getChunk(
-        getCodeFromLine(overriddenStyles.__source).match(new RegExp(`${EVERYTHING}?${propertyMatcher(overriddenProperty)}`, 'm'))[0],
+        getCodeFromLine(overriddenStyles.__source).match(new RegExp(`${EVERYTHING}?${declarationMatcher(overriddenProperty)}`, 'm'))[0],
         overriddenStyles.__source.lineNumber, 
-        propertyMatcher(overriddenProperty),
+        declarationMatcher(overriddenProperty),
         overriddenProperty
       );
 
@@ -464,9 +464,9 @@ function saveNewStyleForExistingRef(newStyle, ref) {
       console.log(overriddenChunk);
 
       const overridingChunk = getChunk(
-        getCodeFromLine(overridingStyles.__source).match(new RegExp(`${EVERYTHING}?${propertyMatcher(overriddenProperty)}`, 'm'))[0],
+        getCodeFromLine(overridingStyles.__source).match(new RegExp(`${EVERYTHING}?${declarationMatcher(overriddenProperty)}`, 'm'))[0],
         overridingStyles.__source.lineNumber, 
-        propertyMatcher(overriddenProperty),
+        declarationMatcher(overriddenProperty),
         overriddenProperty
       );
       
@@ -560,11 +560,10 @@ function stylesAsMap(stylesAsString, attrs = null, ref = null) {
       const [property, value] = declaration.split(COLON).map(res => res.trim().toLowerCase());
 
       if (styles.has(property)) {
-        // todo: this should point to 2nd occurrencee of property (currently 1st)
         const chunk = getChunk(
-          getCodeFromLine(attrs.__source).match(new RegExp(`${EVERYTHING}?${propertyMatcher(property)}`, 'm'))[0],
-          attrs.__source.lineNumber, 
-          propertyMatcher(property),
+          getCodeFromLine(attrs.__source).match(new RegExp(`${EVERYTHING}?${declarationMatcher(property, value)}`, 'm'))[0],
+          attrs.__source.lineNumber,
+          declarationMatcher(property),
           property
         );
         
@@ -642,12 +641,6 @@ function saveSourceMap(fileName, fileSource) {
   SOURCE_MAPS.set(fileName, fileSource);
 }
 
-// for testing / build tools
-function tearDown() {
-  AST.clear();
-  SOURCE_MAPS.clear();
-}
-
 function getCodeFromLine({fileName, lineNumber}) {
   return SOURCE_MAPS.get(fileName)
           .split(/\n/)
@@ -655,9 +648,9 @@ function getCodeFromLine({fileName, lineNumber}) {
           .join('\n');
 }
 
-function propertyMatcher(property) {
+function declarationMatcher(CSSProperty, CSSValue = BLANK) {
   // lookahead to ensure property is not within a comment 
-  return `${property}(?!.+})\\s*:.*$`;
+  return `${CSSProperty}(?!.+})\\s*:\\s+${CSSValue}.*$`;
 }
 
 function getChunk(code, startingLineNumber, matcher, fragment) {
@@ -677,6 +670,12 @@ function getChunk(code, startingLineNumber, matcher, fragment) {
       return `${TAB}${lineNumber}${loc}`;
   })
   .join('\n');
+}
+
+// for testing / build tools
+function tearDown() {
+  AST.clear();
+  SOURCE_MAPS.clear();
 }
 
 class ErrorWithData extends Error {
