@@ -20,9 +20,6 @@ const MEDIA_UNIT        = 'px';
 const AST = new Map();
 const SOURCE_MAPS = new Map();
 
-const BETWEEN_ANGLE_BRACKETS = /^\s*<([\s\S]*?)>/;
-const EVERYTHING = '[\\s\\S]*';
-
 
 function createStyle(element, attrs, ...children) {
   let styles = BLANK;
@@ -55,14 +52,16 @@ function attrsValid(attrs) {
       if (!permittedAttrs.includes(attr)) {
         // TODO: if attr is "id" or "class" log extra message, see: log.js:57
       
-        const chunk = getChunk(
-          getCodeFromLine(attrs.__source).match(BETWEEN_ANGLE_BRACKETS)[0], 
+        const { lineNumber, colNumber, codeFrame } = getCodeFrame(
+          forAttr(attrs.__source),
           attrs.__source.lineNumber, 
           `${attr}(?!\\w|"|')`,
           attr
         );
 
-        console.log(chunk);
+        console.log('lineNumber', lineNumber);
+        console.log('colNumber', colNumber);
+        console.log(codeFrame);
 
         throw new ErrorWithData(
           `\`${attr}\` is not a valid attribute`,
@@ -106,24 +105,28 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
         minWidth ||
         maxWidth
       ) {
-        const parentChunk = getChunk(
-          getCodeFromLine(inheritedMedia.__source).match(BETWEEN_ANGLE_BRACKETS)[0], 
+        const parentError = getCodeFrame(
+          forAttr(inheritedMedia.__source),
           inheritedMedia.__source.lineNumber, 
           inheritedMedia.minWidth ? 'minWidth' : 'maxWidth',
           inheritedMedia.minWidth ? 'minWidth' : 'maxWidth'
         );
 
-        const childChunk = getChunk(
-          getCodeFromLine(__source).match(BETWEEN_ANGLE_BRACKETS)[0], 
+        const childError = getCodeFrame(
+          forAttr(__source),
           __source.lineNumber, 
           minWidth ? 'minWidth' : 'maxWidth',
           minWidth ? 'minWidth' : 'maxWidth'
         );
 
         console.log(`\nParent media query (${inheritedMedia.__source.fileName}):`)
-        console.log(parentChunk);
+        console.log('lineNumber', parentError.lineNumber);
+        console.log('colNumber', parentError.colNumber);
+        console.log(parentError.codeFrame);
         console.log(`\nNested media query (${__source.fileName}):`)
-        console.log(childChunk);
+        console.log('lineNumber', childError.lineNumber);
+        console.log('colNumber', childError.colNumber);
+        console.log(childError.codeFrame);
 
         throw new ErrorWithData(
           `[Nested Media Query] Nested media query found in "${inheritedMedia.setBy}"`,
@@ -152,14 +155,16 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
         cloneBaseStyles(baseRef, fullyQualifiedRef);
         // todo: generate run-time validations
       } else {
-        const chunk = getChunk(
-          getCodeFromLine(__source).match(BETWEEN_ANGLE_BRACKETS)[0], 
+        const { lineNumber, colNumber, codeFrame } = getCodeFrame(
+          forAttr(__source),
           __source.lineNumber, 
           `${baseClass}\\.`,
           baseClass
         );
 
-        console.log(chunk);
+        console.log('lineNumber', lineNumber);
+        console.log('colNumber', colNumber);
+        console.log(codeFrame);
 
         throw new ErrorWithData(
           `The base class \`${baseRef}\` does not exist`,
@@ -249,25 +254,29 @@ function parseAst() {
                 overridingStyles
               } = e.data;
 
-              const overriddenChunk = getChunk(
-                getCodeFromLine(overriddenStyles.__source).match(new RegExp(`${EVERYTHING}?${declarationMatcher(overriddenProperty)}`, 'm'))[0],
+              const overriddenError = getCodeFrame(
+                forDeclaration(overriddenStyles.__source, overriddenProperty),
                 overriddenStyles.__source.lineNumber, 
                 declarationMatcher(overriddenProperty),
                 overriddenProperty
               );
 
               console.log(`\nOverridden styles (${overriddenStyles.__source.fileName}):`)
-              console.log(overriddenChunk);
+              console.log('lineNumber', overriddenError.lineNumber);
+              console.log('colNumber', overriddenError.colNumber);
+              console.log(overriddenError.codeFrame);
 
-              const overridingChunk = getChunk(
-                getCodeFromLine(overridingStyles.__source).match(new RegExp(`${EVERYTHING}?${declarationMatcher(overriddenProperty)}`, 'm'))[0],
+              const overridingError = getCodeFrame(
+                forDeclaration(overridingStyles.__source, overriddenProperty),
                 overridingStyles.__source.lineNumber, 
                 declarationMatcher(overriddenProperty),
                 overriddenProperty
               );
               
               console.log(`\nOverriding styles (${overridingStyles.__source.fileName}):`)
-              console.log(overridingChunk);
+              console.log('lineNumber', overridingError.lineNumber);
+              console.log('colNumber', overridingError.colNumber);
+              console.log(overridingError.codeFrame);
               
               throw new ErrorWithData(
                 `[Override Found] "${ref}" overrides the "${overriddenProperty}" set by "${accumulator}"`,
@@ -380,14 +389,16 @@ function elementCanUseProperty(ref, element, attrs, styles) {
       whitelistedProperty &&
       !elements.includes(element)
     ) {
-      const chunk = getChunk(
-        getCodeFromLine(attrs.__source).match(new RegExp(`${EVERYTHING}?${declarationMatcher(whitelistedProperty)}`, 'm'))[0],
+      const { lineNumber, colNumber, codeFrame } = getCodeFrame(
+        forDeclaration(attrs.__source, whitelistedProperty),
         attrs.__source.lineNumber, 
         declarationMatcher(whitelistedProperty),
         whitelistedProperty
       );
 
-      console.log(chunk);
+      console.log('lineNumber', lineNumber);
+      console.log('colNumber', colNumber);
+      console.log(codeFrame);
 
       throw new ErrorWithData(
         `The HTML element \`${element}\` (${ref}) cannot use the property \`${whitelistedProperty}\``,
@@ -411,14 +422,16 @@ function noAmbiguousProperties(ref, element, attrs, styles) {
     const ambiguousProperty = Object.keys(shorthandProperties).includes(property);
 
     if (ambiguousProperty) {      
-      const chunk = getChunk(
-        getCodeFromLine(attrs.__source).match(new RegExp(`${EVERYTHING}?${declarationMatcher(property)}`, 'm'))[0],
+      const { lineNumber, colNumber, codeFrame } = getCodeFrame(
+        forDeclaration(attrs.__source, property),
         attrs.__source.lineNumber, 
         declarationMatcher(property),
         property
       );
       
-      console.log(chunk);
+      console.log('lineNumber', lineNumber);
+      console.log('colNumber', colNumber);
+      console.log(codeFrame);
 
       console.log('please use unambiguous properties:', shorthandProperties[property].suggestions);
       if (shorthandProperties[property].helper) {
@@ -452,26 +465,30 @@ function saveNewStyleForExistingRef(newStyle, ref) {
         overriddenStyles,
         overridingStyles
       } = e.data;
-
-      const overriddenChunk = getChunk(
-        getCodeFromLine(overriddenStyles.__source).match(new RegExp(`${EVERYTHING}?${declarationMatcher(overriddenProperty)}`, 'm'))[0],
+      
+      const overriddenError = getCodeFrame(
+        forDeclaration(overriddenStyles.__source, overriddenProperty),
         overriddenStyles.__source.lineNumber, 
         declarationMatcher(overriddenProperty),
         overriddenProperty
       );
 
       console.log(`\nOverridden styles (${overriddenStyles.__source.fileName}):`)
-      console.log(overriddenChunk);
+      console.log('lineNumber', overriddenError.lineNumber);
+      console.log('colNumber', overriddenError.colNumber);
+      console.log(overriddenError.codeFrame);
 
-      const overridingChunk = getChunk(
-        getCodeFromLine(overridingStyles.__source).match(new RegExp(`${EVERYTHING}?${declarationMatcher(overriddenProperty)}`, 'm'))[0],
+      const overridingError = getCodeFrame(
+        forDeclaration(overridingStyles.__source, overriddenProperty),
         overridingStyles.__source.lineNumber, 
         declarationMatcher(overriddenProperty),
         overriddenProperty
       );
       
       console.log(`\nOverriding styles (${overridingStyles.__source.fileName}):`)
-      console.log(overridingChunk);
+      console.log('lineNumber', overridingError.lineNumber);
+      console.log('colNumber', overridingError.colNumber);
+      console.log(overridingError.codeFrame);
 
       throw new ErrorWithData(
         `[Override Found] the "${overriddenProperty}" of "${ref}" has already been defined`,
@@ -560,14 +577,16 @@ function stylesAsMap(stylesAsString, attrs = null, ref = null) {
       const [property, value] = declaration.split(COLON).map(res => res.trim().toLowerCase());
 
       if (styles.has(property)) {
-        const chunk = getChunk(
-          getCodeFromLine(attrs.__source).match(new RegExp(`${EVERYTHING}?${declarationMatcher(property, value)}`, 'm'))[0],
-          attrs.__source.lineNumber,
-          declarationMatcher(property),
+        const { lineNumber, colNumber, codeFrame } = getCodeFrame(
+          forDeclaration(attrs.__source, property, value), 
+          attrs.__source.lineNumber, 
+          declarationMatcher(property), 
           property
         );
         
-        console.log(chunk);
+        console.log('lineNumber', lineNumber);
+        console.log('colNumber', colNumber);
+        console.log(codeFrame);
         
         throw new ErrorWithData(
           `The CSS property \`${property}\` is defined twice by \`${ref}\``,
@@ -648,28 +667,46 @@ function getCodeFromLine({fileName, lineNumber}) {
           .join('\n');
 }
 
+function forAttr(source) {
+  // from the opening < to the first occurance of the closing >
+  return getCodeFromLine(source).match(/^\s*<([\s\S]*?)>/)[0];
+}
+
+function forDeclaration(source, CSSProperty, CSSValue) {
+  return getCodeFromLine(source).match(
+    new RegExp(`[\\s\\S]*?${declarationMatcher(CSSProperty, CSSValue)}`, 'm')
+  )[0];
+}
+
 function declarationMatcher(CSSProperty, CSSValue = BLANK) {
   // lookahead to ensure property is not within a comment 
   return `${CSSProperty}(?!.+})\\s*:\\s+${CSSValue}.*$`;
 }
 
-function getChunk(code, startingLineNumber, matcher, fragment) {
-  // prefix each loc with line number & point to the error with carets
-  return code.split(/\n/)
+function getCodeFrame(code, startingLineNumber, matcher, fragment) {
+  let problemLineNumber;
+  let problemColNumber;
+  // prefix each loc with line number & point to the error with carets 
+  const codeFrame = code.split(/\n/)
     .map((loc, i) => {
       const lineNumber = `${startingLineNumber + i}${SPACE}|${SPACE}`;
       const match = new RegExp(matcher).exec(loc);
 
       if (match) {
-        const line = `>${SPACE}${lineNumber}${loc}`;
+        problemLineNumber = startingLineNumber + i;
+        problemColNumber = match.index + 1;
 
-        return line.concat(
-          `\n${TAB}${SPACE.repeat(lineNumber.length + match.index)}${'^'.repeat(fragment.length)}`
-        );
+        return `>${SPACE}${lineNumber}${loc}\n${TAB}${SPACE.repeat(lineNumber.length + match.index)}${'^'.repeat(fragment.length)}`;
       }
       return `${TAB}${lineNumber}${loc}`;
   })
   .join('\n');
+
+  return {
+    lineNumber: problemLineNumber,
+    colNumber: problemColNumber,
+    codeFrame
+  }
 }
 
 // for testing / build tools
