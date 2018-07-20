@@ -38,6 +38,16 @@ function createStyle(element, attrs, ...children) {
   }
 }
 
+// todo: move out into separate module
+function invalidAttrCodeFrame(source, attr) {
+  return getCodeFrame(
+    forAttr(source),
+    source.lineNumber, 
+    `${attr}(?!\\w|"|')`,
+    attr
+  );
+}
+
 function attrsValid(attrs) {
   if (attrs) {
     const permittedAttrs = [
@@ -51,13 +61,8 @@ function attrsValid(attrs) {
     Object.keys(attrs).forEach(attr => {
       if (!permittedAttrs.includes(attr)) {
         // TODO: if attr is "id" or "class" log extra message, see: log.js:57
-      
-        const { lineNumber, colNumber, codeFrame } = getCodeFrame(
-          forAttr(attrs.__source),
-          attrs.__source.lineNumber, 
-          `${attr}(?!\\w|"|')`,
-          attr
-        );
+    
+        const { lineNumber, colNumber, codeFrame } = invalidAttrCodeFrame(attrs.__source, attr);
 
         console.log('lineNumber', lineNumber);
         console.log('colNumber', colNumber);
@@ -87,6 +92,26 @@ function createCSS(styles) {
   return makeCSS();
 }
 
+// todo: move out to separate module
+function mediaQueryCodeFrame(source, minWidthIfAny) {
+  return getCodeFrame(
+    forAttr(source),
+    source.lineNumber, 
+    minWidthIfAny ? 'minWidth' : 'maxWidth',
+    minWidthIfAny ? 'minWidth' : 'maxWidth'
+  );
+}
+
+// todo: move out to separate module
+function baseClassCodeFrame(source, baseClass) {
+  return getCodeFrame(
+    forAttr(source),
+    source.lineNumber, 
+    `${baseClass}\\.`,
+    baseClass
+  );
+}
+
 function parseStyles(block, parentRef = null, inheritedMedia = null) {
   if (attrsValid(block.attrs)) {
     const ref = makeRef(block);
@@ -105,19 +130,8 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
         minWidth ||
         maxWidth
       ) {
-        const parentError = getCodeFrame(
-          forAttr(inheritedMedia.__source),
-          inheritedMedia.__source.lineNumber, 
-          inheritedMedia.minWidth ? 'minWidth' : 'maxWidth',
-          inheritedMedia.minWidth ? 'minWidth' : 'maxWidth'
-        );
-
-        const childError = getCodeFrame(
-          forAttr(__source),
-          __source.lineNumber, 
-          minWidth ? 'minWidth' : 'maxWidth',
-          minWidth ? 'minWidth' : 'maxWidth'
-        );
+        const parentError = mediaQueryCodeFrame(inheritedMedia.__source, inheritedMedia.minWidth);
+        const childError = mediaQueryCodeFrame(__source, minWidth);
 
         console.log(`\nParent media query (${inheritedMedia.__source.fileName}):`)
         console.log('lineNumber', parentError.lineNumber);
@@ -155,12 +169,7 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
         cloneBaseStyles(baseRef, fullyQualifiedRef);
         // todo: generate run-time validations
       } else {
-        const { lineNumber, colNumber, codeFrame } = getCodeFrame(
-          forAttr(__source),
-          __source.lineNumber, 
-          `${baseClass}\\.`,
-          baseClass
-        );
+        const { lineNumber, colNumber, codeFrame } = baseClassCodeFrame(__source, baseClass);
 
         console.log('lineNumber', lineNumber);
         console.log('colNumber', colNumber);
@@ -226,6 +235,16 @@ function isSubclass(parentRef, className) {
          className.includes(DOT);
 }
 
+// todo: move out to separate module
+function CSSPropertyCodeFrame(source, CSSProperty, CSSValue) {
+  return getCodeFrame(
+    forDeclaration(source, CSSProperty, CSSValue),
+    source.lineNumber, 
+    declarationMatcher(CSSProperty),
+    CSSProperty
+  ); 
+}
+
 function parseAst() {
   for (var ref of AST.keys()) {
     const paths = ref.split(SPACE);
@@ -254,25 +273,13 @@ function parseAst() {
                 overridingStyles
               } = e.data;
 
-              const overriddenError = getCodeFrame(
-                forDeclaration(overriddenStyles.__source, overriddenProperty),
-                overriddenStyles.__source.lineNumber, 
-                declarationMatcher(overriddenProperty),
-                overriddenProperty
-              );
+              const overriddenError = CSSPropertyCodeFrame(overriddenStyles.__source, overriddenProperty);
+              const overridingError = CSSPropertyCodeFrame(overridingStyles.__source, overriddenProperty);
 
               console.log(`\nOverridden styles (${overriddenStyles.__source.fileName}):`)
               console.log('lineNumber', overriddenError.lineNumber);
               console.log('colNumber', overriddenError.colNumber);
               console.log(overriddenError.codeFrame);
-
-              const overridingError = getCodeFrame(
-                forDeclaration(overridingStyles.__source, overriddenProperty),
-                overridingStyles.__source.lineNumber, 
-                declarationMatcher(overriddenProperty),
-                overriddenProperty
-              );
-              
               console.log(`\nOverriding styles (${overridingStyles.__source.fileName}):`)
               console.log('lineNumber', overridingError.lineNumber);
               console.log('colNumber', overridingError.colNumber);
@@ -389,12 +396,7 @@ function elementCanUseProperty(ref, element, attrs, styles) {
       whitelistedProperty &&
       !elements.includes(element)
     ) {
-      const { lineNumber, colNumber, codeFrame } = getCodeFrame(
-        forDeclaration(attrs.__source, whitelistedProperty),
-        attrs.__source.lineNumber, 
-        declarationMatcher(whitelistedProperty),
-        whitelistedProperty
-      );
+      const { lineNumber, colNumber, codeFrame } = CSSPropertyCodeFrame(attrs.__source, whitelistedProperty);
 
       console.log('lineNumber', lineNumber);
       console.log('colNumber', colNumber);
@@ -421,13 +423,8 @@ function noAmbiguousProperties(ref, element, attrs, styles) {
   for (var property of stylesAsMap(styles).keys()) {
     const ambiguousProperty = Object.keys(shorthandProperties).includes(property);
 
-    if (ambiguousProperty) {      
-      const { lineNumber, colNumber, codeFrame } = getCodeFrame(
-        forDeclaration(attrs.__source, property),
-        attrs.__source.lineNumber, 
-        declarationMatcher(property),
-        property
-      );
+    if (ambiguousProperty) {
+      const { lineNumber, colNumber, codeFrame } = CSSPropertyCodeFrame(attrs.__source, property);
       
       console.log('lineNumber', lineNumber);
       console.log('colNumber', colNumber);
@@ -465,26 +462,14 @@ function saveNewStyleForExistingRef(newStyle, ref) {
         overriddenStyles,
         overridingStyles
       } = e.data;
-      
-      const overriddenError = getCodeFrame(
-        forDeclaration(overriddenStyles.__source, overriddenProperty),
-        overriddenStyles.__source.lineNumber, 
-        declarationMatcher(overriddenProperty),
-        overriddenProperty
-      );
+
+      const overriddenError = CSSPropertyCodeFrame(overriddenStyles.__source, overriddenProperty);
+      const overridingError = CSSPropertyCodeFrame(overridingStyles.__source, overriddenProperty);
 
       console.log(`\nOverridden styles (${overriddenStyles.__source.fileName}):`)
       console.log('lineNumber', overriddenError.lineNumber);
       console.log('colNumber', overriddenError.colNumber);
       console.log(overriddenError.codeFrame);
-
-      const overridingError = getCodeFrame(
-        forDeclaration(overridingStyles.__source, overriddenProperty),
-        overridingStyles.__source.lineNumber, 
-        declarationMatcher(overriddenProperty),
-        overriddenProperty
-      );
-      
       console.log(`\nOverriding styles (${overridingStyles.__source.fileName}):`)
       console.log('lineNumber', overridingError.lineNumber);
       console.log('colNumber', overridingError.colNumber);
@@ -577,12 +562,7 @@ function stylesAsMap(stylesAsString, attrs = null, ref = null) {
       const [property, value] = declaration.split(COLON).map(res => res.trim().toLowerCase());
 
       if (styles.has(property)) {
-        const { lineNumber, colNumber, codeFrame } = getCodeFrame(
-          forDeclaration(attrs.__source, property, value), 
-          attrs.__source.lineNumber, 
-          declarationMatcher(property), 
-          property
-        );
+        const { lineNumber, colNumber, codeFrame } = CSSPropertyCodeFrame(attrs.__source, property, value);
         
         console.log('lineNumber', lineNumber);
         console.log('colNumber', colNumber);
@@ -660,6 +640,7 @@ function saveSourceMap(fileName, fileSource) {
   SOURCE_MAPS.set(fileName, fileSource);
 }
 
+// todo: move out into separate module
 function getCodeFromLine({fileName, lineNumber}) {
   return SOURCE_MAPS.get(fileName)
           .split(/\n/)
@@ -667,22 +648,26 @@ function getCodeFromLine({fileName, lineNumber}) {
           .join('\n');
 }
 
+// todo: move out into separate module (won't need exporting)
 function forAttr(source) {
   // from the opening < to the first occurance of the closing >
   return getCodeFromLine(source).match(/^\s*<([\s\S]*?)>/)[0];
 }
 
+// todo: move out into separate module (won't need exporting)
 function forDeclaration(source, CSSProperty, CSSValue) {
   return getCodeFromLine(source).match(
     new RegExp(`[\\s\\S]*?${declarationMatcher(CSSProperty, CSSValue)}`, 'm')
   )[0];
 }
 
+// todo: move out into separate module (won't need exporting)
 function declarationMatcher(CSSProperty, CSSValue = BLANK) {
   // lookahead to ensure property is not within a comment 
   return `${CSSProperty}(?!.+})\\s*:\\s+${CSSValue}.*$`;
 }
 
+// todo: move out into separate module (won't need exporting)
 function getCodeFrame(code, startingLineNumber, matcher, fragment) {
   let problemLineNumber;
   let problemColNumber;
