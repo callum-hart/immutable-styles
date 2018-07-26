@@ -75,6 +75,8 @@ function invalidAttrCodeFrame(source, attr) {
   );
 }
 
+// TODO: could this be deprecated in favour of `invalidAttrCodeFrame`?
+// i.e: invalidAttrCodeFrame(source, minWidthIfAny ? 'minWidth' : 'maxWidth')
 function mediaQueryCodeFrame(source, minWidthIfAny) {
   return getCodeFrame(
     forAttr(source),
