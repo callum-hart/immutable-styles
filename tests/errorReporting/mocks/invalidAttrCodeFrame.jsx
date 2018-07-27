@@ -219,22 +219,22 @@ module.exports = [
     color : cadetblue;
   </senarioSixDotTwo>,
 
-  // invalid attribute that matches name of JSX tag
+  // invalid attribute that matches name of JSX tag:
 
   <senarioOne senarioOne>color: cadetblue;</senarioOne>,
-  <senarioTwo  senarioOne  > color : cadetblue;</senarioTwo>,
-  <senarioThree senarioOne>
+  <senarioTwo  senarioTwo  > color : cadetblue;</senarioTwo>,
+  <senarioThree senarioThree>
     color: cadetblue;
   </senarioThree>,
-    <senarioFour   senarioOne >
+    <senarioFour   senarioFour >
     color: cadetblue;
   </senarioFour>,
   <senarioFive
-    senarioOne  >
+    senarioFive  >
     color : cadetblue;
   </senarioFive>,
   <senarioSix
-    senarioOne
+    senarioSix
   >
     color : cadetblue;
   </senarioSix>,
