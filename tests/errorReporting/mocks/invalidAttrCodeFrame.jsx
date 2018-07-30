@@ -180,10 +180,10 @@ module.exports = [
   <senarioOneDotTwo pseu pseudo=":hover">color: cadetblue;</senarioOneDotTwo>,
   <senarioOneDotTwo  pseudo=":hover" pseu  > color : cadetblue;</senarioOneDotTwo>,
   <senarioTwoDotTwo  pseu pseudo=":hover"  > color : cadetblue;</senarioTwoDotTwo>,
-  <senarioThreDotOne pseudo=":hover"
+  <senarioThreeDotOne pseudo=":hover"
     pseu>
     color : cadetblue;
-  </senarioThreDotOne>,
+  </senarioThreeDotOne>,
   <senarioThreeDotTwo pseu
     pseudo=":hover">
     color : cadetblue;
@@ -219,7 +219,7 @@ module.exports = [
     color : cadetblue;
   </senarioSixDotTwo>,
 
-  // invalid attribute that matches name of JSX tag:
+  // invalid attribute with same name as JSX tag:
 
   <senarioOne senarioOne>color: cadetblue;</senarioOne>,
   <senarioTwo  senarioTwo  > color : cadetblue;</senarioTwo>,
