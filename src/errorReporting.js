@@ -1,3 +1,4 @@
+const BLANK = '';
 const SPACE = ' ';
 const TAB = SPACE.repeat(2);
 const SOURCE_MAPS = new Map();
@@ -36,14 +37,14 @@ function forDeclaration(source, CSSProperty, CSSValue) {
 }
 
 function declarationMatcher(CSSProperty, CSSValue = BLANK) {
-  // lookahead to ensure property is not within a comment 
+  // lookahead to ensure property is not within a comment
   return `${CSSProperty}(?!.+})\\s*:\\s+${CSSValue}.*$`;
 }
 
 function getCodeFrame(code, startingLineNumber, matcher, fragment) {
   let problemLineNumber;
   let problemColNumber;
-  // prefix each loc with line number & point to the error with carets 
+  // prefix each loc with line number & point to the error with carets
   const codeFrame = code.split(/\n/)
     .map((loc, i) => {
       const lineNumber = `${startingLineNumber + i}${SPACE}|${SPACE}`;
@@ -69,7 +70,7 @@ function getCodeFrame(code, startingLineNumber, matcher, fragment) {
 function invalidAttrCodeFrame(source, attr) {
   return getCodeFrame(
     forAttr(source),
-    source.lineNumber, 
+    source.lineNumber,
     `${attr}(?!\\w|"|')`,
     attr
   );
@@ -80,7 +81,7 @@ function invalidAttrCodeFrame(source, attr) {
 function mediaQueryCodeFrame(source, minWidthIfAny) {
   return getCodeFrame(
     forAttr(source),
-    source.lineNumber, 
+    source.lineNumber,
     minWidthIfAny ? 'minWidth' : 'maxWidth',
     minWidthIfAny ? 'minWidth' : 'maxWidth'
   );
@@ -89,7 +90,7 @@ function mediaQueryCodeFrame(source, minWidthIfAny) {
 function baseClassCodeFrame(source, baseClass) {
   return getCodeFrame(
     forAttr(source),
-    source.lineNumber, 
+    source.lineNumber,
     `${baseClass}\\.`,
     baseClass
   );
@@ -98,10 +99,10 @@ function baseClassCodeFrame(source, baseClass) {
 function CSSPropertyCodeFrame(source, CSSProperty, CSSValue) {
   return getCodeFrame(
     forDeclaration(source, CSSProperty, CSSValue),
-    source.lineNumber, 
+    source.lineNumber,
     declarationMatcher(CSSProperty),
     CSSProperty
-  ); 
+  );
 }
 
 module.exports = {
