@@ -1,12 +1,11 @@
 const elementPropertyWhitelist = require('./elementPropertyWhitelist');
 const shorthandProperties = require('./shorthandProperties')
 const shorthandHelpers = require('./shorthandHelpers');
-const { 
+const {
   saveSourceMap,
   clearSourceMaps,
   shouldLogErrorReport,
-  invalidAttrCodeFrame,
-  mediaQueryCodeFrame,
+  attributeCodeFrame,
   baseClassCodeFrame,
   CSSPropertyCodeFrame
 } = require('./errorReporting');
@@ -57,9 +56,9 @@ function attrsValid(attrs) {
     Object.keys(attrs).forEach(attr => {
       if (!permittedAttrs.includes(attr)) {
         // TODO: if attr is "id" or "class" log extra message, see: log.js:57
-    
+
         if (shouldLogErrorReport(attrs.__source)) {
-          const { lineNumber, colNumber, codeFrame } = invalidAttrCodeFrame(attrs.__source, attr);
+          const { lineNumber, colNumber, codeFrame } = attributeCodeFrame(attrs.__source, attr);
 
           console.log('lineNumber', lineNumber);
           console.log('colNumber', colNumber);
@@ -105,8 +104,11 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
           shouldLogErrorReport(inheritedMedia.__source) &&
           shouldLogErrorReport(__source)
         ) {
-          const parentError = mediaQueryCodeFrame(inheritedMedia.__source, inheritedMedia.minWidth);
-          const childError = mediaQueryCodeFrame(__source, minWidth);
+          const parentError = attributeCodeFrame(
+            inheritedMedia.__source,
+            inheritedMedia.minWidth ? 'minWidth' : 'maxWidth'
+          );
+          const childError = attributeCodeFrame(__source, minWidth ? 'minWidth' : 'maxWidth');
 
           console.log(`\nParent media query (${inheritedMedia.__source.fileName}):`)
           console.log('lineNumber', parentError.lineNumber);
@@ -243,7 +245,7 @@ function parseAst() {
                 console.log('colNumber', overridingError.colNumber);
                 console.log(overridingError.codeFrame);
               }
-              
+
               throw new Error(
                 `[Override Found] "${ref}" overrides the "${overriddenProperty}" set by "${accumulator}"`
               );
@@ -374,7 +376,7 @@ function noAmbiguousProperties(ref, element, attrs, styles) {
     if (ambiguousProperty) {
       if (shouldLogErrorReport(attrs.__source)) {
         const { lineNumber, colNumber, codeFrame } = CSSPropertyCodeFrame(attrs.__source, property);
-      
+
         console.log('lineNumber', lineNumber);
         console.log('colNumber', colNumber);
         console.log(codeFrame);
@@ -506,12 +508,12 @@ function stylesAsMap(stylesAsString, attrs = null, ref = null) {
       if (styles.has(property)) {
         if (shouldLogErrorReport(attrs.__source)) {
           const { lineNumber, colNumber, codeFrame } = CSSPropertyCodeFrame(attrs.__source, property, value);
-        
+
           console.log('lineNumber', lineNumber);
           console.log('colNumber', colNumber);
           console.log(codeFrame);
         }
-        
+
         throw new Error(`The CSS property \`${property}\` is defined twice by \`${ref}\``);
       } else {
         styles.set(property, value);

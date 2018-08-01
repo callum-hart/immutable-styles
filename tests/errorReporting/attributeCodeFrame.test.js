@@ -10,9 +10,9 @@
 
 const fs = require('fs');
 
-const { saveSourceMap, invalidAttrCodeFrame } = require('../../src/errorReporting');
+const { saveSourceMap, attributeCodeFrame } = require('../../src/errorReporting');
 
-const fileName = './tests/errorReporting/mocks/invalidAttrCodeFrame.jsx';
+const fileName = './tests/errorReporting/mocks/attributeCodeFrame.jsx';
 
 beforeAll(() => saveSourceMap(fileName, fs.readFileSync(fileName, 'utf8')));
 
@@ -21,7 +21,7 @@ describe('invalid attribute', () => {
   const givenAttr = 'invalidAttr';
 
   test('senarioOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 4}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 4}, givenAttr);
 
     expect(lineNumber).toBe(4);
     expect(colNumber).toBe(15);
@@ -29,7 +29,7 @@ describe('invalid attribute', () => {
 
 
   test('senarioTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 5}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 5}, givenAttr);
 
     expect(lineNumber).toBe(5);
     expect(colNumber).toBe(16);
@@ -37,7 +37,7 @@ describe('invalid attribute', () => {
 
 
   test('senarioThree', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 6}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 6}, givenAttr);
 
     expect(lineNumber).toBe(6);
     expect(colNumber).toBe(17);
@@ -45,7 +45,7 @@ describe('invalid attribute', () => {
 
 
   test('senarioFour', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 9}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 9}, givenAttr);
 
     expect(lineNumber).toBe(9);
     expect(colNumber).toBe(20);
@@ -53,7 +53,7 @@ describe('invalid attribute', () => {
 
 
   test('senarioFive', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 12}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 12}, givenAttr);
 
     expect(lineNumber).toBe(13);
     expect(colNumber).toBe(5);
@@ -61,7 +61,7 @@ describe('invalid attribute', () => {
 
 
   test('senarioSix', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 16}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 16}, givenAttr);
 
     expect(lineNumber).toBe(17);
     expect(colNumber).toBe(5);
@@ -73,7 +73,7 @@ describe('invalid attribute with same name as CSS property', () => {
   const givenAttr = 'color';
 
   test('senarioOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 24}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 24}, givenAttr);
 
     expect(lineNumber).toBe(24);
     expect(colNumber).toBe(15);
@@ -81,7 +81,7 @@ describe('invalid attribute with same name as CSS property', () => {
 
 
   test('senarioTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 25}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 25}, givenAttr);
 
     expect(lineNumber).toBe(25);
     expect(colNumber).toBe(16);
@@ -89,7 +89,7 @@ describe('invalid attribute with same name as CSS property', () => {
 
 
   test('senarioThree', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 26}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 26}, givenAttr);
 
     expect(lineNumber).toBe(26);
     expect(colNumber).toBe(17);
@@ -97,7 +97,7 @@ describe('invalid attribute with same name as CSS property', () => {
 
 
   test('senarioFour', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 29}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 29}, givenAttr);
 
     expect(lineNumber).toBe(29);
     expect(colNumber).toBe(20);
@@ -105,7 +105,7 @@ describe('invalid attribute with same name as CSS property', () => {
 
 
   test('senarioFive', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 32}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 32}, givenAttr);
 
     expect(lineNumber).toBe(33);
     expect(colNumber).toBe(5);
@@ -113,7 +113,7 @@ describe('invalid attribute with same name as CSS property', () => {
 
 
   test('senarioSix', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 36}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 36}, givenAttr);
 
     expect(lineNumber).toBe(37);
     expect(colNumber).toBe(5);
@@ -125,7 +125,7 @@ describe('invalid attribute with same name as CSS className', () => {
   const givenAttr = 'aClass';
 
   test('senarioOneDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 44}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 44}, givenAttr);
 
     expect(lineNumber).toBe(44);
     expect(colNumber).toBe(40);
@@ -133,7 +133,7 @@ describe('invalid attribute with same name as CSS className', () => {
 
 
   test('senarioOneDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 45}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 45}, givenAttr);
 
     expect(lineNumber).toBe(45);
     expect(colNumber).toBe(21);
@@ -141,7 +141,7 @@ describe('invalid attribute with same name as CSS className', () => {
 
 
   test('senarioTwoDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 46}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 46}, givenAttr);
 
     expect(lineNumber).toBe(46);
     expect(colNumber).toBe(41);
@@ -149,7 +149,7 @@ describe('invalid attribute with same name as CSS className', () => {
 
 
   test('senarioTwoDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 47}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 47}, givenAttr);
 
     expect(lineNumber).toBe(47);
     expect(colNumber).toBe(22);
@@ -157,7 +157,7 @@ describe('invalid attribute with same name as CSS className', () => {
 
 
   test('senarioThreeDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 48}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 48}, givenAttr);
 
     expect(lineNumber).toBe(49);
     expect(colNumber).toBe(5);
@@ -165,7 +165,7 @@ describe('invalid attribute with same name as CSS className', () => {
 
 
   test('senarioThreeDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 52}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 52}, givenAttr);
 
     expect(lineNumber).toBe(52);
     expect(colNumber).toBe(23);
@@ -173,7 +173,7 @@ describe('invalid attribute with same name as CSS className', () => {
 
 
   test('senarioFourDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 56}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 56}, givenAttr);
 
     expect(lineNumber).toBe(57);
     expect(colNumber).toBe(9);
@@ -181,7 +181,7 @@ describe('invalid attribute with same name as CSS className', () => {
 
 
   test('senarioFourDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 60}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 60}, givenAttr);
 
     expect(lineNumber).toBe(60);
     expect(colNumber).toBe(25);
@@ -189,7 +189,7 @@ describe('invalid attribute with same name as CSS className', () => {
 
 
   test('senarioFiveDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 64}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 64}, givenAttr);
 
     expect(lineNumber).toBe(66);
     expect(colNumber).toBe(5);
@@ -197,7 +197,7 @@ describe('invalid attribute with same name as CSS className', () => {
 
 
   test('senarioFiveDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 69}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 69}, givenAttr);
 
     expect(lineNumber).toBe(70);
     expect(colNumber).toBe(5);
@@ -205,7 +205,7 @@ describe('invalid attribute with same name as CSS className', () => {
 
 
   test('senarioSixDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 74}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 74}, givenAttr);
 
     expect(lineNumber).toBe(76);
     expect(colNumber).toBe(5);
@@ -213,7 +213,7 @@ describe('invalid attribute with same name as CSS className', () => {
 
 
   test('senarioSixDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 80}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 80}, givenAttr);
 
     expect(lineNumber).toBe(81);
     expect(colNumber).toBe(5);
@@ -225,7 +225,7 @@ describe('invalid attribute with same name as baseclass', () => {
   const givenAttr = 'baseClass';
 
   test('senarioOneDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 89}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 89}, givenAttr);
 
     expect(lineNumber).toBe(89);
     expect(colNumber).toBe(52);
@@ -233,7 +233,7 @@ describe('invalid attribute with same name as baseclass', () => {
 
 
   test('senarioOneDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 90}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 90}, givenAttr);
 
     expect(lineNumber).toBe(90);
     expect(colNumber).toBe(21);
@@ -241,7 +241,7 @@ describe('invalid attribute with same name as baseclass', () => {
 
 
   test('senarioTwoDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 91}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 91}, givenAttr);
 
     expect(lineNumber).toBe(91);
     expect(colNumber).toBe(53);
@@ -249,7 +249,7 @@ describe('invalid attribute with same name as baseclass', () => {
 
 
   test('senarioTwoDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 92}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 92}, givenAttr);
 
     expect(lineNumber).toBe(92);
     expect(colNumber).toBe(22);
@@ -257,7 +257,7 @@ describe('invalid attribute with same name as baseclass', () => {
 
 
   test('senarioThreeDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 93}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 93}, givenAttr);
 
     expect(lineNumber).toBe(94);
     expect(colNumber).toBe(5);
@@ -265,7 +265,7 @@ describe('invalid attribute with same name as baseclass', () => {
 
 
   test('senarioThreeDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 97}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 97}, givenAttr);
 
     expect(lineNumber).toBe(97);
     expect(colNumber).toBe(23);
@@ -273,7 +273,7 @@ describe('invalid attribute with same name as baseclass', () => {
 
 
   test('senarioFourDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 101}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 101}, givenAttr);
 
     expect(lineNumber).toBe(102);
     expect(colNumber).toBe(9);
@@ -281,7 +281,7 @@ describe('invalid attribute with same name as baseclass', () => {
 
 
   test('senarioFourDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 105}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 105}, givenAttr);
 
     expect(lineNumber).toBe(105);
     expect(colNumber).toBe(25);
@@ -289,7 +289,7 @@ describe('invalid attribute with same name as baseclass', () => {
 
 
   test('senarioFiveDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 109}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 109}, givenAttr);
 
     expect(lineNumber).toBe(111);
     expect(colNumber).toBe(5);
@@ -297,7 +297,7 @@ describe('invalid attribute with same name as baseclass', () => {
 
 
   test('senarioFiveDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 114}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 114}, givenAttr);
 
     expect(lineNumber).toBe(115);
     expect(colNumber).toBe(5);
@@ -305,7 +305,7 @@ describe('invalid attribute with same name as baseclass', () => {
 
 
   test('senarioSixDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 119}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 119}, givenAttr);
 
     expect(lineNumber).toBe(121);
     expect(colNumber).toBe(5);
@@ -313,7 +313,7 @@ describe('invalid attribute with same name as baseclass', () => {
 
 
   test('senarioSixDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 125}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 125}, givenAttr);
 
     expect(lineNumber).toBe(126);
     expect(colNumber).toBe(5);
@@ -325,7 +325,7 @@ describe('invalid attribute with same name as subclass', () => {
   const givenAttr = 'subClass';
 
   test('senarioOneDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 134}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 134}, givenAttr);
 
     expect(lineNumber).toBe(134);
     expect(colNumber).toBe(52);
@@ -333,7 +333,7 @@ describe('invalid attribute with same name as subclass', () => {
 
 
   test('senarioOneDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 135}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 135}, givenAttr);
 
     expect(lineNumber).toBe(135);
     expect(colNumber).toBe(21);
@@ -341,7 +341,7 @@ describe('invalid attribute with same name as subclass', () => {
 
 
   test('senarioTwoDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 136}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 136}, givenAttr);
 
     expect(lineNumber).toBe(136);
     expect(colNumber).toBe(53);
@@ -349,7 +349,7 @@ describe('invalid attribute with same name as subclass', () => {
 
 
   test('senarioTwoDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 137}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 137}, givenAttr);
 
     expect(lineNumber).toBe(137);
     expect(colNumber).toBe(22);
@@ -357,7 +357,7 @@ describe('invalid attribute with same name as subclass', () => {
 
 
   test('senarioThreeDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 138}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 138}, givenAttr);
 
     expect(lineNumber).toBe(139);
     expect(colNumber).toBe(5);
@@ -365,7 +365,7 @@ describe('invalid attribute with same name as subclass', () => {
 
 
   test('senarioThreeDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 142}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 142}, givenAttr);
 
     expect(lineNumber).toBe(142);
     expect(colNumber).toBe(23);
@@ -373,7 +373,7 @@ describe('invalid attribute with same name as subclass', () => {
 
 
   test('senarioFourDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 146}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 146}, givenAttr);
 
     expect(lineNumber).toBe(147);
     expect(colNumber).toBe(9);
@@ -381,7 +381,7 @@ describe('invalid attribute with same name as subclass', () => {
 
 
   test('senarioFourDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 150}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 150}, givenAttr);
 
     expect(lineNumber).toBe(150);
     expect(colNumber).toBe(25);
@@ -389,7 +389,7 @@ describe('invalid attribute with same name as subclass', () => {
 
 
   test('senarioFiveDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 154}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 154}, givenAttr);
 
     expect(lineNumber).toBe(156);
     expect(colNumber).toBe(5);
@@ -397,7 +397,7 @@ describe('invalid attribute with same name as subclass', () => {
 
 
   test('senarioFiveDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 159}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 159}, givenAttr);
 
     expect(lineNumber).toBe(160);
     expect(colNumber).toBe(5);
@@ -405,7 +405,7 @@ describe('invalid attribute with same name as subclass', () => {
 
 
   test('senarioSixDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 164}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 164}, givenAttr);
 
     expect(lineNumber).toBe(166);
     expect(colNumber).toBe(5);
@@ -413,7 +413,7 @@ describe('invalid attribute with same name as subclass', () => {
 
 
   test('senarioSixDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 170}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 170}, givenAttr);
 
     expect(lineNumber).toBe(171);
     expect(colNumber).toBe(5);
@@ -425,7 +425,7 @@ describe('invalid attribute that partially matches a valid attribute', () => {
   const givenAttr = 'pseu';
 
   test('senarioOneDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 179}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 179}, givenAttr);
 
     expect(lineNumber).toBe(179);
     expect(colNumber).toBe(37);
@@ -433,7 +433,7 @@ describe('invalid attribute that partially matches a valid attribute', () => {
 
 
   test('senarioOneDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 180}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 180}, givenAttr);
 
     expect(lineNumber).toBe(180);
     expect(colNumber).toBe(21);
@@ -441,7 +441,7 @@ describe('invalid attribute that partially matches a valid attribute', () => {
 
 
   test('senarioTwoDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 181}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 181}, givenAttr);
 
     expect(lineNumber).toBe(181);
     expect(colNumber).toBe(38);
@@ -449,7 +449,7 @@ describe('invalid attribute that partially matches a valid attribute', () => {
 
 
   test('senarioTwoDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 182}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 182}, givenAttr);
 
     expect(lineNumber).toBe(182);
     expect(colNumber).toBe(22);
@@ -457,7 +457,7 @@ describe('invalid attribute that partially matches a valid attribute', () => {
 
 
   test('senarioThreeDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 183}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 183}, givenAttr);
 
     expect(lineNumber).toBe(184);
     expect(colNumber).toBe(5);
@@ -465,7 +465,7 @@ describe('invalid attribute that partially matches a valid attribute', () => {
 
 
   test('senarioThreeDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 187}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 187}, givenAttr);
 
     expect(lineNumber).toBe(187);
     expect(colNumber).toBe(23);
@@ -473,7 +473,7 @@ describe('invalid attribute that partially matches a valid attribute', () => {
 
 
   test('senarioFourDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 191}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 191}, givenAttr);
 
     expect(lineNumber).toBe(192);
     expect(colNumber).toBe(9);
@@ -481,7 +481,7 @@ describe('invalid attribute that partially matches a valid attribute', () => {
 
 
   test('senarioFourDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 195}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 195}, givenAttr);
 
     expect(lineNumber).toBe(195);
     expect(colNumber).toBe(25);
@@ -489,7 +489,7 @@ describe('invalid attribute that partially matches a valid attribute', () => {
 
 
   test('senarioFiveDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 199}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 199}, givenAttr);
 
     expect(lineNumber).toBe(201);
     expect(colNumber).toBe(5);
@@ -497,7 +497,7 @@ describe('invalid attribute that partially matches a valid attribute', () => {
 
 
   test('senarioFiveDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 204}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 204}, givenAttr);
 
     expect(lineNumber).toBe(205);
     expect(colNumber).toBe(5);
@@ -505,7 +505,7 @@ describe('invalid attribute that partially matches a valid attribute', () => {
 
 
   test('senarioSixDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 209}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 209}, givenAttr);
 
     expect(lineNumber).toBe(211);
     expect(colNumber).toBe(5);
@@ -513,7 +513,7 @@ describe('invalid attribute that partially matches a valid attribute', () => {
 
 
   test('senarioSixDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 215}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 215}, givenAttr);
 
     expect(lineNumber).toBe(216);
     expect(colNumber).toBe(5);
@@ -524,7 +524,7 @@ describe('invalid attribute that partially matches a valid attribute', () => {
 describe('invalid attribute that matches name of JSX tag', () => {
   test('senarioOne', () => {
     const givenAttr = 'senarioOne';
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 224}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 224}, givenAttr);
 
     expect(lineNumber).toBe(224);
     expect(colNumber).toBe(15);
@@ -533,7 +533,7 @@ describe('invalid attribute that matches name of JSX tag', () => {
 
   test('senarioTwo', () => {
     const givenAttr = 'senarioTwo';
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 225}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 225}, givenAttr);
 
     expect(lineNumber).toBe(225);
     expect(colNumber).toBe(16);
@@ -542,7 +542,7 @@ describe('invalid attribute that matches name of JSX tag', () => {
 
   test('senarioThree', () => {
     const givenAttr = 'senarioThree';
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 226}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 226}, givenAttr);
 
     expect(lineNumber).toBe(226);
     expect(colNumber).toBe(17);
@@ -551,7 +551,7 @@ describe('invalid attribute that matches name of JSX tag', () => {
 
   test('senarioFour', () => {
     const givenAttr = 'senarioFour';
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 229}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 229}, givenAttr);
 
     expect(lineNumber).toBe(229);
     expect(colNumber).toBe(20);
@@ -560,7 +560,7 @@ describe('invalid attribute that matches name of JSX tag', () => {
 
   test('senarioFive', () => {
     const givenAttr = 'senarioFive';
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 232}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 232}, givenAttr);
 
     expect(lineNumber).toBe(233);
     expect(colNumber).toBe(5);
@@ -569,7 +569,7 @@ describe('invalid attribute that matches name of JSX tag', () => {
 
   test('senarioSix', () => {
     const givenAttr = 'senarioSix';
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 236}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 236}, givenAttr);
 
     expect(lineNumber).toBe(237);
     expect(colNumber).toBe(5);
@@ -581,7 +581,7 @@ describe('invalid attribute that matches a comment', () => {
   const givenAttr = 'invalidAttr';
 
   test('senarioThreeDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 244}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 244}, givenAttr);
 
     expect(lineNumber).toBe(245);
     expect(colNumber).toBe(5);
@@ -589,7 +589,7 @@ describe('invalid attribute that matches a comment', () => {
 
 
   test('senarioFourDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 248}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 248}, givenAttr);
 
     expect(lineNumber).toBe(249);
     expect(colNumber).toBe(9);
@@ -597,7 +597,7 @@ describe('invalid attribute that matches a comment', () => {
 
 
   test('senarioFiveDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 252}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 252}, givenAttr);
 
     expect(lineNumber).toBe(254);
     expect(colNumber).toBe(5);
@@ -605,7 +605,7 @@ describe('invalid attribute that matches a comment', () => {
 
 
   test('senarioSixDotOne', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 257}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 257}, givenAttr);
 
     expect(lineNumber).toBe(259);
     expect(colNumber).toBe(5);
@@ -613,7 +613,7 @@ describe('invalid attribute that matches a comment', () => {
 
 
   test('senarioSixDotTwo', () => {
-    const { lineNumber, colNumber } = invalidAttrCodeFrame({fileName, lineNumber: 263}, givenAttr);
+    const { lineNumber, colNumber } = attributeCodeFrame({fileName, lineNumber: 263}, givenAttr);
 
     expect(lineNumber).toBe(264);
     expect(colNumber).toBe(5);

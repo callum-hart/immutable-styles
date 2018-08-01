@@ -67,23 +67,12 @@ function getCodeFrame(code, startingLineNumber, matcher, fragment) {
   }
 }
 
-function invalidAttrCodeFrame(source, attr) {
+function attributeCodeFrame(source, attr) {
   return getCodeFrame(
     forAttr(source),
     source.lineNumber,
     `${attr}(?!\\w|"|')`,
     attr
-  );
-}
-
-// TODO: could this be deprecated in favour of `invalidAttrCodeFrame`?
-// i.e: invalidAttrCodeFrame(source, minWidthIfAny ? 'minWidth' : 'maxWidth')
-function mediaQueryCodeFrame(source, minWidthIfAny) {
-  return getCodeFrame(
-    forAttr(source),
-    source.lineNumber,
-    minWidthIfAny ? 'minWidth' : 'maxWidth',
-    minWidthIfAny ? 'minWidth' : 'maxWidth'
   );
 }
 
@@ -109,8 +98,7 @@ module.exports = {
   saveSourceMap,
   clearSourceMaps,
   shouldLogErrorReport,
-  invalidAttrCodeFrame,
-  mediaQueryCodeFrame,
+  attributeCodeFrame,
   baseClassCodeFrame,
   CSSPropertyCodeFrame
 }

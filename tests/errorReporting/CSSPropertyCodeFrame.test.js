@@ -319,9 +319,201 @@ describe('CSS property that matches a comment', () => {
 });
 
 
-// describe('CSS property that partially matches another', () => {
-// });
+describe('CSS property that partially matches another', () => {
+  const givenProperty = 'color';
+
+  test('senarioOneDotOne', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 129}, givenProperty);
+
+    expect(lineNumber).toBe(129);
+    expect(colNumber).toBe(49);
+  });
 
 
-// describe('CSS property that matches CSS value', () => {
-// });
+  test('senarioOneDotTwo', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 130}, givenProperty);
+
+    expect(lineNumber).toBe(130);
+    expect(colNumber).toBe(21);
+  });
+
+
+  test('senarioTwoDotOne', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 131}, givenProperty);
+
+    expect(lineNumber).toBe(131);
+    expect(colNumber).toBe(54);
+  });
+
+
+  test('senarioTwoDotTwo', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 132}, givenProperty);
+
+    expect(lineNumber).toBe(132);
+    expect(colNumber).toBe(25);
+  });
+
+
+  test('senarioThreeDotOne', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 133}, givenProperty);
+
+    expect(lineNumber).toBe(135);
+    expect(colNumber).toBe(5);
+  });
+
+
+  test('senarioThreeDotTwo', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 137}, givenProperty);
+
+    expect(lineNumber).toBe(138);
+    expect(colNumber).toBe(5);
+  });
+
+
+  test('senarioFourDotOne', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 141}, givenProperty);
+
+    expect(lineNumber).toBe(143);
+    expect(colNumber).toBe(5);
+  });
+
+
+  test('senarioFourDotTwo', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 145}, givenProperty);
+
+    expect(lineNumber).toBe(146);
+    expect(colNumber).toBe(5);
+  });
+
+
+  test('senarioFiveDotOne', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 149}, givenProperty);
+
+    expect(lineNumber).toBe(152);
+    expect(colNumber).toBe(5);
+  });
+
+
+  test('senarioFiveDotTwo', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 154}, givenProperty);
+
+    expect(lineNumber).toBe(156);
+    expect(colNumber).toBe(5);
+  });
+
+
+  test('senarioSixDotOne', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 159}, givenProperty);
+
+    expect(lineNumber).toBe(163);
+    expect(colNumber).toBe(5);
+  });
+
+
+  test('senarioSixDotTwo', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 165}, givenProperty);
+
+    expect(lineNumber).toBe(168);
+    expect(colNumber).toBe(5);
+  });
+});
+
+
+describe('CSS property that matches CSS value', () => {
+  const givenProperty = 'left';
+
+  test('senarioOneDotOne', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 174}, givenProperty);
+
+    expect(lineNumber).toBe(174);
+    expect(colNumber).toBe(21);
+  });
+
+
+  test('senarioOneDotTwo', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 175}, givenProperty);
+
+    expect(lineNumber).toBe(175);
+    expect(colNumber).toBe(33);
+  });
+
+
+  test('senarioTwoDotOne', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 176}, givenProperty);
+
+    expect(lineNumber).toBe(176);
+    expect(colNumber).toBe(25);
+  });
+
+
+  test('senarioTwoDotTwo', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 177}, givenProperty);
+
+    expect(lineNumber).toBe(177);
+    expect(colNumber).toBe(38);
+  });
+
+
+  test('senarioThreeDotOne', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 178}, givenProperty);
+
+    expect(lineNumber).toBe(179);
+    expect(colNumber).toBe(5);
+  });
+
+
+  test('senarioThreeDotTwo', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 182}, givenProperty);
+
+    expect(lineNumber).toBe(184);
+    expect(colNumber).toBe(5);
+  });
+
+
+  test('senarioFourDotOne', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 186}, givenProperty);
+
+    expect(lineNumber).toBe(187);
+    expect(colNumber).toBe(5);
+  });
+
+
+  test('senarioFourDotTwo', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 190}, givenProperty);
+
+    expect(lineNumber).toBe(192);
+    expect(colNumber).toBe(5);
+  });
+
+
+  test('senarioFiveDotOne', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 194}, givenProperty);
+
+    expect(lineNumber).toBe(196);
+    expect(colNumber).toBe(5);
+  });
+
+
+  test('senarioFiveDotTwo', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 199}, givenProperty);
+
+    expect(lineNumber).toBe(202);
+    expect(colNumber).toBe(5);
+  });
+
+
+  test('senarioSixDotOne', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 204}, givenProperty);
+
+    expect(lineNumber).toBe(207);
+    expect(colNumber).toBe(5);
+  });
+
+
+  test('senarioSixDotTwo', () => {
+    const { lineNumber, colNumber } = CSSPropertyCodeFrame({fileName, lineNumber: 210}, givenProperty);
+
+    expect(lineNumber).toBe(214);
+    expect(colNumber).toBe(5);
+  });
+});
