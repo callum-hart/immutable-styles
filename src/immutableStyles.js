@@ -7,7 +7,12 @@ const {
   shouldLogErrorReport,
   attributeCodeFrame,
   baseClassCodeFrame,
-  CSSPropertyCodeFrame
+  CSSPropertyCodeFrame,
+  logInvalidAttribute,
+  logDuplicateProperty,
+  logOverrideFound,
+  logNestedMediaQuery,
+  logElementPropertyMismatch
 } = require('./errorReporting');
 
 
@@ -55,16 +60,7 @@ function attrsValid(attrs) {
 
     Object.keys(attrs).forEach(attr => {
       if (!permittedAttrs.includes(attr)) {
-        // TODO: if attr is "id" or "class" log extra message, see: log.js:57
-
-        if (shouldLogErrorReport(attrs.__source)) {
-          const { lineNumber, colNumber, codeFrame } = attributeCodeFrame(attrs.__source, attr);
-
-          console.log('lineNumber', lineNumber);
-          console.log('colNumber', colNumber);
-          console.log(codeFrame);
-        }
-
+        logInvalidAttribute(attrs.__source, attr, permittedAttrs);
         throw new Error(`\`${attr}\` is not a valid attribute`);
       }
     });
@@ -100,26 +96,7 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
         minWidth ||
         maxWidth
       ) {
-        if (
-          shouldLogErrorReport(inheritedMedia.__source) &&
-          shouldLogErrorReport(__source)
-        ) {
-          const parentError = attributeCodeFrame(
-            inheritedMedia.__source,
-            inheritedMedia.minWidth ? 'minWidth' : 'maxWidth'
-          );
-          const childError = attributeCodeFrame(__source, minWidth ? 'minWidth' : 'maxWidth');
-
-          console.log(`\nParent media query (${inheritedMedia.__source.fileName}):`)
-          console.log('lineNumber', parentError.lineNumber);
-          console.log('colNumber', parentError.colNumber);
-          console.log(parentError.codeFrame);
-          console.log(`\nNested media query (${__source.fileName}):`)
-          console.log('lineNumber', childError.lineNumber);
-          console.log('colNumber', childError.colNumber);
-          console.log(childError.codeFrame);
-        }
-
+        logNestedMediaQuery(inheritedMedia.__source, inheritedMedia.minWidth, __source, minWidth);
         throw new Error(`[Nested Media Query] Nested media query found in "${inheritedMedia.setBy}"`);
       } else {
         // add inherited media queries to child block
@@ -229,23 +206,7 @@ function parseAst() {
                 overridingStyles
               } = e.data;
 
-              if (
-                shouldLogErrorReport(overriddenStyles.__source) &&
-                shouldLogErrorReport(overridingStyles.__source)
-              ) {
-                const overriddenError = CSSPropertyCodeFrame(overriddenStyles.__source, overriddenProperty);
-                const overridingError = CSSPropertyCodeFrame(overridingStyles.__source, overriddenProperty);
-
-                console.log(`\nOverridden styles (${overriddenStyles.__source.fileName}):`)
-                console.log('lineNumber', overriddenError.lineNumber);
-                console.log('colNumber', overriddenError.colNumber);
-                console.log(overriddenError.codeFrame);
-                console.log(`\nOverriding styles (${overridingStyles.__source.fileName}):`)
-                console.log('lineNumber', overridingError.lineNumber);
-                console.log('colNumber', overridingError.colNumber);
-                console.log(overridingError.codeFrame);
-              }
-
+              logOverrideFound(overriddenStyles.__source, overridingStyles.__source, overriddenProperty);
               throw new Error(
                 `[Override Found] "${ref}" overrides the "${overriddenProperty}" set by "${accumulator}"`
               );
@@ -352,14 +313,7 @@ function elementCanUseProperty(ref, element, attrs, styles) {
       whitelistedProperty &&
       !elements.includes(element)
     ) {
-      if (shouldLogErrorReport(attrs.__source)) {
-        const { lineNumber, colNumber, codeFrame } = CSSPropertyCodeFrame(attrs.__source, whitelistedProperty);
-
-        console.log('lineNumber', lineNumber);
-        console.log('colNumber', colNumber);
-        console.log(codeFrame);
-      }
-
+      logElementPropertyMismatch(attrs.__source, element, whitelistedProperty, elements);
       throw new Error(
         `The HTML element \`${element}\` (${ref}) cannot use the property \`${whitelistedProperty}\``
       );
@@ -406,23 +360,7 @@ function saveNewStyleForExistingRef(newStyle, ref) {
         overridingStyles
       } = e.data;
 
-      if (
-        shouldLogErrorReport(overriddenStyles.__source) &&
-        shouldLogErrorReport(overridingStyles.__source)
-      ) {
-        const overriddenError = CSSPropertyCodeFrame(overriddenStyles.__source, overriddenProperty);
-        const overridingError = CSSPropertyCodeFrame(overridingStyles.__source, overriddenProperty);
-
-        console.log(`\nOverridden styles (${overriddenStyles.__source.fileName}):`)
-        console.log('lineNumber', overriddenError.lineNumber);
-        console.log('colNumber', overriddenError.colNumber);
-        console.log(overriddenError.codeFrame);
-        console.log(`\nOverriding styles (${overridingStyles.__source.fileName}):`)
-        console.log('lineNumber', overridingError.lineNumber);
-        console.log('colNumber', overridingError.colNumber);
-        console.log(overridingError.codeFrame);
-      }
-
+      logOverrideFound(overriddenStyles.__source, overridingStyles.__source, overriddenProperty);
       throw new Error(
         `[Override Found] the "${overriddenProperty}" of "${ref}" has already been defined`
       );
@@ -506,14 +444,7 @@ function stylesAsMap(stylesAsString, attrs = null, ref = null) {
       const [property, value] = declaration.split(COLON).map(res => res.trim().toLowerCase());
 
       if (styles.has(property)) {
-        if (shouldLogErrorReport(attrs.__source)) {
-          const { lineNumber, colNumber, codeFrame } = CSSPropertyCodeFrame(attrs.__source, property, value);
-
-          console.log('lineNumber', lineNumber);
-          console.log('colNumber', colNumber);
-          console.log(codeFrame);
-        }
-
+        logDuplicateProperty(attrs.__source, property, value);
         throw new Error(`The CSS property \`${property}\` is defined twice by \`${ref}\``);
       } else {
         styles.set(property, value);

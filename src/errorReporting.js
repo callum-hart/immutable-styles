@@ -1,8 +1,21 @@
 const BLANK = '';
 const SPACE = ' ';
 const TAB = SPACE.repeat(2);
+const COMMA = ',';
+
 const SOURCE_MAPS = new Map();
 
+const END_FORMAT = '\x1b[0m';
+
+const color = {
+  red: text => `\x1b[31m${text}${END_FORMAT}`,
+  dim: text => `\x1b[2m${text}${END_FORMAT}`
+}
+
+const text = {
+  bold: text => `\x1b[1m${text}${END_FORMAT}`,
+  underline: text => `\x1b[4m${text}${END_FORMAT}`
+}
 
 function saveSourceMap(fileName, fileSource) {
   SOURCE_MAPS.set(fileName, fileSource);
@@ -16,6 +29,14 @@ function shouldLogErrorReport(attrs) {
   return typeof(attrs) !== 'undefined' &&
     typeof(attrs.fileName) !== 'undefined' &&
     typeof(attrs.lineNumber) !== 'undefined';
+}
+
+function chunkArray(array, chunk = 10) {
+  if (array.length === 0) {
+    return [];
+  } else {
+    return [array.slice(0,chunk)].concat(chunkArray(array.slice(chunk), chunk));
+  }
 }
 
 function getCodeFromLine({fileName, lineNumber}) {
@@ -54,9 +75,11 @@ function getCodeFrame(code, startingLineNumber, matcher, fragment) {
         problemLineNumber = startingLineNumber + i;
         problemColNumber = match.index + 1;
 
-        return `>${SPACE}${lineNumber}${loc}\n${TAB}${SPACE.repeat(lineNumber.length + match.index)}${'^'.repeat(fragment.length)}`;
+        return `${color.red('>')}${SPACE}${lineNumber}${loc}`.concat(
+          `\n${TAB}${SPACE.repeat(lineNumber.length + match.index)}${color.red('^').repeat(fragment.length)}`
+        );
       }
-      return `${TAB}${lineNumber}${loc}`;
+      return `${TAB}${color.dim(`${lineNumber}${loc}`)}`;
   })
   .join('\n');
 
@@ -94,11 +117,126 @@ function CSSPropertyCodeFrame(source, CSSProperty, CSSValue) {
   );
 }
 
+function logHeading(errorName) {
+  console.log(`\n${color.red(text.bold(`[${errorName}]`))}`);
+}
+
+function logFile(fileName, lineNumber, colNumber) {
+  console.log(`${TAB}${color.dim(`${fileName}`)}`.concat(lineNumber && colNumber ?
+    color.dim(`:${lineNumber}:${colNumber}`) :
+    BLANK
+  ));
+}
+
+function logInvalidAttribute(source, attr, permittedAttrs) {
+  if (shouldLogErrorReport(source)) {
+    const { lineNumber, colNumber, codeFrame } = attributeCodeFrame(source, attr);
+
+    logHeading('Invalid Attribute');
+    logFile(source.fileName, lineNumber, colNumber);
+    console.log(`\n\`${attr}\` is not a valid attribute:\n`)
+    console.log(codeFrame);
+    console.log(`\nOnly the following attributes are permitted:\n`);
+    chunkArray(permittedAttrs.filter(attr => attr !== '__source'))
+      .map(chunk => chunk.join(`${COMMA}${SPACE}`))
+      .forEach(chunk => console.log(`${TAB}${chunk}`));
+    console.log(`\n`
+      .concat(attr === 'id' ?
+        `${text.underline('Hint')}: IDs cannot be used for styling, use className instead.\n` :
+        BLANK
+      )
+      .concat(attr === 'class' ?
+        `${text.underline('Hint')}: Perhaps you meant className?\n` :
+        BLANK
+      )
+    );
+  }
+}
+
+function logDuplicateProperty(source, property, value) {
+  if (shouldLogErrorReport(source)) {
+    const { lineNumber, colNumber, codeFrame } = CSSPropertyCodeFrame(source, property, value);
+
+    logHeading('Duplicate Property');
+    logFile(source.fileName, lineNumber, colNumber);
+    console.log(`\nThe property \`${property}\` has been defined twice:\n`)
+    console.log(codeFrame);
+    console.log('\nThe first occurrence is overridden by the second.');
+    console.log(`\n${text.underline('Hint')}: remove either one.\n`);
+  }
+}
+
+function logOverrideFound(overriddenSource, overridingSource, property) {
+  if (
+    shouldLogErrorReport(overriddenSource) &&
+    shouldLogErrorReport(overridingSource)
+  ) {
+    const overriddenCodeFrame = CSSPropertyCodeFrame(overriddenSource, property)
+    const overridingCodeFrame = CSSPropertyCodeFrame(overridingSource, property);
+
+    logHeading('Override Found');
+    console.log(`\nThe property \`${property}\` is defined here:`);
+    logFile(overriddenSource.fileName, overriddenCodeFrame.lineNumber, overriddenCodeFrame.colNumber);
+    console.log(`\n${overriddenCodeFrame.codeFrame}`);
+    console.log('\nAnd again here:');
+    logFile(overridingSource.fileName, overridingCodeFrame.lineNumber, overridingCodeFrame.colNumber);
+    console.log(`\n${overridingCodeFrame.codeFrame}`);
+    console.log('\nThe first occurrence is overridden by the second.\n');
+  }
+}
+
+function logNestedMediaQuery(outerMediaSource, outerMinWidthIfAny, innerMediaSource, innerMinWidthIfAny) {
+  if (
+    shouldLogErrorReport(outerMediaSource) &&
+    shouldLogErrorReport(innerMediaSource)
+  ) {
+    const outerMediaCodeFrame = attributeCodeFrame(
+      outerMediaSource,
+      outerMinWidthIfAny ? 'minWidth' : 'maxWidth'
+    );
+    const innerMediaCodeFrame = attributeCodeFrame(
+      innerMediaSource,
+      innerMinWidthIfAny ? 'minWidth' : 'maxWidth'
+    );
+
+    logHeading('Nested Media Query');
+    console.log('\nA media query cannot be nested inside another media query.\n');
+    console.log('Outer media query:');
+    logFile(outerMediaSource.fileName, outerMediaCodeFrame.lineNumber, outerMediaCodeFrame.colNumber);
+    console.log(`\n${outerMediaCodeFrame.codeFrame}`);
+    console.log('\nInner media query:');
+    logFile(innerMediaSource.fileName, innerMediaCodeFrame.lineNumber, innerMediaCodeFrame.colNumber);
+    console.log(`\n${innerMediaCodeFrame.codeFrame}\n`);
+  }
+}
+
+function logElementPropertyMismatch(source, element, property, permittedElements) {
+  if (shouldLogErrorReport(source)) {
+    const { lineNumber, colNumber, codeFrame } = CSSPropertyCodeFrame(source, property);
+
+    logHeading('Element Property Mismatch');
+    logFile(source.fileName, lineNumber, colNumber);
+    console.log(`\nThe element <${element}> cannot use the property \`${property}\`:\n`);
+    console.log(codeFrame);
+    console.log(`\n\`${property}\` can only be used by the following elements:\n`);
+    chunkArray(permittedElements, 8)
+      .map(chunk => chunk.map(element => `<${element}>`))
+      .map(chunk => chunk.join(`${COMMA}${SPACE}`))
+      .forEach(chunk => console.log(`${TAB}${chunk}`));
+    console.log('\n');
+  }
+}
+
 module.exports = {
   saveSourceMap,
   clearSourceMaps,
   shouldLogErrorReport,
   attributeCodeFrame,
   baseClassCodeFrame,
-  CSSPropertyCodeFrame
+  CSSPropertyCodeFrame,
+  logInvalidAttribute,
+  logDuplicateProperty,
+  logOverrideFound,
+  logNestedMediaQuery,
+  logElementPropertyMismatch
 }
