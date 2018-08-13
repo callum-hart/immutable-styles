@@ -146,7 +146,7 @@ function logInvalidAttribute(source, attr, permittedAttrs) {
         BLANK
       )
       .concat(attr === 'class' ?
-        `${text.underline('Hint')}: Perhaps you meant className?\n` :
+        `${text.underline('Hint')}: perhaps you meant className?\n` :
         BLANK
       )
     );
@@ -210,6 +210,17 @@ function logNestedMediaQuery(outerMediaSource, outerMinWidthIfAny, innerMediaSou
   }
 }
 
+function logUnknownBaseClass(source, baseClass) {
+  if (shouldLogErrorReport(source)) {
+    const { lineNumber, colNumber, codeFrame } = baseClassCodeFrame(source, baseClass);
+
+    logHeading('Unknown Base Class');
+    logFile(source.fileName, lineNumber, colNumber);
+    console.log(`\nThe base class \`${baseClass}\` does not exist:\n`);
+    console.log(`${codeFrame}\n`);
+  }
+}
+
 function logElementPropertyMismatch(source, element, property, permittedElements) {
   if (shouldLogErrorReport(source)) {
     const { lineNumber, colNumber, codeFrame } = CSSPropertyCodeFrame(source, property);
@@ -227,6 +238,33 @@ function logElementPropertyMismatch(source, element, property, permittedElements
   }
 }
 
+function logAmbiguousProperty(source, element, property, propertyDetails) {
+  if (shouldLogErrorReport(source)) {
+    const { lineNumber, colNumber, codeFrame } = CSSPropertyCodeFrame(source, property);
+
+    logHeading('Ambiguous Property');
+    logFile(source.fileName, lineNumber, colNumber);
+    console.log(`\nThe shorthand property for \`${property}\` is ambiguous:\n`);
+    console.log(codeFrame);
+    console.log(`\n${text.underline('Hint')}: Perhaps you meant one of the following:\n`);
+    chunkArray(propertyDetails.suggestions)
+      .map(chunk => chunk.join(`${COMMA}${SPACE}`))
+      .forEach(chunk => console.log(`${TAB}${chunk}`));
+
+    if (propertyDetails.helper) {
+      const { name, example} = propertyDetails.helper;
+
+      console.log(`\n${text.underline('Alternatively')}, you could use the \`${name}\` helper:\n`)
+      console.log(`${TAB}${color.dim('import { margin } from \'immutable-styles\';')}\n`);
+      console.log(`${TAB}${color.dim(`<${element}>`)}`);
+      console.log(`${TAB}${TAB}{${SPACE}${example}${SPACE}}`);
+      console.log(`${TAB}${color.dim(`</${element}>`)}`);
+    }
+
+    console.log('\n');
+  }
+}
+
 module.exports = {
   saveSourceMap,
   clearSourceMaps,
@@ -238,5 +276,7 @@ module.exports = {
   logDuplicateProperty,
   logOverrideFound,
   logNestedMediaQuery,
-  logElementPropertyMismatch
+  logUnknownBaseClass,
+  logElementPropertyMismatch,
+  logAmbiguousProperty
 }

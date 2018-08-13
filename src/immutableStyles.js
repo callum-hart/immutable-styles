@@ -4,15 +4,13 @@ const shorthandHelpers = require('./shorthandHelpers');
 const {
   saveSourceMap,
   clearSourceMaps,
-  shouldLogErrorReport,
-  attributeCodeFrame,
-  baseClassCodeFrame,
-  CSSPropertyCodeFrame,
   logInvalidAttribute,
   logDuplicateProperty,
   logOverrideFound,
   logNestedMediaQuery,
-  logElementPropertyMismatch
+  logUnknownBaseClass,
+  logElementPropertyMismatch,
+  logAmbiguousProperty
 } = require('./errorReporting');
 
 
@@ -108,6 +106,7 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
       }
     }
 
+    // todo: need to log error when subclass is a nested element
     if (isSubclass(parentRef, className)) {
       const baseClass = className.match(/^.+(?=(\.))/)[0]; // upto (but not including) dot
       const baseRef = `${block.element}${DOT}${baseClass}`;
@@ -116,14 +115,7 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
         cloneBaseStyles(baseRef, fullyQualifiedRef);
         // todo: generate run-time validations
       } else {
-        if (shouldLogErrorReport(__source)) {
-          const { lineNumber, colNumber, codeFrame } = baseClassCodeFrame(__source, baseClass);
-
-          console.log('lineNumber', lineNumber);
-          console.log('colNumber', colNumber);
-          console.log(codeFrame);
-        }
-
+        logUnknownBaseClass(__source, baseClass);
         throw new Error(`The base class \`${baseRef}\` does not exist`);
       }
     }
@@ -328,20 +320,7 @@ function noAmbiguousProperties(ref, element, attrs, styles) {
     const ambiguousProperty = Object.keys(shorthandProperties).includes(property);
 
     if (ambiguousProperty) {
-      if (shouldLogErrorReport(attrs.__source)) {
-        const { lineNumber, colNumber, codeFrame } = CSSPropertyCodeFrame(attrs.__source, property);
-
-        console.log('lineNumber', lineNumber);
-        console.log('colNumber', colNumber);
-        console.log(codeFrame);
-
-        console.log('please use unambiguous properties:', shorthandProperties[property].suggestions);
-        if (shorthandProperties[property].helper) {
-          const { name, example} = shorthandProperties[property].helper;
-          console.log('or use the helper:', name, example);
-        }
-      }
-
+      logAmbiguousProperty(attrs.__source, element, property, shorthandProperties[property]);
       throw new Error(`[Ambiguous property] "${ref}" uses the shorthand property "${property}"`);
     }
   }
