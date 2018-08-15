@@ -1,7 +1,11 @@
-const BLANK = '';
-const SPACE = ' ';
-const TAB = SPACE.repeat(2);
-const COMMA = ',';
+const {
+  BLANK,
+  SPACE,
+  TAB,
+  DOT,
+  COMMA
+} = require('./constants');
+
 
 const SOURCE_MAPS = new Map();
 
@@ -121,8 +125,14 @@ function logHeading(errorName) {
   console.log(`\n${color.red(text.bold(`[${errorName}]`))}`);
 }
 
-function logFile(fileName, lineNumber, colNumber) {
-  console.log(`${TAB}${color.dim(`${fileName}`)}`.concat(lineNumber && colNumber ?
+function logFile(filePath, lineNumber, colNumber) {
+  // filePath = 'aFileWithoutPath.iss.jsx';
+  const [fullPath, pathToFile, fileName] = filePath.match(/(.+[\/])(.+)/) || [null, null, filePath];
+
+  console.log(`pathToFile:`, pathToFile);
+  console.log(`fileName:`, fileName);
+
+  console.log(`${TAB}${color.dim(`${filePath}`)}`.concat(lineNumber && colNumber ?
     color.dim(`:${lineNumber}:${colNumber}`) :
     BLANK
   ));
@@ -221,6 +231,19 @@ function logUnknownBaseClass(source, baseClass) {
   }
 }
 
+function logNestedSubclass(source, className) {
+  if (shouldLogErrorReport(source)) {
+    const baseClass = className.split(DOT)[0];
+    const { lineNumber, colNumber, codeFrame } = baseClassCodeFrame(source, baseClass);
+
+    logHeading('Nested Subclass');
+    logFile(source.fileName, lineNumber, colNumber);
+    console.log('\nA subclass cannot be nested:\n');
+    console.log(codeFrame);
+    console.log('\nA subclass can only be defined by root nodes.\n');
+  }
+}
+
 function logElementPropertyMismatch(source, element, property, permittedElements) {
   if (shouldLogErrorReport(source)) {
     const { lineNumber, colNumber, codeFrame } = CSSPropertyCodeFrame(source, property);
@@ -246,7 +269,7 @@ function logAmbiguousProperty(source, element, property, propertyDetails) {
     logFile(source.fileName, lineNumber, colNumber);
     console.log(`\nThe shorthand property for \`${property}\` is ambiguous:\n`);
     console.log(codeFrame);
-    console.log(`\n${text.underline('Hint')}: Perhaps you meant one of the following:\n`);
+    console.log(`\n${text.underline('Hint')}: perhaps you meant one of the following:\n`);
     chunkArray(propertyDetails.suggestions)
       .map(chunk => chunk.join(`${COMMA}${SPACE}`))
       .forEach(chunk => console.log(`${TAB}${chunk}`));
@@ -277,6 +300,7 @@ module.exports = {
   logOverrideFound,
   logNestedMediaQuery,
   logUnknownBaseClass,
+  logNestedSubclass,
   logElementPropertyMismatch,
   logAmbiguousProperty
 }

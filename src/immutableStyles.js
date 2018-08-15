@@ -9,23 +9,26 @@ const {
   logOverrideFound,
   logNestedMediaQuery,
   logUnknownBaseClass,
+  logNestedSubclass,
   logElementPropertyMismatch,
   logAmbiguousProperty
 } = require('./errorReporting');
 
+const {
+  BLANK,
+  SPACE,
+  DOT,
+  COLON,
+  SEMI_COLON,
+  CHILD_COMBINATOR,
+  OPEN_PARENTHESIS,
+  CLOSE_PARENTHESIS,
+  OPEN_BRACE,
+  CLOSE_BRACE,
+  ZERO,
+  MEDIA_UNIT
+} = require('./constants');
 
-const BLANK             = '';
-const SPACE             = ' ';
-const DOT               = '.';
-const COLON             = ':';
-const SEMI_COLON        = ';';
-const CHILD_COMBINATOR  = '>';
-const OPEN_PARENTHESIS  = '(';
-const CLOSE_PARENTHESIS = ')';
-const OPEN_BRACE        = '{';
-const CLOSE_BRACE       = '}';
-const ZERO              = 0;
-const MEDIA_UNIT        = 'px';
 
 const AST = new Map();
 
@@ -59,7 +62,7 @@ function attrsValid(attrs) {
     Object.keys(attrs).forEach(attr => {
       if (!permittedAttrs.includes(attr)) {
         logInvalidAttribute(attrs.__source, attr, permittedAttrs);
-        throw new Error(`\`${attr}\` is not a valid attribute`);
+        throw new Error(`[Invalid Attribute] \`${attr}\` is not a valid attribute`);
       }
     });
   }
@@ -95,7 +98,7 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
         maxWidth
       ) {
         logNestedMediaQuery(inheritedMedia.__source, inheritedMedia.minWidth, __source, minWidth);
-        throw new Error(`[Nested Media Query] Nested media query found in "${inheritedMedia.setBy}"`);
+        throw new Error(`[Nested Media Query] Nested media query found in \`${inheritedMedia.setBy}\``);
       } else {
         // add inherited media queries to child block
         block.attrs = {
@@ -106,9 +109,8 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
       }
     }
 
-    // todo: need to log error when subclass is a nested element
-    if (isSubclass(parentRef, className)) {
-      const baseClass = className.match(/^.+(?=(\.))/)[0]; // upto (but not including) dot
+    if (isSubclass(parentRef, className, __source)) {
+      const baseClass = className.split(DOT)[0]; // upto (but not including) dot
       const baseRef = `${block.element}${DOT}${baseClass}`;
 
       if (AST.has(baseRef)) {
@@ -116,7 +118,7 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
         // todo: generate run-time validations
       } else {
         logUnknownBaseClass(__source, baseClass);
-        throw new Error(`The base class \`${baseRef}\` does not exist`);
+        throw new Error(`[Unknown Base Class] The base class \`${baseRef}\` does not exist`);
       }
     }
 
@@ -161,13 +163,20 @@ function cloneBaseStyles(baseRef, clonedRef) {
   }
 }
 
-function isSubclass(parentRef, className) {
-  // for now only support inheritance for:
-  //  - top level nodes
-  //  - single inheritance
-  return parentRef === null &&
-         className &&
-         className.includes(DOT);
+function isSubclass(parentRef, className, source) {
+  // for now only support single inheritance & top level nodes
+  if (
+    className &&
+    className.includes(DOT)
+  ) {
+    if (parentRef === null) {
+      return true;
+    }
+    logNestedSubclass(source, className);
+    throw new Error(`[Nested Subclass] Nested subclass \`${className}\` found in \`${parentRef}\``);
+  }
+
+  return false;
 }
 
 function parseAst() {
@@ -200,7 +209,7 @@ function parseAst() {
 
               logOverrideFound(overriddenStyles.__source, overridingStyles.__source, overriddenProperty);
               throw new Error(
-                `[Override Found] "${ref}" overrides the "${overriddenProperty}" set by "${accumulator}"`
+                `[Override Found] \`${ref}\` overrides the \`${overriddenProperty}\` set by \`${accumulator}\``
               );
             }
           });
@@ -307,7 +316,7 @@ function elementCanUseProperty(ref, element, attrs, styles) {
     ) {
       logElementPropertyMismatch(attrs.__source, element, whitelistedProperty, elements);
       throw new Error(
-        `The HTML element \`${element}\` (${ref}) cannot use the property \`${whitelistedProperty}\``
+        `[Element Property Mismatch] The HTML element \`${element}\` (${ref}) cannot use the property \`${whitelistedProperty}\``
       );
     }
   });
@@ -321,7 +330,7 @@ function noAmbiguousProperties(ref, element, attrs, styles) {
 
     if (ambiguousProperty) {
       logAmbiguousProperty(attrs.__source, element, property, shorthandProperties[property]);
-      throw new Error(`[Ambiguous property] "${ref}" uses the shorthand property "${property}"`);
+      throw new Error(`[Ambiguous Property] \`${ref}\` uses the shorthand property \`${property}\``);
     }
   }
 
@@ -341,7 +350,7 @@ function saveNewStyleForExistingRef(newStyle, ref) {
 
       logOverrideFound(overriddenStyles.__source, overridingStyles.__source, overriddenProperty);
       throw new Error(
-        `[Override Found] the "${overriddenProperty}" of "${ref}" has already been defined`
+        `[Override Found] The \`${overriddenProperty}\` of \`${ref}\` has already been defined`
       );
     }
   });
@@ -383,7 +392,7 @@ function areStylesUnique(control, comparison) {
     for (var property of stylesAsMap(comparison.styles).keys()) {
       if (stylesAsMap(control.styles).get(property)) {
         throw new ErrorWithData(
-          `Override found. The property \`${property}\` has already been defined`,
+          `[Override Found] The property \`${property}\` has already been defined`,
           {
             overriddenProperty: property,
             overriddenStyles: control,
@@ -424,7 +433,7 @@ function stylesAsMap(stylesAsString, attrs = null, ref = null) {
 
       if (styles.has(property)) {
         logDuplicateProperty(attrs.__source, property, value);
-        throw new Error(`The CSS property \`${property}\` is defined twice by \`${ref}\``);
+        throw new Error(`[Duplicate Property] The CSS property \`${property}\` is defined twice by \`${ref}\``);
       } else {
         styles.set(property, value);
       }

@@ -19,7 +19,7 @@ test('[ambiguous propeties] shorthand properties should not be allowed', () => {
   );
 
   const styles = () => createCSS(input);
-  expect(styles).toThrow('[Ambiguous property] "div" uses the shorthand property "background"');
+  expect(styles).toThrow('[Ambiguous Property] `div` uses the shorthand property `background`');
 });
 
 

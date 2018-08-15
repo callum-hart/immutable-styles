@@ -11,7 +11,7 @@ const {
 beforeEach(() => tearDown());
 
 
-test('[composition] Subclass inherits styles from base-class', () => {
+test('Subclass inherits styles from base-class', () => {
   const input = [
     createStyle(
       'form',
@@ -41,7 +41,7 @@ form[class="baseForm subForm"] {
 });
 
 
-test('[composition] Subclass can add its own styles to inherited styles', () => {
+test('Subclass can add its own styles to inherited styles', () => {
   const input = [
     createStyle(
       'form',
@@ -71,7 +71,7 @@ form[class="baseForm subForm"] {
 });
 
 
-test('[composition] Subclass can override an inherited style', () => {
+test('Subclass can override an inherited style', () => {
   const input = [
     createStyle(
       'form',
@@ -101,7 +101,7 @@ form[class="baseForm subForm"] {
 });
 
 
-test('[composition] Subclass inherits child node styles from base-class', () => {
+test('Subclass inherits child node styles from base-class', () => {
   const input = [
     createStyle(
       'form',
@@ -143,7 +143,7 @@ form[class="baseForm subForm"] > input:not([class]) {
 
 
 
-test('[composition] Subclass can add its own styles to child nodes', () => {
+test('Subclass can add its own styles to child nodes', () => {
   const input = [
     createStyle(
       'form',
@@ -189,7 +189,7 @@ form[class="baseForm subForm"] > input:not([class]) {
 });
 
 
-test('[composition] Subclass can override inherited child node styles', () => {
+test('Subclass can override inherited child node styles', () => {
   const input = [
     createStyle(
       'form',
@@ -235,7 +235,7 @@ form[class="baseForm subForm"] > input:not([class]) {
 });
 
 
-test('[composition] Cannot extend a non-existent base-class', () => {
+test('Subclass cannot extend an unknown base-class', () => {
   const input = createStyle(
     'div',
     {
@@ -246,4 +246,25 @@ test('[composition] Cannot extend a non-existent base-class', () => {
 
   const unknownBaseClass = () => createCSS(input);
   expect(unknownBaseClass).toThrow('The base class `div.modal` does not exist');
+});
+
+
+test('Subclass cannot be nested', () => {
+  const input = [
+    createStyle(
+      'div',
+      null,
+      '',
+      createStyle(
+        'span',
+        {
+          className: 'baseClass.subClass'
+        },
+        ''
+      )
+    )
+  ];
+
+  const nestedSubclass = () => createCSS(input);
+  expect(nestedSubclass).toThrow('[Nested Subclass] Nested subclass `baseClass.subClass` found in `div`');
 });
