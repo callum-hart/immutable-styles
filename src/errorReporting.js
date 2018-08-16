@@ -129,12 +129,14 @@ function logFile(filePath, lineNumber, colNumber) {
   // filePath = 'aFileWithoutPath.iss.jsx';
   const [fullPath, pathToFile, fileName] = filePath.match(/(.+[\/])(.+)/) || [null, null, filePath];
 
-  console.log(`pathToFile:`, pathToFile);
-  console.log(`fileName:`, fileName);
-
-  console.log(`${TAB}${color.dim(`${filePath}`)}`.concat(lineNumber && colNumber ?
-    color.dim(`:${lineNumber}:${colNumber}`) :
-    BLANK
+  console.log(`${TAB}`.concat(pathToFile
+    ? color.dim(pathToFile)
+    : BLANK
+  )
+  .concat(text.bold(fileName))
+  .concat(lineNumber && colNumber
+    ? text.bold(color.dim(`:${lineNumber}:${colNumber}`))
+    : BLANK
   ));
 }
 
@@ -151,13 +153,13 @@ function logInvalidAttribute(source, attr, permittedAttrs) {
       .map(chunk => chunk.join(`${COMMA}${SPACE}`))
       .forEach(chunk => console.log(`${TAB}${chunk}`));
     console.log(`\n`
-      .concat(attr === 'id' ?
-        `${text.underline('Hint')}: IDs cannot be used for styling, use className instead.\n` :
-        BLANK
+      .concat(attr === 'id'
+        ? `${text.underline('Hint')}: IDs cannot be used for styling, use className instead.\n`
+        : BLANK
       )
-      .concat(attr === 'class' ?
-        `${text.underline('Hint')}: perhaps you meant className?\n` :
-        BLANK
+      .concat(attr === 'class'
+        ? `${text.underline('Hint')}: perhaps you meant className?\n`
+        : BLANK
       )
     );
   }
