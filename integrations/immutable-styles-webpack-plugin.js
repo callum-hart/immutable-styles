@@ -29,7 +29,6 @@ function buildAST(modules) {
           return eval(fileSource._value); // use https://www.npmjs.com/package/safer-eval instead?
         } else {
           // todo: log prompt to enable source maps (https://webpack.js.org/configuration/devtool/)
-          // throw new Error('Source maps not enabled');
           logEnableWebpackSourceMaps();
         }
       } catch ({name, message}) {

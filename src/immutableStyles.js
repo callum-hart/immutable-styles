@@ -515,7 +515,6 @@ module.exports = {
   createCSS,
   saveSourceMap,
   tearDown,
-  ErrorWithData,
   ...shorthandHelpers,
   logBuildError,
   logEnableWebpackSourceMaps
