@@ -290,6 +290,23 @@ function logAmbiguousProperty(source, element, property, propertyDetails) {
   }
 }
 
+function logBuildError(fileName, errorName, errorMessage) {
+  logHeading(errorName);
+  logFile(fileName, null, null);
+  console.log(`\n${errorMessage}\n`);
+}
+
+function logEnableWebpackSourceMaps() {
+  logHeading('Missing Source Maps');
+  console.log('\nPlease enable source maps in your `webpack.config.js`:\n');
+  console.log(`${TAB}${color.dim(`devtool: "source-map"`)}`);
+  console.log(
+    `\n${text.underline('Hint')}: more info can be found here:`.concat(
+      `${text.underline('https://webpack.js.org/configuration/devtool')}\n`
+    )
+  );
+}
+
 module.exports = {
   saveSourceMap,
   clearSourceMaps,
@@ -304,5 +321,7 @@ module.exports = {
   logUnknownBaseClass,
   logNestedSubclass,
   logElementPropertyMismatch,
-  logAmbiguousProperty
+  logAmbiguousProperty,
+  logBuildError,
+  logEnableWebpackSourceMaps
 }

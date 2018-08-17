@@ -11,7 +11,9 @@ const {
   logUnknownBaseClass,
   logNestedSubclass,
   logElementPropertyMismatch,
-  logAmbiguousProperty
+  logAmbiguousProperty,
+  logBuildError,
+  logEnableWebpackSourceMaps
 } = require('./errorReporting');
 
 const {
@@ -514,5 +516,7 @@ module.exports = {
   saveSourceMap,
   tearDown,
   ErrorWithData,
-  ...shorthandHelpers
+  ...shorthandHelpers,
+  logBuildError,
+  logEnableWebpackSourceMaps
 };

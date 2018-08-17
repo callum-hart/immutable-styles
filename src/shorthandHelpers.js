@@ -1,6 +1,6 @@
 /**
  * Mixins that wrap longhand properties to save people the trouble, i.e:
- * 
+ *
  * margin('10px', '15px') generates:
  *    margin-top: 10px;
  *    margin-right: 15px;
@@ -13,7 +13,7 @@ function arityIsValid(property, maxArity, args) {
     args.length === 0 ||
     args.length > maxArity
   ) {
-    throw Error(`"${property}" should have at least 1, and at most ${maxArity} arguments`);
+    throw new Error(`\`${property}\` should have at least 1, and at most ${maxArity} arguments`);
   }
 
   return true;

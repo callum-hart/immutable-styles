@@ -2,23 +2,23 @@ const fs = require('fs');
 
 
 const ImmutableStyles = require('immutable-styles');
-const { ErrorWithData } = ImmutableStyles;
+const { logBuildError, logEnableWebpackSourceMaps } = ImmutableStyles;
 
 
-function isImmutableStyleModule(resourceName) {
+function isImmutableStylesModule(resourceName) {
   return typeof(resourceName) !== 'undefined' &&
-    resourceName.endsWith('.iss.jsx'); // .iss => Immutable Styles Sheet 
+    resourceName.endsWith('.iss.jsx'); // .iss => Immutable Styles Sheet
 }
 
 function isSoureMapEnabled(moduleSource) {
   return typeof(moduleSource._sourceMap) !== 'undefined';
 }
 
-// throws error when file: 
+// throws error when file:
 // - contains a JavaScript error (i.e: variable is not defined)
 // - contains shorthand helper with invalid arity
 function buildAST(modules) {
-  return modules.filter(module => isImmutableStyleModule(module.resource))
+  return modules.filter(module => isImmutableStylesModule(module.resource))
     .map(module => {
       const fileName = module.resource;
       const fileSource = module._source;
@@ -26,21 +26,15 @@ function buildAST(modules) {
       try {
         if (isSoureMapEnabled(fileSource)) {
           ImmutableStyles.saveSourceMap(fileName, fileSource._sourceMap.sourcesContent[0]);
-          return eval(fileSource._value); // todo: use https://www.npmjs.com/package/safer-eval
+          return eval(fileSource._value); // use https://www.npmjs.com/package/safer-eval instead?
         } else {
           // todo: log prompt to enable source maps (https://webpack.js.org/configuration/devtool/)
-          console.log('source maps not enabled 🙁');
+          // throw new Error('Source maps not enabled');
+          logEnableWebpackSourceMaps();
         }
-      } catch (err) {
-        const message = err.message.concat(`\n └─ ${fileName}`);
-
-        throw new ErrorWithData(
-          message,
-          {
-            fileName,
-            fileSource
-          }
-        );
+      } catch ({name, message}) {
+        logBuildError(fileName, name, message);
+        throw new Error(`[${name}] ${message}`);
       }
     })
     // flatten AST
