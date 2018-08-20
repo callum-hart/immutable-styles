@@ -28,7 +28,6 @@ function buildAST(modules) {
           ImmutableStyles.saveSourceMap(fileName, fileSource._sourceMap.sourcesContent[0]);
           return eval(fileSource._value); // use https://www.npmjs.com/package/safer-eval instead?
         } else {
-          // todo: log prompt to enable source maps (https://webpack.js.org/configuration/devtool/)
           logEnableWebpackSourceMaps();
         }
       } catch ({name, message}) {
