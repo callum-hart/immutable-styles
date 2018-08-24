@@ -31,7 +31,7 @@ If you have ever encountered styles that were neither expected nor desired you p
 - c) Styles overriding other styles
 - d) Elements inheriting undesirable styles
 
-As the name suggests the library uses immutability to help remove these side effects. With Immutable Styles all CSS rules are immutable. An immutable rule cannot change once created, which means it can **never** be overridden. This alone solves a, b and c (we will see the solution to d later).
+As the name suggests the library uses immutability to help remove these side effects. With Immutable Styles all CSS rules are immutable. An immutable CSS rule cannot change once created, which means it can **never** be overridden. This alone solves a, b and c (we will see the solution to d later).
 
 ## The case for Immutable Styles
 
@@ -47,7 +47,7 @@ Overrides make CSS **unpredictable** because:
 2. The side effects aren’t immediately apparent (exaggerated by #1).
 3. A lack of encapsulation dampens efforts to protect styles from being overridden.
 4. The longevity of an override is unknown. Just because a style wins today doesn’t mean it always will.
-5. They obfuscate developer intent. It’s hard to differentiate between an intentional and unintentional override (which can be left to interpretation).
+5. They obfuscate developer intent. It’s hard to differentiate between an intentional and unintentional override (which is open to interpretation).
 
 Parallels can be drawn between mutable state in programs and overrides in CSS. When a style overrides another it mutates (changes) the value of the original style. Over recent years the front-end community has seen a huge shift towards removing mutable state in our applications - yet CSS has been left behind.
 

@@ -1,57 +1,134 @@
-## Features
+## TOC
 
-- Build time errors
-- Override prevention
-- Single inheritance model
-- Discrete breakpoints (breakpoint collision detection)
-- Strict CSS Inheritance
-- Unambiguos CSS declarations (no shorthands)
-- Duplicate property detection
-- Runtime override protection (styles are resiliant to changes in HTML)
-- Pre-processor features (variables, mixins, etc...)
+```
+- README
+	- Features
+	- What is Immutable Styles
+	- The Case for Immutable Styles
+- Basic Concepts
+	- What is a CSS override
+	- What is the beef with overrides?
+	- What is an Immutable Style
+	- What is an Immutable Style Sheet
+	- Written using JSX
+	- Four ~Props~ Attributtes
+- Getting Started
+	- Install
+	- Usage with Webpack
+	- Beginner Tutorial
+- Cheetsheet
+	- CSS Comparison
+	- Build Time Errors
+- Recipies
+	- Button MVC
+	- Themes 
+- Advanced Concepts
+	- Single Inheritance Model
+	- Strict CSS Inheritance
+	- Discrete Breakpoints
+	- Unambiguos Declarations
+	- Pre-processor'esque Features
+	- How it Works
+- Changelog
+- Roadmap
+```
 
-## Introduction
 
-- What is Immutable Styles **done**
-- The case for Immutable Styles **done**
+## README
 
-## Basic Concepts
+Catch CSS bugs ahead of time
 
-- What is a CSS override
-- What is an Immutable Style
-- What is an Immutable Style Sheet
-- Written using JSX (same structure as DOM) 
-- The four attributtes (className, minWith, maxWidth, pseudo)
+> 📖 **Immutable Styles** | ɪˈmjuːtəb(ə)l | stʌɪl |
 
-## Advanced Concepts
+> A JavaScript library for styling web interfaces with a focus on predictability and robustness. It uses immutability to remove side effects often tied to CSS.
 
+### Features
+
+- Build Time Errors
+- Override Prevention
 - Single Inheritance Model
 - Discrete Breakpoints
 - Strict CSS Inheritance
 - Unambiguos Declarations
-- Pre-processor'esque Features
-- Themes
-- How it works: design decisions, why the generated CSS is how it is
+- Duplicate Property Detection
+- Runtime Override Protection (styles are resiliant to changes in HTML)
+- Pre-processor Features (variables, mixins, etc...)
 
-## Cheetsheet
+### What is Immutable Styles
+- see current README.md
 
-- CSS Comparison, what's the equivalent of a:
-	- CSS ruleset
-	- CSS selector
-	- CSS/Pre-processor selector for child element. All children are immediate!
-	- CSS declaration(s)
-	- Media query
-	- Pseudo selector
-	- Pseudo element
-	- CSS variable
-	- Pre-processor mixin
-- Compile Time Errors
+### The case for Immutable Styles
+- see current README.md
+
+## Basic Concepts
+
+### What is a CSS override
+- A style can be overriden (few ways this can happen)
+- An inherited style can be overriden
+- Brief walkthrough of how CSS overrides work (cascade, specificity, !important)
+	- Explain different scenarios & their outcomes (winning style🏅)
+
+### What is an Immutable Style
+- Brief explanation / quote of what immutability is
+- Style that can never be overridden (similar to `const`)
+
+### What is an Immutable Style Sheet
+- Immutable Styles are written in `.iss` files, which stands for Immutable Style Sheet.
+
+### Written using JSX
+- Represented using a [Tree]() data structure
+- Share the same structure as HTML
+- Written using JSX (like React). 
+- 💡Note: other than using JSX the similarites between React and Immutable Styles end there. Immutable Styles is only concerned with styling web interfaces.
+
+### Four ~Props~ Attributtes
+- Like React components, an Immutable Style can have props. 
+- 💡 Note: unlike React, the props are predefined by the library. User defined props are  [forbidden]().
+- To distinguish between JSX props and CSS properties, the JSX props exposed by Immutable Styles are referred to as **attributes**.
+- There are four attributtes:
+	1. className
+	2. pseudo
+	3. minWidth
+	4. maxWidth
 
 ## Getting Started
 
 - Install
 - Usage with webpack
-- Tutorial (example project)
+- Beginner Tutorial (example project)
+
+## Cheetsheet
+
+- CSS Comparison, what is the equivalent of a:
+	- CSS ruleset
+	- CSS selector
+	- Pseudo selector
+	- Pseudo element
+	- CSS declaration(s)
+	- Media query
+	- CSS variable
+	- Pre-processor mixin
+- Build Time Errors 
+	- see compileTimeErrors.md, need to update examples to use JSX
+
+## Recipies
+
+- Button MVC (like TODO MVC)
+	- set of buttons
+- Themes: see features.md, need to expand example
+
+## Advanced Concepts
+
+- Single Inheritance Model
+	- see singleInheritanceModel.md, need to update examples to use JSX
+- Strict CSS Inheritance
+- Discrete Breakpoints
+- Unambiguos Declarations
+- Pre-processor'esque Features
+	- see features.md
+- How it Works
+	- Design decisions
+	- Drilldown into the generated CSS
 
 ## Changelog
 
