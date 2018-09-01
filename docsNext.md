@@ -74,6 +74,7 @@ Catch CSS bugs ahead of time
 
 ### What is an Immutable Style Sheet
 - Immutable Styles are written in `.iss` files, which stands for Immutable Style Sheet.
+- Dual extension of `.iss.jsx`
 
 ### Written using JSX
 - Represented using a [Tree]() data structure
@@ -113,8 +114,6 @@ Catch CSS bugs ahead of time
 
 ## Recipies
 
-- Button MVC (like TODO MVC)
-	- set of buttons
 - Themes: see features.md, need to expand example
 
 ## Advanced Concepts
@@ -128,6 +127,7 @@ Catch CSS bugs ahead of time
 	- see features.md
 - How it Works
 	- Design decisions
+		- Always including element in selector et'cetera...
 	- Drilldown into the generated CSS
 
 ## Changelog
@@ -147,9 +147,9 @@ Catch CSS bugs ahead of time
 - Inferred discrete breakpoints. Max-widths are generated from min-widths
 - Inheritance blockers. The rule: `button { color: black; }` generates a rule that prevents child elements from inheriting the color: `button * { color: 'needs to be explicity set' }`
 - Runtime validations (see `immutableStyles.js:120`).
-- Extend should be an attribute `extendFrom`, rather than naming convention
-- Extend from an element that doesn't have a className i.e: `p`
-- Differentiate between subclass and modifier class.
+- Extend should be an attribute `extendFrom`, rather than naming convention **todo**
+- Extend from an element that doesn't have a className i.e: `p` **todo**
+- Differentiate between subclass and modifier class. **todo**
 	- Subclass is used on its own, i.e: `btn-primary`
 	- Modifier class is used with original class, i.e: `btn btn--loading`
 	- `modifierFor` attribute
