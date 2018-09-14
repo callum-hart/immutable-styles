@@ -2,16 +2,14 @@
 
 ```
 - README
-	- Features
-	- What is Immutable Styles
-	- The Case for Immutable Styles
+	- Features **done**
+	- What is Immutable Styles **done**
+	- The Case for Immutable Styles **done**
 - Basic Concepts
-	- What is a CSS override
-	- What is the beef with overrides?
-	- What is an Immutable Style
-	- What is an Immutable Style Sheet
+	- CSS Overrides
+	- An Immutable Style
+	- Immutable Style Sheets
 	- Written using JSX
-	- Four ~Props~ Attributtes
 - Getting Started
 	- Install
 	- Usage with Webpack
@@ -20,8 +18,7 @@
 	- CSS Comparison
 	- Build Time Errors
 - Recipies
-	- Button MVC
-	- Themes 
+	- Themes
 - Advanced Concepts
 	- Single Inheritance Model
 	- Strict CSS Inheritance
@@ -32,7 +29,6 @@
 - Changelog
 - Roadmap
 ```
-
 
 ## README
 
@@ -53,6 +49,7 @@ Catch CSS bugs ahead of time
 - Duplicate Property Detection
 - Runtime Override Protection (styles are resiliant to changes in HTML)
 - Pre-processor Features (variables, mixins, etc...)
+- Strict Type Selectors
 
 ### What is Immutable Styles
 - see current README.md
@@ -79,18 +76,11 @@ Catch CSS bugs ahead of time
 ### Written using JSX
 - Represented using a [Tree]() data structure
 - Share the same structure as HTML
-- Written using JSX (like React). 
-- 💡Note: other than using JSX the similarites between React and Immutable Styles end there. Immutable Styles is only concerned with styling web interfaces.
-
-### Four ~Props~ Attributtes
-- Like React components, an Immutable Style can have props. 
-- 💡 Note: unlike React, the props are predefined by the library. User defined props are  [forbidden]().
-- To distinguish between JSX props and CSS properties, the JSX props exposed by Immutable Styles are referred to as **attributes**.
-- There are four attributtes:
-	1. className
-	2. pseudo
-	3. minWidth
-	4. maxWidth
+- Written using JSX (like React).
+- Like React components, an Immutable Style can have props.
+- To distinguish between JSX properties and CSS properties, the JSX props exposed by Immutable Styles are referred to as **attributes**.
+- There are {N} attributtes: className, pseudo, minWidth, maxWidth, (extendFrom?, modifierFor?)
+- 💡Note: Unlike React, the props are predefined by the library. User defined props are  [forbidden](). Other than using JSX the similarites between React and Immutable Styles end there. Immutable Styles is only concerned with styling web interfaces, not building them.
 
 ## Getting Started
 
@@ -103,13 +93,14 @@ Catch CSS bugs ahead of time
 - CSS Comparison, what is the equivalent of a:
 	- CSS ruleset
 	- CSS selector
+		- descendant combinator selectors cast too wide net
 	- Pseudo selector
 	- Pseudo element
 	- CSS declaration(s)
 	- Media query
 	- CSS variable
 	- Pre-processor mixin
-- Build Time Errors 
+- Build Time Errors
 	- see compileTimeErrors.md, need to update examples to use JSX
 
 ## Recipies
@@ -134,7 +125,7 @@ Catch CSS bugs ahead of time
 
 - Usage with JSX
 - Webpack plugin, with hot reload 🔥
-- Elm inspired error messages, with hints!
+- Elm inspired error messages, with helpful hints!
 - Ambiguous property mixins
 - Nested subclass error handling
 - `createCSS` now accepts an object aswell as array
@@ -154,4 +145,4 @@ Catch CSS bugs ahead of time
 	- Modifier class is used with original class, i.e: `btn btn--loading`
 	- `modifierFor` attribute
 - Allow modules to expose styles that can be redefined at compile-time (similar to single inheritance model).
-- Entity relationship modelling: https://github.com/callum-hart/mono/blob/master/misc/notes/entity%20relationship%20model.md
+- Entity relationship models (ERM): https://github.com/callum-hart/mono/blob/master/misc/notes/entity%20relationship%20model.md
