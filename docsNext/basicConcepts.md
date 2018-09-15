@@ -1,4 +1,4 @@
-# Basic Concepts
+# The Basics
 
 ## Written using JSX
 
@@ -8,7 +8,8 @@
 - Like React components, an Immutable Style can have props.
 - To distinguish between JSX properties and CSS properties, the JSX props exposed by Immutable Styles are referred to as **attributes**.
 - There are {N} attributtes: className, pseudo, minWidth, maxWidth, (extendFrom?, modifierFor?)
-- 💡Note: Unlike React, the props are predefined by the library. User–defined props are  [forbidden](). Other than using JSX the similarites between React and Immutable Styles end there. Immutable Styles is only concerned with styling web interfaces, not building them.
+- 💡Note: Unlike React, the props are predefined by the library. User–defined props are  [forbidden]().
+- 💡Note: Other than using JSX the similarites between React and Immutable Styles end there. Immutable Styles is only concerned with styling web interfaces, not building them.
 
 ---
 
@@ -26,7 +27,7 @@ Immutable Styles are represented using a [Tree](https://en.wikipedia.org/wiki/Tr
 
 The example above is the equivalant of a CSS rule-set. It consists of a *selector* – in this case the `h1` tag, and contains three CSS declarations: `font-family`, `font-weight` and `font-size`. In immutable styles this is known as an **immutable rule-set**.
 
-An immutable rule-set can contain both CSS declarations (as seen above) and/or other immutable rule-sets:
+An immutable rule-set can contain other immutable rule-sets:
 
 ```jsx
 <dl>
@@ -36,11 +37,50 @@ An immutable rule-set can contain both CSS declarations (as seen above) and/or o
 </dl>
 ```
 
-The example above equates to a CSS rule-set that consists of two selectors – the first selector being `dl`, the second `dt`, and a declaration (`flex-basis`) that applies to elements matching the second selector only if the elements ancestor matches the first selector. In CSS this in known as decendant selectors.
+The example above equates to a CSS rule-set that consists of two selectors. The `flex-basis` declaration will apply to elements matching the second selector – the `dt` tag, only when the ancestor element matches the first selector – the `dl` tag. In CSS these are known as *decendant selectors*.
 
-### Props
+An immutable rule-set can contain both CSS declarations and other immutable rule-sets:
 
-So far we've only seen *type selectors* – selectors that match elements by HTML tag name.
+```jsx
+<dl>
+  display: flex;
+  flex-wrap: wrap;
+  <dt>
+    flex-basis: 50%;
+  </dt>
+</dl>
+```
 
+The example above includes CSS declarations for both the first selector – the `dl` tag – and the second selector – the `dt` tag.
 
-Like React components, an immutable rule-set can have props. Unlike React, user–defined props are  [forbidden]().
+As with CSS there is no limit to the number of decendants in a given selector. In the example above the second rule-set could contain a thrid rule-set, which in turn could contain a forth rule-set, and so on.
+
+```jsx
+<dl>
+  display: flex;
+  flex-wrap: wrap;
+  <dt>
+    flex-basis: 50%;
+    <span>
+      text-transform: uppercase;
+    </span>
+  </dt>
+</dl>
+```
+
+> 💡Note: other than using JSX the similarites between React and Immutable Styles end there. Immutable Styles is only concerned with styling web interfaces and *not* building them.
+
+### Immutable Selectors
+
+So far we've only seen *type selectors* – selectors that match elements by their HTML tag name. However it is common for CSS selectors to match elements with a specific class name.
+
+In immutable styles this is achieved using the JSX `className` prop provided by the library:
+
+```jsx
+<div className="sideBar">
+  height: 100%;
+  overflow hidden;
+</div>
+```
+
+The example above is the equivalant of a CSS rule-set whose *selector* matches HTML elements of type `div` which have the class `sideBar`.
