@@ -37,7 +37,7 @@ An immutable rule-set can contain other immutable rule-sets:
 </dl>
 ```
 
-The example above equates to a CSS rule-set that consists of two selectors. The `flex-basis` declaration will apply to elements matching the second selector – the `dt` tag, only when the ancestor element matches the first selector – the `dl` tag. In CSS these are known as *decendant selectors*.
+The example above equates to a CSS rule-set that consists of two selectors. The `flex-basis` declaration will apply to elements matching the second selector – the `dt` tag *only* when the ancestor element matches the first selector – the `dl` tag. This is the equivalant of a CSS *decendant selector*.
 
 An immutable rule-set can contain both CSS declarations and other immutable rule-sets:
 
@@ -51,9 +51,7 @@ An immutable rule-set can contain both CSS declarations and other immutable rule
 </dl>
 ```
 
-The example above includes CSS declarations for both the first selector – the `dl` tag – and the second selector – the `dt` tag.
-
-As with CSS there is no limit to the number of decendants in a given selector. In the example above the second rule-set could contain a thrid rule-set, which in turn could contain a forth rule-set, and so on.
+The example above includes CSS declarations for both the first selector – the `dl` tag – and the second selector – the `dt` tag. As with CSS there is no limit to the number of decendants in a given selector. In the example above the second rule-set could contain a thrid rule-set, which in turn could contain a forth rule-set, and so on:
 
 ```jsx
 <dl>
@@ -68,13 +66,13 @@ As with CSS there is no limit to the number of decendants in a given selector. I
 </dl>
 ```
 
-> 💡Note: other than using JSX the similarites between React and Immutable Styles end there. Immutable Styles is only concerned with styling web interfaces and *not* building them.
+> 💡Note: other than using JSX the similarites between React and Immutable Styles end there. Immutable Styles is *only* concerned with styling web interfaces and *not* building them.
 
-### Immutable Selectors
+### Attributes
 
-So far we've only seen *type selectors* – selectors that match elements by their HTML tag name. However it is common for CSS selectors to match elements with a specific class name.
+So far we've only seen *type selectors* – selectors that match elements by their HTML tag name. However it is common for CSS selectors to match elements based on a specific class name, pseudo class or element, and screen-size.
 
-In immutable styles this is achieved using the JSX `className` prop provided by the library:
+In immutable styles these are achieved using JSX attributtes. Similar to props in React – immutable attributtes are defined by the opening JSX tag – such as the `className` attributte:
 
 ```jsx
 <div className="sideBar">
@@ -83,4 +81,6 @@ In immutable styles this is achieved using the JSX `className` prop provided by 
 </div>
 ```
 
-The example above is the equivalant of a CSS rule-set whose *selector* matches HTML elements of type `div` which have the class `sideBar`.
+The example above is the equivalant of a CSS rule-set whose *selector* matches HTML elements of type `div` with the class `sideBar`.
+
+> 💡Note: it should be noted that *unlike* props in React – only JSX attributes predefined by immutable styles are allowed.
