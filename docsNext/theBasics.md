@@ -66,13 +66,15 @@ The example above includes CSS declarations for both the first selector – the 
 </dl>
 ```
 
-> 💡Note: other than using JSX the similarites between React and Immutable Styles end there. Immutable Styles is *only* concerned with styling web interfaces and *not* building them.
+> 💡Note: other than using JSX the similarites between React and Immutable Styles end there. Immutable Styles is only concerned with *styling* web interfaces and not *building* them.
 
-### Attributes
+### JSX Attributes
 
-So far we've only seen *type selectors* – selectors that match elements by their HTML tag name. However it is common for CSS selectors to match elements based on a specific class name, pseudo class or element, and screen-size.
+So far we've only seen *type selectors* – selectors that match elements by their HTML tag name. However it is common for CSS selectors to match elements based on a specific class name, pseudo class/element, and or screen-size.
 
-In immutable styles these are achieved using JSX attributtes. Similar to props in React – immutable attributtes are defined by the opening JSX tag – such as the `className` attributte:
+In immutable styles these are achieved using JSX attributtes. Similar to props in React – immutable attributtes are defined on the opening JSX tag.
+
+**`className`**
 
 ```jsx
 <div className="sideBar">
@@ -81,6 +83,64 @@ In immutable styles these are achieved using JSX attributtes. Similar to props i
 </div>
 ```
 
-The example above is the equivalant of a CSS rule-set whose *selector* matches HTML elements of type `div` with the class `sideBar`.
+The example above is the equivalant of a CSS rule-set whose *selector* matches HTML elements of type `div` *and* have the class `sideBar`.
+
+**`pseudo`**
+
+```jsx
+<a pseudo=":hover">
+	color: darkblue;
+</a>
+```
+
+The example above is the equivalant of a CSS selector using the *pseudo-class* keyword that matches HTML elements of type `a` in a specific state – in this case `hover`.
+
+Likewise the `pseudo` attribute is also used for *pseudo-elements* :
+
+```jsx
+<span pseudo="::before">
+	content: "🐹";
+</span>
+```
+
+> 💡Note: the `pseudo` JSX attribute supports both CSS2 (`:before`) and CSS3 (`::before`) syntax.
+
+**`minWidth`**
+
+```jsx
+<body minWidth="900">
+	font-size: 1rem;
+</body> 
+```
+
+The example above is the equivalant of a CSS rule-set defined within a `media-query`. In this case the selector targets the HTML element `body` on screen-sizes wider than 900px.
+
+
+**`maxWidth`**
+
+```jsx
+<body maxWidth="350">
+	font-size: 1.4rem;
+</body> 
+```
+
+The example above is the equivalant of a CSS *media-query* targeting screens less than 350px wide.
+
+> 💡Note: the unit for media-queries is predefined by immutable styles – all media queries  default to pixels – `maxWidth="350"` equates to 350px. Supporting units other than pixels is something that could change in future.
+
+<center>*</center>
+
+Any combination of the JSX attributes can be used together:
+
+```jsx
+<div className="sideBar" maxWidth="350">
+	width: 150px;
+	<span className="icon">
+		
+	</span>
+</div>
+```
 
 > 💡Note: it should be noted that *unlike* props in React – only JSX attributes predefined by immutable styles are allowed.
+
+

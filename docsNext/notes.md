@@ -10,6 +10,11 @@
 	- An Immutable Style
 	- Immutable Style Sheets
 	- Written using JSX
+- Making CSS Deterministic
+	- Child combinator
+	- Class attribute selectors
+	- Type selectors
+	- Discrete media queries
 - Getting Started
 	- Install
 	- Usage with Webpack
@@ -106,6 +111,7 @@ Catch CSS bugs ahead of time
 ## Recipies
 
 - Themes: see features.md, need to expand example
+- Sharing styles (mixins)
 
 ## Advanced Concepts
 
