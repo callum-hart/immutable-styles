@@ -30,6 +30,7 @@
 	- Discrete Breakpoints
 	- Unambiguos Declarations
 	- Pre-processor'esque Features
+	- All selectors include element type
 	- How it Works
 - Changelog
 - Roadmap

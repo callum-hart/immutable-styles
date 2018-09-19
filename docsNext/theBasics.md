@@ -2,17 +2,6 @@
 
 ## Written using JSX
 
-- Represented using a [Tree](https://en.wikipedia.org/wiki/Tree_(data_structure)) data structure DONE
-- Share the same structure as HTML DONE
-- Written using JSX (like React). DONE
-- Like React components, an Immutable Style can have props.
-- To distinguish between JSX properties and CSS properties, the JSX props exposed by Immutable Styles are referred to as **attributes**.
-- There are {N} attributtes: className, pseudo, minWidth, maxWidth, (extendFrom?, modifierFor?)
-- 💡Note: Unlike React, the props are predefined by the library. User–defined props are  [forbidden]().
-- 💡Note: Other than using JSX the similarites between React and Immutable Styles end there. Immutable Styles is only concerned with styling web interfaces, not building them.
-
----
-
 ### Data Structure
 
 Immutable Styles are represented using a [Tree](https://en.wikipedia.org/wiki/Tree_(data_structure)) – the same data structure as HTML – and are written using JSX (like React). Here is an immutable style in its simplest form:
@@ -39,7 +28,7 @@ An immutable rule-set can contain other immutable rule-sets:
 
 The example above equates to a CSS rule-set that consists of two selectors. The `flex-basis` declaration will apply to elements matching the second selector – the `dt` tag *only* when the ancestor element matches the first selector – the `dl` tag. This is the equivalant of a CSS *decendant selector*.
 
-An immutable rule-set can contain both CSS declarations and other immutable rule-sets:
+An immutable rule-set can contain *both* CSS declarations and other immutable rule-sets:
 
 ```jsx
 <dl>
@@ -66,7 +55,7 @@ The example above includes CSS declarations for both the first selector – the 
 </dl>
 ```
 
-> 💡Note: other than using JSX the similarites between React and Immutable Styles end there. Immutable Styles is only concerned with *styling* web interfaces and not *building* them.
+> 💡Note: other than using JSX the similarites between React and Immutable Styles end. Immutable Styles is only concerned with *styling* web interfaces and not *building* them.
 
 ### JSX Attributes
 
@@ -77,19 +66,19 @@ In immutable styles these are achieved using JSX attributtes. Similar to props i
 **`className`**
 
 ```jsx
-<div className="sideBar">
+<div className="side-bar">
   height: 100%;
-  overflow hidden;
+  overflow auto;
 </div>
 ```
 
-The example above is the equivalant of a CSS rule-set whose *selector* matches HTML elements of type `div` *and* have the class `sideBar`.
+The example above is the equivalant of a CSS rule-set whose *selector* matches HTML elements of type `div` *and* have the class `side-bar`.
 
 **`pseudo`**
 
 ```jsx
 <a pseudo=":hover">
-	color: darkblue;
+  color: darkblue;
 </a>
 ```
 
@@ -99,7 +88,7 @@ Likewise the `pseudo` attribute is also used for *pseudo-elements* :
 
 ```jsx
 <span pseudo="::before">
-	content: "🐹";
+  content: "🐹";
 </span>
 ```
 
@@ -109,7 +98,7 @@ Likewise the `pseudo` attribute is also used for *pseudo-elements* :
 
 ```jsx
 <body minWidth="900">
-	font-size: 1rem;
+  font-size: 1rem;
 </body> 
 ```
 
@@ -120,27 +109,69 @@ The example above is the equivalant of a CSS rule-set defined within a `media-qu
 
 ```jsx
 <body maxWidth="350">
-	font-size: 1.4rem;
+  font-size: 1.4rem;
 </body> 
 ```
 
 The example above is the equivalant of a CSS *media-query* targeting screens less than 350px wide.
 
-> 💡Note: the unit for media-queries is predefined by immutable styles – all media queries  default to pixels – `maxWidth="350"` equates to 350px. Supporting units other than pixels is something that could change in future.
+> 💡Note: the unit for media-queries is predefined by immutable styles – all media queries  default to pixels – where `maxWidth="350"` equates to 350px. 
+
+> 🔮 Supporting units other than pixels is something that could change in future.
 
 <center>*</center>
 
-Any combination of the JSX attributes can be used together:
+Any combination of JSX attributes can be used together:
 
 ```jsx
-<div className="sideBar" maxWidth="350">
-	width: 150px;
-	<span className="icon">
-		
-	</span>
+<div className="side-bar" minWidth="350">
+  background: ivory;
+  <span className="icon">
+    color: magenta;
+  </span>
+  <span className="icon" pseudo=":hover">
+    color: darkmagenta;
+  </span>
 </div>
 ```
 
+The example above features the `className`, `minWidth` and `pseudo` JSX attributes. On screens wider than 350px HTML elements of type `div` with the class `side-bar` will have an ivory background color.
+
+On screens wider than 350px HTML elements of type `span` – with the class `icon` – whose ancestor is a `div` with the class `side-bar` will be the color magenta. On `hover` the same icon color will change to darkmagenta.
+
 > 💡Note: it should be noted that *unlike* props in React – only JSX attributes predefined by immutable styles are allowed.
 
+<center>***</center>
+
+Until now we have only observed the similarieties between immutable styles and CSS – the only difference *so far* being immutable styles are written using JSX. 
+
+There are however some major differences between immutable styles and CSS – all of which fall under the umbrella of *preventing* CSS overrides.
+
+> 💡Note: if you haven't already, I strongly reccommend reading [The case for Immutable Styles]() and the post [CSS Overrides: Friend or Foe?]() before reading the next section.
+
+The key difference is that immutable styles are *compiled*. Just like Elms compiler prevents runtime errors in JavaScript, the immutable styles compiler prevents runtime overrides in CSS.
+
+Imagine all primary buttons in a project look like this:
+
+*insert screenshot of button here*
+
+The immutable styles rule-set would be:
+
+```jsx
+<button className="btn-primary">
+  background: cornflowerblue;
+  color: ivory;
+</button>
+```
+
+And the equivalant CSS rule-set would look almost identical:
+
+```css
+.btn-primary {
+  background: cornflowerblue;  
+  color: ivory;
+}
+```
+
+The key difference comes when we try and override the button styles...
 
