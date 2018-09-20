@@ -117,7 +117,7 @@ The example above is the equivalant of a CSS *media-query* targeting screens les
 
 > 💡Note: the unit for media-queries is predefined by immutable styles – all media queries  default to pixels – where `maxWidth="350"` equates to 350px. 
 
-> 🔮 Supporting units other than pixels is something that could change in future.
+> 🔮 Supporting units other than pixels is something that could be added in future.
 
 <center>*</center>
 
@@ -149,22 +149,15 @@ There are however some major differences between immutable styles and CSS – al
 
 > 💡Note: if you haven't already, I strongly reccommend reading [The case for Immutable Styles]() and the post [CSS Overrides: Friend or Foe?]() before reading the next section.
 
-The key difference is that immutable styles are *compiled*. Just like Elms compiler prevents runtime errors in JavaScript, the immutable styles compiler prevents runtime overrides in CSS.
+The key difference is that immutable styles are *compiled*. Just like Elms compiler prevents runtime errors in JavaScript, the immutable styles compiler prevents *runtime* overrides in CSS. 
 
-Imagine all primary buttons in a project look like this:
+> 📖 A runtime override happens when two or more rule-sets containing conflicting declarations target the same element.
+
+Imagine a designer has provided a styleguide that states all primary buttons *should* look like this:
 
 *insert screenshot of button here*
 
-The immutable styles rule-set would be:
-
-```jsx
-<button className="btn-primary">
-  background: cornflowerblue;
-  color: ivory;
-</button>
-```
-
-And the equivalant CSS rule-set would look almost identical:
+In conventional CSS the rule-set would be:
 
 ```css
 .btn-primary {
@@ -173,5 +166,45 @@ And the equivalant CSS rule-set would look almost identical:
 }
 ```
 
-The key difference comes when we try and override the button styles...
+And the equivalant immutable styles rule-set would look almost identical:
+
+```jsx
+<button className="btn-primary">
+  background: cornflowerblue;
+  color: ivory;
+</button>
+```
+
+Whilst semantically similar – the behaviour of each rule-set is different. The first [CSS] example is vulnerable to both intentional and unintensional modifications:
+
+```css
+.promo .btn-primary {
+  background: ivory;
+  color: cornflowerblue;
+}
+```
+
+The example above changes the background and [text] color of primary buttons inside elements with the class `promo`. Whilst being perfectly valid CSS this invalidates the design principle – in this case – that all primary buttons should have a `cornflowerblue` background and `ivory` color.
+
+There is no *guarantee* that all primary buttons will look the same. Which in effect makes the styleguide more a suggestion than gospel.
+
+💡Note: not only does this lead to an inconsistant UI and an unhappy designer – it also creates technical debt.
+
+<center>*</center>
+
+The immutable styles rule-set however is different. Modifying the background and [text] color of primary buttons is not allowed:
+
+```jsx
+<div className="promo">
+  <button className="btn-primary">
+    background: ivory;
+    color: cornflower;
+  </button>  
+</div>
+```
+
+Attempting todo so throws a compiler error:
+
+*insert screenshot of compile time error here*
+
 
