@@ -99,7 +99,7 @@ Likewise the `pseudo` attribute is also used for *pseudo-elements* :
 ```jsx
 <body minWidth="900">
   font-size: 1rem;
-</body> 
+</body>
 ```
 
 The example above is the equivalant of a CSS rule-set defined within a `media-query`. In this case the selector targets the HTML element `body` on screen-sizes wider than 900px.
@@ -110,12 +110,12 @@ The example above is the equivalant of a CSS rule-set defined within a `media-qu
 ```jsx
 <body maxWidth="350">
   font-size: 1.4rem;
-</body> 
+</body>
 ```
 
 The example above is the equivalant of a CSS *media-query* targeting screens less than 350px wide.
 
-> 💡Note: the unit for media-queries is predefined by immutable styles – all media queries  default to pixels – where `maxWidth="350"` equates to 350px. 
+> 💡Note: the unit for media-queries is predefined by immutable styles – all media queries  default to pixels – where `maxWidth="350"` equates to 350px.
 
 > 🔮 Supporting units other than pixels is something that could be added in future.
 
@@ -141,19 +141,21 @@ On screens wider than 350px HTML elements of type `span` – with the class `ico
 
 > 💡Note: it should be noted that *unlike* props in React – only JSX attributes predefined by immutable styles are allowed.
 
-<center>***</center>
+### 🚫 No Overrides Allowed
 
-Until now we have only observed the similarieties between immutable styles and CSS – the only difference *so far* being immutable styles are written using JSX. 
+> 💡Note: if you haven't already, I strongly reccommend reading [The case for Immutable Styles]() and the post [CSS Overrides: Friend or Foe?]() before reading this section.
 
-There are however some major differences between immutable styles and CSS – all of which fall under the umbrella of *preventing* CSS overrides.
+Until now we have only observed the similarieties between immutable styles and CSS – the only difference *so far* being immutable styles are written using JSX.
 
-> 💡Note: if you haven't already, I strongly reccommend reading [The case for Immutable Styles]() and the post [CSS Overrides: Friend or Foe?]() before reading the next section.
+There are however some major differences between immutable styles and CSS – most of which fall under the umbrella of **preventing CSS overrides**.
 
-The key difference is that immutable styles are *compiled*. Just like Elms compiler prevents runtime errors in JavaScript, the immutable styles compiler prevents *runtime* overrides in CSS. 
+The key difference is that immutable styles are *compiled*. Just like Elms compiler prevents runtime errors in JavaScript, the immutable styles compiler prevents *runtime* overrides in CSS.
 
 > 📖 A runtime override happens when two or more rule-sets containing conflicting declarations target the same element.
 
-Imagine a designer has provided a styleguide that states all primary buttons *should* look like this:
+<center>*</center>
+
+Imagine a designer has provided a styleguide that shows all primary buttons *should* look like this:
 
 *insert screenshot of button here*
 
@@ -161,12 +163,12 @@ In conventional CSS the rule-set would be:
 
 ```css
 .btn-primary {
-  background: cornflowerblue;  
+  background: cornflowerblue;
   color: ivory;
 }
 ```
 
-And the equivalant immutable styles rule-set would look almost identical:
+The equivalant immutable styles rule-set would be almost identical:
 
 ```jsx
 <button className="btn-primary">
@@ -175,7 +177,7 @@ And the equivalant immutable styles rule-set would look almost identical:
 </button>
 ```
 
-Whilst semantically similar – the behaviour of each rule-set is different. The first [CSS] example is vulnerable to both intentional and unintensional modifications:
+Whilst semantically similar – the *behaviour* of each rule-set is different. The first [CSS] example is vulnerable to both intentional and unintensional overrides:
 
 ```css
 .promo .btn-primary {
@@ -184,27 +186,33 @@ Whilst semantically similar – the behaviour of each rule-set is different. The
 }
 ```
 
-The example above changes the background and [text] color of primary buttons inside elements with the class `promo`. Whilst being perfectly valid CSS this invalidates the design principle – in this case – that all primary buttons should have a `cornflowerblue` background and `ivory` color.
+The example above modifies the background and text color of primary buttons inside elements with the class `promo`. Whilst being perfectly valid CSS this *invalidates* the design principle – in this case – that all primary buttons should have a `cornflowerblue` background and `ivory` color.
 
-There is no *guarantee* that all primary buttons will look the same. Which in effect makes the styleguide more a suggestion than gospel.
+There is no *guarantee* that all primary buttons will look the same – which in effect makes the designers styleguide more a suggestion than a gospel truth.
 
-💡Note: not only does this lead to an inconsistant UI and an unhappy designer – it also creates technical debt.
+> 💡Note: this leads to an inconsistant UI and an unhappy designer. It also creates technical debt – where 2 versions of primary buttons need maintaining.
 
-<center>*</center>
-
-The immutable styles rule-set however is different. Modifying the background and [text] color of primary buttons is not allowed:
+Attempting the same in immutable styes yeilds a different result. Overriding an immutable rule-set is not allowed:
 
 ```jsx
 <div className="promo">
   <button className="btn-primary">
     background: ivory;
     color: cornflower;
-  </button>  
+  </button>
 </div>
 ```
 
-Attempting todo so throws a compiler error:
+Modifying the background and text color of primary buttons inside elements with the class `promo` throws a compile time error:
 
 *insert screenshot of compile time error here*
 
+The compiler makes runtime overrides impossible. Overrides are caught and prevented ahead of time. Compile time errors – such as the case above – are treated as failed builds, for which no CSS is generated. CSS is only generated for successful builds – those without compile time errors such as runtime overrides.
 
+The immutable rule-set for primary buttons is therefore a gospel truth. It can be guaranteed that all primary buttons *will always* have a `cornflowerblue` background and `ivory` text color.
+
+<center>*</center>
+
+Whether attempted overrides happen in the same file or in another file – among equal selectors or nested selectors – or even among different screen-sizes, the compiler catches them all. 
+
+The complex task of detecting and preventing runtime overrides is offloaded to a compiler – keeping track of overrides is no longer a developer concern.

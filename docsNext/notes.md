@@ -94,7 +94,7 @@ Catch CSS bugs ahead of time
 - Usage with webpack
 - Beginner Tutorial (example project)
 
-## Cheetsheet
+## Cheat Sheet
 
 - CSS Comparison, what is the equivalent of a:
 	- CSS ruleset
@@ -106,6 +106,10 @@ Catch CSS bugs ahead of time
 	- Media query
 	- CSS variable
 	- Pre-processor mixin
+- Also include things without equivalents:
+	- Descendant combinator (A B)
+	- General sibling combinator (A ~ B)
+	- Adjacent sibling combinator (A + B)
 - Build Time Errors
 	- see compileTimeErrors.md, need to update examples to use JSX
 
@@ -125,7 +129,8 @@ Catch CSS bugs ahead of time
 	- see features.md
 - How it Works
 	- Design decisions
-		- Always including element in selector et'cetera...
+		- Always including element in selector
+		- Child combinator selector (A > B). Descendant combinator selectors cast too wide net.
 	- Drilldown into the generated CSS
 
 ## Changelog
