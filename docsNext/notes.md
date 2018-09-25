@@ -93,6 +93,9 @@ Catch CSS bugs ahead of time
 - Install
 - Usage with webpack
 - Beginner Tutorial (example project)
+	- Find small hello world demo UI:
+		- Food App - showing meal card.
+		- Could be expanded in future. Meals with different states – unavailable, ordered... et'cetera
 
 ## Cheat Sheet
 

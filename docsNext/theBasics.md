@@ -188,7 +188,7 @@ Whilst semantically similar – the *behaviour* of each rule-set is different. T
 
 The example above modifies the background and text color of primary buttons inside elements with the class `promo`. Whilst being perfectly valid CSS this *invalidates* the design principle – in this case – that all primary buttons should have a `cornflowerblue` background and `ivory` color.
 
-There is no *guarantee* that all primary buttons will look the same – which in effect makes the designers styleguide more a suggestion than a gospel truth.
+It cannot be *guaranteed* that all primary buttons will look the same – which in effect makes the designers styleguide more a suggestion than a gospel truth.
 
 > 💡Note: this leads to an inconsistant UI and an unhappy designer. It also creates technical debt – where 2 versions of primary buttons need maintaining.
 
@@ -213,6 +213,6 @@ The immutable rule-set for primary buttons is therefore a gospel truth. It can b
 
 <center>*</center>
 
-Whether attempted overrides happen in the same file or in another file – among equal selectors or nested selectors – or even among different screen-sizes, the compiler catches them all. 
+Whether attempted overrides happen in the same file or in another file – among equal selectors or nested selectors – or even among different screen-sizes, the compiler catches them all.
 
 The complex task of detecting and preventing runtime overrides is offloaded to a compiler – keeping track of overrides is no longer a developer concern.
