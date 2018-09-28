@@ -26,7 +26,7 @@ Then start the application:
 npm start
 ```
 
-In its current state the restaurant card looks rather unappetizing – the markup is there – the styling is *not*. 
+In its current state the restaurant card looks rather unappetizing – the markup is there –  the styling is not *yet* there.
 
 The files we are interested in are: src/RestaurantCard.jsx – which contains the restaurant cards markup and: src/RestaurantCard.**iss.jsx** – which *will* contain the restaurant cards styles.
 
@@ -34,9 +34,9 @@ You may have noticed `RestaurantCard.iss.jsx` uses a dual file extension of `.is
 
 > 💡Note: although this tutorial uses React, it should be noted that immutable styles is markup agnostic – meaning it isn’t coupled or biased to a specific way of generating HTML. Just like a CSS pre-processor – immutable styles generates CSS which can be used on any website – rendered server or client-side.
 
-<center>*</center>
+### Boilerplate
 
-Lets first examine `RestaurantCard.iss.jsx`:
+`RestaurantCard.iss.jsx` currently contains boilerplate code typical of any  Immutable Style Sheet:
 
 ```jsx
 1|  /** @jsx createStyle */
@@ -45,8 +45,37 @@ Lets first examine `RestaurantCard.iss.jsx`:
 4|  module.exports = [];
 ```
 
-All Immutable Style Sheets:
+Line 2 imports `createStyle` from immutable styles – which is a function that generates immutable rulesets. On line 1 `createStyle` is mapped to JSX – meaning any JSX tags in this file will be transpiled to `createStyle` function calls. Line 4 *will* export our immutable rulesets.
 
-- Import the `createStyle` function from immutable styles` (line 2). This is comparable to Reacts `createElement`.
-- Need to map JSX to the `createStyle`(line 1). By default `babel` maps this to Reacts `createElement`.
-- Export styles (line 4)
+### First immutable ruleset
+
+We are going to write our first immutable ruleset. Since this is the first lets make it special – we will style the restaurants star rating ⭐️.
+
+Replace line 4 of  `RestaurantCard.iss.jsx` with the following snippet:
+
+```jsx
+module.exports = [
+  <ul className="starRating">
+    padding-left: 0;
+    display: flex;
+    <li>
+      list-style-type: none;
+      color: #FADB83;
+    </li>
+  </ul>
+];
+```
+
+Save the file – you should see the following:
+
+*screenshot of progress so far*
+
+So far, all restaurants in our app will have a five star rating. Sadly, in the real world this isn't always the case – some restaurants get a three star rating. Lets update both the markup and styling accordingly.
+
+In `RestaurantCard.jsx`...
+
+
+
+
+
+
