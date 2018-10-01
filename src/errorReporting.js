@@ -280,7 +280,7 @@ function logAmbiguousProperty(source, element, property, propertyDetails) {
       const { name, example} = propertyDetails.helper;
 
       console.log(`\n${text.underline('Alternatively')}, you could use the \`${name}\` helper:\n`)
-      console.log(`${TAB}${color.dim('import { margin } from \'immutable-styles\';')}\n`);
+      console.log(`${TAB}${color.dim(`import { ${name} } from \'immutable-styles\';`)}\n`);
       console.log(`${TAB}${color.dim(`<${element}>`)}`);
       console.log(`${TAB}${TAB}{${SPACE}${example}${SPACE}}`);
       console.log(`${TAB}${color.dim(`</${element}>`)}`);
