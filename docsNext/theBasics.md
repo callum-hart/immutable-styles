@@ -147,13 +147,13 @@ On screens wider than 350px HTML elements of type `span` – with the class `ico
 
 Until now we have only observed the similarieties between immutable styles and CSS – the only difference *so far* being immutable styles are written using JSX.
 
-There are however some major differences between immutable styles and CSS – most of which fall under the umbrella of **preventing CSS overrides**.
+There are however some major differences between immutable styles and CSS – most of which fall under the umbrella goal of **preventing CSS overrides**.
 
 The key difference is that immutable styles are *compiled*. Just like Elms compiler prevents runtime errors in JavaScript, the immutable styles compiler prevents *runtime* overrides in CSS.
 
 > 📖 A runtime override happens when two or more rule-sets containing conflicting declarations target the same element.
 
-<center>*</center>
+#### An Example
 
 Imagine a designer has provided a styleguide that shows all primary buttons *should* look like this:
 
@@ -188,9 +188,9 @@ Whilst semantically similar – the *behaviour* of each rule-set is different. T
 
 The example above modifies the background and text color of primary buttons inside elements with the class `promo`. Whilst being perfectly valid CSS this *invalidates* the design principle – in this case – that all primary buttons should have a `cornflowerblue` background and `ivory` color.
 
-It cannot be *guaranteed* that all primary buttons will look the same – which in effect makes the designers styleguide more a suggestion than a gospel truth.
+It therefore cannot be *guaranteed* that all primary buttons will look the same – which in effect makes the designers styleguide more a suggestion than a gospel truth.
 
-> 💡Note: this leads to an inconsistant UI and an unhappy designer. It also creates technical debt – where 2 versions of primary buttons need maintaining.
+> 💡Note: this leads to an inconsistant UI and an unhappy designer. It also creates technical debt – where two versions of primary buttons need maintaining.
 
 Attempting the same in immutable styes yeilds a different result. Overriding an immutable rule-set is not allowed:
 
@@ -215,4 +215,4 @@ The immutable rule-set for primary buttons is therefore a gospel truth. It can b
 
 Whether attempted overrides happen in the same file or in another file – among equal selectors or nested selectors – or even among different screen-sizes, the compiler catches them all.
 
-The complex task of detecting and preventing runtime overrides is offloaded to a compiler – keeping track of overrides is no longer a developer concern.
+The complex task of detecting and preventing runtime overrides is offloaded to a compiler; so that keeping track of overrides is no longer a developer concern.

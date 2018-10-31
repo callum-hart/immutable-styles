@@ -294,8 +294,8 @@ function saveRef(ref, {element, attrs, styles}) {
  */
 function stylesValid(...reas) {
   return propertiesAreUnique(...reas) &&
-         elementCanUseProperty(...reas) &&
-         noAmbiguousProperties(...reas);
+         elementCanUseProperty(...reas) // &&
+        //  noAmbiguousProperties(...reas);
 }
 
 function propertiesAreUnique(ref, element, attrs, styles) {
@@ -389,10 +389,44 @@ function createStyleEntry(styles, {minWidth, maxWidth, __source}) {
   }
 }
 
+const forbiddenPropertyCombinations = {
+  'background': [
+    'background-color',
+    'background-image',
+    'background-repreat'
+  ],
+  'padding': [
+    'padding-top',
+    'padding-right',
+    'padding-bottom',
+    'padding-left'
+  ],
+  // et cetera...
+}
+
+function isPropertyCombinationPermitted(control, comparison) {
+  control.forEach(property => {
+    if (forbiddenPropertyCombinations[property]) {
+      forbiddenPropertyCombinations[property].forEach(longhandProperty => {
+        if (comparison.includes(longhandProperty)) {
+          console.log(`property: ${property}`);
+          console.log(`longhandProperty: ${longhandProperty}`);
+        }
+      });
+    }
+  });
+}
+
 function areStylesUnique(control, comparison) {
   if (breakpointsOverlap(control, comparison)) {
-    for (var property of stylesAsMap(comparison.styles).keys()) {
-      if (stylesAsMap(control.styles).get(property)) {
+    const controlProperties = [...stylesAsMap(control.styles).keys()];
+    const comparisonProperties = [...stylesAsMap(comparison.styles).keys()];
+
+    console.log('controlProperties:', controlProperties);
+    console.log('comparisonProperties:', comparisonProperties);
+
+    controlProperties.forEach(property => {
+      if (comparisonProperties.includes(property)) {
         throw new ErrorWithData(
           `[Override Found] The property \`${property}\` has already been defined`,
           {
@@ -402,7 +436,11 @@ function areStylesUnique(control, comparison) {
           }
         );
       }
-    }
+    });
+
+    isPropertyCombinationPermitted(controlProperties, comparisonProperties);
+    isPropertyCombinationPermitted(comparisonProperties, controlProperties);
+    console.log('-'.repeat(100));
   }
 
   return true;

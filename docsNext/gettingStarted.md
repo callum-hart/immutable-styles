@@ -4,7 +4,7 @@
 
 The goal of this tutorial is to introduce immutable styles in a *hopefully* accessible way.
 
-This tutorial will use a fictitious food app to demonstrate how immutable styles is used for styling web interfaces. For the sake of berevity we will focus on styling a small part of the app – the restaurant card, which displays information for a given restaurant:
+This tutorial will use a fictitious food app to demonstrate how immutable styles is used for styling web interfaces. For the sake of berevity we will focus on styling a part of the app – the restaurant card, which displays information for a given restaurant:
 
 *screenshot of restaurant card*
 
@@ -26,7 +26,7 @@ Then start the application:
 npm start
 ```
 
-In its current state the restaurant card looks rather unappetizing – the markup is there –  the styling is not.
+In its current state the restaurant card looks rather unappetizing – the markup is there –  the styling however is not.
 
 The files we are interested in are: src/RestaurantCard.jsx – which contains the restaurant cards markup and: src/RestaurantCard.**iss.jsx** – which *will* contain the restaurant cards styles.
 

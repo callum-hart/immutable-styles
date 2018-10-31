@@ -4,7 +4,7 @@ const TAB = SPACE.repeat(2);
 const SEMI_COLON = ';';
 const COMMA = ',';
 
-
+// TODO: can delete this file?
 const logStyles = styles => {
   console.log('\n' +
     styles.split(SEMI_COLON)
