@@ -178,7 +178,7 @@ function logDuplicateProperty(source, property, value) {
   }
 }
 
-function logOverrideFound(overriddenSource, overridingSource, property) {
+function logExactOverrideFound(overriddenSource, overridingSource, property) {
   if (
     shouldLogErrorReport(overriddenSource) &&
     shouldLogErrorReport(overridingSource)
@@ -195,6 +195,25 @@ function logOverrideFound(overriddenSource, overridingSource, property) {
     console.log(`\n${overridingCodeFrame.codeFrame}`);
     console.log('\nThe first occurrence is overridden by the second.\n');
   }
+}
+
+function logPartialOverrideFound(overriddenSource, overridingSource, overriddenProperty, overridingProperty) {
+  if (
+    shouldLogErrorReport(overriddenSource) &&
+    shouldLogErrorReport(overridingSource)
+  ) {
+  const overriddenCodeFrame = CSSPropertyCodeFrame(overriddenSource, overriddenProperty)
+  const overridingCodeFrame = CSSPropertyCodeFrame(overridingSource, overridingProperty);
+
+  logHeading('Partial Override Found');
+  console.log(`\nThe property \`${overriddenProperty}\` is defined here:`);
+  logFile(overriddenSource.fileName, overriddenCodeFrame.lineNumber, overriddenCodeFrame.colNumber);
+  console.log(`\n${overriddenCodeFrame.codeFrame}`);
+  console.log(`\nAnd is partially overridden by \`${overridingProperty}\`:`);
+  logFile(overridingSource.fileName, overridingCodeFrame.lineNumber, overridingCodeFrame.colNumber);
+  console.log(`\n${overridingCodeFrame.codeFrame}`);
+  console.log('\nThe first occurrence is partially overridden by the second.\n');
+ }
 }
 
 function logNestedMediaQuery(outerMediaSource, outerMinWidthIfAny, innerMediaSource, innerMinWidthIfAny) {
@@ -316,7 +335,8 @@ module.exports = {
   CSSPropertyCodeFrame,
   logInvalidAttribute,
   logDuplicateProperty,
-  logOverrideFound,
+  logExactOverrideFound,
+  logPartialOverrideFound,
   logNestedMediaQuery,
   logUnknownBaseClass,
   logNestedSubclass,

@@ -6,7 +6,8 @@ const {
   clearSourceMaps,
   logInvalidAttribute,
   logDuplicateProperty,
-  logOverrideFound,
+  logExactOverrideFound,
+  logPartialOverrideFound,
   logNestedMediaQuery,
   logUnknownBaseClass,
   logNestedSubclass,
@@ -199,22 +200,7 @@ function parseAst() {
       ) {
         // ref exists as part of another ref, check if styles are unique
         AST.get(ref).forEach(existingStyle => {
-          AST.get(accumulator).forEach(accumulatedStyle => {
-            try {
-              areStylesUnique(accumulatedStyle, existingStyle);
-            } catch (e) {
-              const {
-                overriddenProperty,
-                overriddenStyles,
-                overridingStyles
-              } = e.data;
-
-              logOverrideFound(overriddenStyles.__source, overridingStyles.__source, overriddenProperty);
-              throw new Error(
-                `[Override Found] \`${ref}\` overrides the \`${overriddenProperty}\` set by \`${accumulator}\``
-              );
-            }
-          });
+          AST.get(accumulator).forEach(accumulatedStyle => checkForOverrides(accumulatedStyle, existingStyle));
         });
       }
 
@@ -294,8 +280,7 @@ function saveRef(ref, {element, attrs, styles}) {
  */
 function stylesValid(...reas) {
   return propertiesAreUnique(...reas) &&
-         elementCanUseProperty(...reas) // &&
-        //  noAmbiguousProperties(...reas);
+         elementCanUseProperty(...reas);
 }
 
 function propertiesAreUnique(ref, element, attrs, styles) {
@@ -326,37 +311,23 @@ function elementCanUseProperty(ref, element, attrs, styles) {
   return true;
 }
 
-function noAmbiguousProperties(ref, element, attrs, styles) {
-  for (var property of stylesAsMap(styles).keys()) {
-    const ambiguousProperty = Object.keys(shorthandProperties).includes(property);
+// TODO: deprecate and remove anything associated with ambiguous properties (such as shorthand helpers)
 
-    if (ambiguousProperty) {
-      logAmbiguousProperty(attrs.__source, element, property, shorthandProperties[property]);
-      throw new Error(`[Ambiguous Property] \`${ref}\` uses the shorthand property \`${property}\``);
-    }
-  }
+// function noAmbiguousProperties(ref, element, attrs, styles) {
+//   for (var property of stylesAsMap(styles).keys()) {
+//     const ambiguousProperty = Object.keys(shorthandProperties).includes(property);
 
-  return true;
-}
+//     if (ambiguousProperty) {
+//       logAmbiguousProperty(attrs.__source, element, property, shorthandProperties[property]);
+//       throw new Error(`[Ambiguous Property] \`${ref}\` uses the shorthand property \`${property}\``);
+//     }
+//   }
+
+//   return true;
+// }
 
 function saveNewStyleForExistingRef(newStyle, ref) {
-  AST.get(ref).forEach(existingStyle => {
-    try {
-      areStylesUnique(existingStyle, newStyle);
-    } catch (e) {
-      const {
-        overriddenProperty,
-        overriddenStyles,
-        overridingStyles
-      } = e.data;
-
-      logOverrideFound(overriddenStyles.__source, overridingStyles.__source, overriddenProperty);
-      throw new Error(
-        `[Override Found] The \`${overriddenProperty}\` of \`${ref}\` has already been defined`
-      );
-    }
-  });
-
+  AST.get(ref).forEach(existingStyle => checkForOverrides(existingStyle, newStyle));
   AST.get(ref).push(newStyle); // save styles
 }
 
@@ -389,6 +360,7 @@ function createStyleEntry(styles, {minWidth, maxWidth, __source}) {
   }
 }
 
+// TODO: move into separate file and add remaining forbidden property combos
 const forbiddenPropertyCombinations = {
   'background': [
     'background-color',
@@ -404,46 +376,50 @@ const forbiddenPropertyCombinations = {
   // et cetera...
 }
 
-function isPropertyCombinationPermitted(control, comparison) {
-  control.forEach(property => {
+function propertiesAsArray(styles){
+  return [...stylesAsMap(styles).keys()];
+}
+
+function checkForExactOverride(control, comparison) {
+  const controlProperties = propertiesAsArray(control.styles);
+  const comparisonProperties = propertiesAsArray(comparison.styles);
+
+  controlProperties.forEach(property => {
+    if (comparisonProperties.includes(property)) {
+      logExactOverrideFound(control.__source, comparison.__source, property);
+      throw new Error(`[Override Found] The property \`${property}\` has already been defined`);
+    }
+  });
+}
+
+function checkForPartialOverride(control, comparison, shorthandPropertyFirst = true) {
+  const controlProperties = propertiesAsArray(control.styles);
+  const comparisonProperties = propertiesAsArray(comparison.styles);
+
+  controlProperties.forEach(property => {
     if (forbiddenPropertyCombinations[property]) {
       forbiddenPropertyCombinations[property].forEach(longhandProperty => {
-        if (comparison.includes(longhandProperty)) {
-          console.log(`property: ${property}`);
-          console.log(`longhandProperty: ${longhandProperty}`);
+        if (comparisonProperties.includes(longhandProperty)) {
+          const [ overriddenSource, overridingSource, overriddenProperty, overridingProperty ] = shorthandPropertyFirst
+            ? [ comparison.__source, control.__source, longhandProperty, property ]
+            : [ control.__source, comparison.__source, property, longhandProperty];
+
+          logPartialOverrideFound(overriddenSource, overridingSource, overriddenProperty, overridingProperty);
+          throw new Error(
+            `[Override Found] The property \`${overriddenProperty}\` has already been defined, cannot set \`${overridingProperty}\``
+          );
         }
       });
     }
   });
 }
 
-function areStylesUnique(control, comparison) {
+function checkForOverrides(control, comparison) {
   if (breakpointsOverlap(control, comparison)) {
-    const controlProperties = [...stylesAsMap(control.styles).keys()];
-    const comparisonProperties = [...stylesAsMap(comparison.styles).keys()];
-
-    console.log('controlProperties:', controlProperties);
-    console.log('comparisonProperties:', comparisonProperties);
-
-    controlProperties.forEach(property => {
-      if (comparisonProperties.includes(property)) {
-        throw new ErrorWithData(
-          `[Override Found] The property \`${property}\` has already been defined`,
-          {
-            overriddenProperty: property,
-            overriddenStyles: control,
-            overridingStyles: comparison
-          }
-        );
-      }
-    });
-
-    isPropertyCombinationPermitted(controlProperties, comparisonProperties);
-    isPropertyCombinationPermitted(comparisonProperties, controlProperties);
-    console.log('-'.repeat(100));
+    checkForExactOverride(control, comparison);
+    checkForPartialOverride(comparison, control);
+    checkForPartialOverride(control, comparison, false);
   }
-
-  return true;
 }
 
 function breakpointsOverlap(controlRange, comparisonRange) {
@@ -538,14 +514,6 @@ function makeSubclassSelector(elementWithSubclass) {
 function tearDown() {
   AST.clear();
   clearSourceMaps();
-}
-
-class ErrorWithData extends Error {
-  constructor(message, data) {
-    super(message);
-    this.message = message;
-    this.data = data;
-  }
 }
 
 module.exports = {
