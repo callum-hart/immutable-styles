@@ -1,6 +1,5 @@
 const elementPropertyWhitelist = require('./elementPropertyWhitelist');
-const shorthandProperties = require('./shorthandProperties')
-const shorthandHelpers = require('./shorthandHelpers');
+const forbiddenPropertyCombinations = require('./forbiddenPropertyCombinations');
 const {
   saveSourceMap,
   clearSourceMaps,
@@ -12,7 +11,6 @@ const {
   logUnknownBaseClass,
   logNestedSubclass,
   logElementPropertyMismatch,
-  logAmbiguousProperty,
   logBuildError,
   logEnableWebpackSourceMaps
 } = require('./errorReporting');
@@ -311,21 +309,6 @@ function elementCanUseProperty(ref, element, attrs, styles) {
   return true;
 }
 
-// TODO: deprecate and remove anything associated with ambiguous properties (such as shorthand helpers)
-
-// function noAmbiguousProperties(ref, element, attrs, styles) {
-//   for (var property of stylesAsMap(styles).keys()) {
-//     const ambiguousProperty = Object.keys(shorthandProperties).includes(property);
-
-//     if (ambiguousProperty) {
-//       logAmbiguousProperty(attrs.__source, element, property, shorthandProperties[property]);
-//       throw new Error(`[Ambiguous Property] \`${ref}\` uses the shorthand property \`${property}\``);
-//     }
-//   }
-
-//   return true;
-// }
-
 function saveNewStyleForExistingRef(newStyle, ref) {
   AST.get(ref).forEach(existingStyle => checkForOverrides(existingStyle, newStyle));
   AST.get(ref).push(newStyle); // save styles
@@ -360,22 +343,6 @@ function createStyleEntry(styles, {minWidth, maxWidth, __source}) {
   }
 }
 
-// TODO: move into separate file and add remaining forbidden property combos
-const forbiddenPropertyCombinations = {
-  'background': [
-    'background-color',
-    'background-image',
-    'background-repreat'
-  ],
-  'padding': [
-    'padding-top',
-    'padding-right',
-    'padding-bottom',
-    'padding-left'
-  ],
-  // et cetera...
-}
-
 function propertiesAsArray(styles){
   return [...stylesAsMap(styles).keys()];
 }
@@ -406,7 +373,8 @@ function checkForPartialOverride(control, comparison, shorthandPropertyFirst = t
 
           logPartialOverrideFound(overriddenSource, overridingSource, overriddenProperty, overridingProperty);
           throw new Error(
-            `[Override Found] The property \`${overriddenProperty}\` has already been defined, cannot set \`${overridingProperty}\``
+            `[Partial Override Found] The property \`${overriddenProperty}\`` +
+            `has already been defined, cannot set \`${overridingProperty}\``
           );
         }
       });
@@ -521,7 +489,6 @@ module.exports = {
   createCSS,
   saveSourceMap,
   tearDown,
-  ...shorthandHelpers,
   logBuildError,
   logEnableWebpackSourceMaps
 };

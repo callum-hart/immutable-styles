@@ -5,8 +5,7 @@
 const {
   createCSS,
   createStyle,
-  tearDown,
-  margin
+  tearDown
 } = require('../src/immutableStyles');
 
 beforeEach(() => tearDown());
@@ -31,7 +30,7 @@ test('Override found from adjacent node', () => {
   ];
 
   const overrideFound = () => createCSS(input);
-  expect(overrideFound).toThrow('[Override Found] The `font-size` of `h1.pageTitle` has already been defined');
+  expect(overrideFound).toThrow('[Override Found] The property `font-size` has already been defined');
 });
 
 
@@ -61,7 +60,7 @@ test('Override found from child node', () => {
   ];
 
   const overrideFound = () => createCSS(input);
-  expect(overrideFound).toThrow('[Override Found] `div.titleBar h1.pageTitle` overrides the `font-size` set by `h1.pageTitle`');
+  expect(overrideFound).toThrow('[Override Found] The property `font-size` has already been defined');
 });
 
 
@@ -98,7 +97,7 @@ test('Override found from adjacent child nodes', () => {
   ];
 
   const overrideFound = () => createCSS(input);
-  expect(overrideFound).toThrow('[Override Found] The `color` of `div.parent span.child` has already been defined');
+  expect(overrideFound).toThrow('[Override Found] The property `color` has already been defined');
 });
 
 
@@ -144,7 +143,7 @@ test('Override found when breakpoints are indiscrete', () => {
   ];
 
   const overrideFound = () => createCSS(input);
-  expect(overrideFound).toThrow('[Override Found] The `display` of `section.sideBar` has already been defined');
+  expect(overrideFound).toThrow('[Override Found] The property `display` has already been defined');
 });
 
 
@@ -237,16 +236,4 @@ test('Override found in detached CSS rule-set', () => {
 
   const overrideNotFound = () => createCSS(input);
   expect(overrideNotFound).toThrow('The CSS property `font-size` is defined twice by `h1.pageTitle`');
-});
-
-
-test('Override found when shorthand helper is used', () => {
-  const input = createStyle(
-    'div',
-    null,
-    `${margin('10px')} margin-top: 20px;`
-  );
-
-  const overrideNotFound = () => createCSS(input);
-  expect(overrideNotFound).toThrow('The CSS property `margin-top` is defined twice by `div`');
 });
