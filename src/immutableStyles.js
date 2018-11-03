@@ -1,4 +1,4 @@
-const elementPropertyWhitelist = require('./elementPropertyWhitelist');
+const forbiddenElementPropertyCombinations = require('./forbiddenElementPropertyCombinations');
 const forbiddenPropertyCombinations = require('./forbiddenPropertyCombinations');
 const {
   saveSourceMap,
@@ -21,7 +21,6 @@ const {
   DOT,
   COLON,
   SEMI_COLON,
-  DASH,
   CHILD_COMBINATOR,
   OPEN_PARENTHESIS,
   CLOSE_PARENTHESIS,
@@ -293,16 +292,16 @@ function propertiesAreUnique(ref, element, attrs, styles) {
 }
 
 function elementCanUseProperty(ref, element, attrs, styles) {
-  elementPropertyWhitelist.forEach(({elements, properties}) => {
-    const whitelistedProperty = properties.find(property => stylesAsMap(styles).get(property));
+  forbiddenElementPropertyCombinations.forEach(({elements, properties}) => {
+    const forbiddenProperty = properties.find(property => stylesAsMap(styles).get(property));
 
     if (
-      whitelistedProperty &&
+      forbiddenProperty &&
       !elements.includes(element)
     ) {
-      logElementPropertyMismatch(attrs.__source, element, whitelistedProperty, elements);
+      logElementPropertyMismatch(attrs.__source, element, forbiddenProperty, elements);
       throw new Error(
-        `[Element Property Mismatch] The HTML element \`${element}\` (${ref}) cannot use the property \`${whitelistedProperty}\``
+        `[Element Property Mismatch] The HTML element \`${element}\` (${ref}) cannot use the property \`${forbiddenProperty}\``
       );
     }
   });

@@ -5,7 +5,6 @@ const DOT               = '.';
 const COMMA             = ',';
 const COLON             = ':';
 const SEMI_COLON        = ';';
-const DASH              = '-';
 const CHILD_COMBINATOR  = '>';
 const OPEN_PARENTHESIS  = '(';
 const CLOSE_PARENTHESIS = ')';
@@ -22,7 +21,6 @@ module.exports = {
   COMMA,
   COLON,
   SEMI_COLON,
-  DASH,
   CHILD_COMBINATOR,
   OPEN_PARENTHESIS,
   CLOSE_PARENTHESIS,

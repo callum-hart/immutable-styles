@@ -210,8 +210,4 @@ function buildBorderCombinations(borderSide, property) {
   'animation-play-state'
 ].forEach(property => buildShortAndLongHandCombinations('animation', property));
 
-// TODO:
-// - skip any failing errorReporting tests
-// - rename elementPropertyWhitelist to forbiddenElementPropertyCombinations
-
 module.exports = combinations;
