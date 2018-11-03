@@ -209,10 +209,10 @@ function logPartialOverrideFound(overriddenSource, overridingSource, overriddenP
   console.log(`\nThe property \`${overriddenProperty}\` is defined here:`);
   logFile(overriddenSource.fileName, overriddenCodeFrame.lineNumber, overriddenCodeFrame.colNumber);
   console.log(`\n${overriddenCodeFrame.codeFrame}`);
-  console.log(`\nAnd is partially overridden by \`${overridingProperty}\`:`);
+  console.log(`\nWhich is overridden by \`${overridingProperty}\`:`);
   logFile(overridingSource.fileName, overridingCodeFrame.lineNumber, overridingCodeFrame.colNumber);
   console.log(`\n${overridingCodeFrame.codeFrame}`);
-  console.log('\nThe first occurrence is partially overridden by the second.\n');
+  console.log('\nThe first occurrence is overridden by the second.\n');
  }
 }
 

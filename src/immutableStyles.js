@@ -21,6 +21,7 @@ const {
   DOT,
   COLON,
   SEMI_COLON,
+  DASH,
   CHILD_COMBINATOR,
   OPEN_PARENTHESIS,
   CLOSE_PARENTHESIS,
@@ -359,22 +360,17 @@ function checkForExactOverride(control, comparison) {
   });
 }
 
-function checkForPartialOverride(control, comparison, shorthandPropertyFirst = true) {
+function checkForPartialOverride(control, comparison) {
   const controlProperties = propertiesAsArray(control.styles);
   const comparisonProperties = propertiesAsArray(comparison.styles);
 
   controlProperties.forEach(property => {
     if (forbiddenPropertyCombinations[property]) {
-      forbiddenPropertyCombinations[property].forEach(longhandProperty => {
-        if (comparisonProperties.includes(longhandProperty)) {
-          const [ overriddenSource, overridingSource, overriddenProperty, overridingProperty ] = shorthandPropertyFirst
-            ? [ comparison.__source, control.__source, longhandProperty, property ]
-            : [ control.__source, comparison.__source, property, longhandProperty];
-
-          logPartialOverrideFound(overriddenSource, overridingSource, overriddenProperty, overridingProperty);
+      forbiddenPropertyCombinations[property].forEach(overiddingProperty => {
+        if (comparisonProperties.includes(overiddingProperty)) {
+          logPartialOverrideFound(control.__source, comparison.__source, property, overiddingProperty);
           throw new Error(
-            `[Partial Override Found] The property \`${overriddenProperty}\`` +
-            `has already been defined, cannot set \`${overridingProperty}\``
+            `[Partial Override Found] The property \`${property}\` is overridden by \`${overiddingProperty}\``
           );
         }
       });
@@ -385,8 +381,7 @@ function checkForPartialOverride(control, comparison, shorthandPropertyFirst = t
 function checkForOverrides(control, comparison) {
   if (breakpointsOverlap(control, comparison)) {
     checkForExactOverride(control, comparison);
-    checkForPartialOverride(comparison, control);
-    checkForPartialOverride(control, comparison, false);
+    checkForPartialOverride(control, comparison);
   }
 }
 
@@ -418,9 +413,18 @@ function stylesAsMap(stylesAsString, attrs = null, ref = null) {
       if (styles.has(property)) {
         logDuplicateProperty(attrs.__source, property, value);
         throw new Error(`[Duplicate Property] The CSS property \`${property}\` is defined twice by \`${ref}\``);
-      } else {
-        styles.set(property, value);
+      } else if (forbiddenPropertyCombinations[property]) {
+        forbiddenPropertyCombinations[property].forEach(overiddenProperty => {
+          if (styles.has(overiddenProperty)) {
+            logPartialOverrideFound(attrs.__source, attrs.__source, overiddenProperty, property);
+            throw new Error(
+              `[Partial Override Found] The property \`${overiddenProperty}\` is overridden by \`${property}\``
+            )
+          }
+        });
       }
+
+      styles.set(property, value);
     });
 
   return styles;
