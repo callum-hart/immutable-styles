@@ -1,5 +1,5 @@
 /*
- Testing override detection among immutable styles
+ Testing exact override detection among immutable styles
 */
 
 const {

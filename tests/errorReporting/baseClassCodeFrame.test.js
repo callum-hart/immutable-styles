@@ -454,7 +454,7 @@ describe('unknown baseclass that matches a comment', () => {
   });
 
 
-  test('senarioSixDotTwo', () => {
+  test.skip('senarioSixDotTwo', () => {
     const { lineNumber, colNumber } = baseClassCodeFrame({fileName, lineNumber: 193}, givenBaseClass);
 
     expect(lineNumber).toBe(194);
