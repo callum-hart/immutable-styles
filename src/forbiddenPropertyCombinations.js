@@ -4,10 +4,6 @@ function saveCombination(key, value) {
   combinations[key] ? combinations[key].push(value) : combinations[key] = [value];
 }
 
-function buildAnyCombinations(property, index, properties) {
-  combinations[property] = properties.filter(prop => prop !== property);
-}
-
 function buildShortAndLongHandCombinations(shorthand, longhand) {
   saveCombination(shorthand, longhand);
   combinations[longhand] = [shorthand];
@@ -29,7 +25,7 @@ function buildBorderCombinations(borderSide, property) {
   'background-repeat',
   'background-size',
   'background-attachment'
-].forEach(buildAnyCombinations);
+].forEach(property => buildShortAndLongHandCombinations('background', property));
 
 [
   'margin-top',
