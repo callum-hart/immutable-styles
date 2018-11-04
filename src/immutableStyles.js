@@ -35,6 +35,10 @@ const AST = new Map();
 
 
 function createStyle(element, attrs, ...children) {
+  if (typeof(element) === 'function') {
+    return element(attrs);
+  }
+
   let styles = BLANK;
   const childNodes = [];
   // children can contain styles for current element or child nodes
