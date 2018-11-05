@@ -35,8 +35,9 @@ const AST = new Map();
 
 
 function createStyle(element, attrs, ...children) {
+  // element is an immutable mixin
   if (typeof(element) === 'function') {
-    return element(attrs);
+    return element(attrs, children);
   }
 
   let styles = BLANK;
