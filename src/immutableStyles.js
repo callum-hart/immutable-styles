@@ -35,17 +35,23 @@ const AST = new Map();
 
 
 function createStyle(element, attrs, ...children) {
+  let styles = BLANK;
+  const childNodes = [];
+  const handleChild = child => child.element ? childNodes.push(child) : styles += child;
+
   // element is an immutable mixin
   if (typeof(element) === 'function') {
     return element(attrs, children);
   }
 
-  let styles = BLANK;
-  const childNodes = [];
   // children can contain styles for current element or child nodes
-  children.forEach(child => child.element
-    ? childNodes.push(child)
-    : styles += child);
+  children.forEach(child => {
+    if (Array.isArray(child)) {
+      child.forEach(handleChild);
+    } else {
+      handleChild(child);
+    }
+  });
 
   return {
     element,
