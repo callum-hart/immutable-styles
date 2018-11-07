@@ -241,30 +241,6 @@ function logNestedMediaQuery(outerMediaSource, outerMinWidthIfAny, innerMediaSou
   }
 }
 
-function logUnknownBaseClass(source, baseClass) {
-  if (shouldLogErrorReport(source)) {
-    const { lineNumber, colNumber, codeFrame } = baseClassCodeFrame(source, baseClass);
-
-    logHeading('Unknown Base Class');
-    logFile(source.fileName, lineNumber, colNumber);
-    console.log(`\nThe base class \`${baseClass}\` does not exist:\n`);
-    console.log(`${codeFrame}\n`);
-  }
-}
-
-function logNestedSubclass(source, className) {
-  if (shouldLogErrorReport(source)) {
-    const baseClass = className.split(DOT)[0];
-    const { lineNumber, colNumber, codeFrame } = baseClassCodeFrame(source, baseClass);
-
-    logHeading('Nested Subclass');
-    logFile(source.fileName, lineNumber, colNumber);
-    console.log('\nA subclass cannot be nested:\n');
-    console.log(codeFrame);
-    console.log('\nA subclass can only be defined by root nodes.\n');
-  }
-}
-
 function logElementPropertyMismatch(source, element, property, permittedElements) {
   if (shouldLogErrorReport(source)) {
     const { lineNumber, colNumber, codeFrame } = CSSPropertyCodeFrame(source, property);
@@ -311,8 +287,6 @@ module.exports = {
   logExactOverrideFound,
   logPartialOverrideFound,
   logNestedMediaQuery,
-  logUnknownBaseClass,
-  logNestedSubclass,
   logElementPropertyMismatch,
   logBuildError,
   logEnableWebpackSourceMaps

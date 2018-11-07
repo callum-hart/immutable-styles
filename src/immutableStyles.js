@@ -8,8 +8,6 @@ const {
   logExactOverrideFound,
   logPartialOverrideFound,
   logNestedMediaQuery,
-  logUnknownBaseClass,
-  logNestedSubclass,
   logElementPropertyMismatch,
   logBuildError,
   logEnableWebpackSourceMaps
@@ -61,6 +59,12 @@ function createStyle(element, attrs, ...children) {
   }
 }
 
+const createMixin = ([attrs, children], ruleset) => createStyle(
+  ruleset.element,
+  { ...ruleset.attrs, ...attrs },
+  [ ...ruleset.children, ...ruleset.styles, ...children ]
+);
+
 function attrsValid(attrs) {
   if (attrs) {
     const permittedAttrs = [
@@ -91,18 +95,15 @@ function createCSS(styles) {
   return makeCSS();
 }
 
-function parseStyles(block, parentRef = null, inheritedMedia = null) {
-  if (attrsValid(block.attrs)) {
-    const ref = makeRef(block);
-    const fullyQualifiedRef = parentRef
-      ? `${parentRef}${SPACE}${ref}`
-      : ref;
+function parseStyles({ element, attrs, styles, children }, parentRef = null, inheritedMedia = null) {
+  if (attrsValid(attrs)) {
+    const ref = makeRef(element, attrs);
+    const fullyQualifiedRef = parentRef ? `${parentRef}${SPACE}${ref}` : ref;
     const {
       minWidth,
       maxWidth,
-      className,
       __source
-    } = block.attrs;
+    } = attrs;
 
     if (inheritedMedia) {
       if (
@@ -113,34 +114,19 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
         throw new Error(`[Nested Media Query] Nested media query found in \`${inheritedMedia.setBy}\``);
       } else {
         // add inherited media queries to child block
-        block.attrs = {
-          ...block.attrs,
+        attrs = {
+          ...attrs,
           ...inheritedMedia.minWidth && { minWidth: inheritedMedia.minWidth },
           ...inheritedMedia.maxWidth && { maxWidth: inheritedMedia.maxWidth }
         }
       }
     }
 
-    if (isSubclass(parentRef, className, __source)) {
-      const baseClass = className.split(DOT)[0]; // upto (but not including) dot
-      const baseRef = `${block.element}${DOT}${baseClass}`;
+    saveRef(fullyQualifiedRef, element, attrs, styles);
 
-      if (AST.has(baseRef)) {
-        cloneBaseStyles(baseRef, fullyQualifiedRef);
-        // todo: generate run-time validations
-      } else {
-        logUnknownBaseClass(__source, baseClass);
-        throw new Error(`[Unknown Base Class] The base class \`${baseRef}\` does not exist`);
-      }
-    }
-
-    saveRef(fullyQualifiedRef, block);
-
-    if (block.children.length) {
+    if (children.length) {
       // save parent path for children
-      parentRef
-        ? parentRef += `${SPACE}${ref}`
-        : parentRef = ref;
+      parentRef ? parentRef += `${SPACE}${ref}` : parentRef = ref;
 
       // save inferred media queries if any
       if (
@@ -156,39 +142,9 @@ function parseStyles(block, parentRef = null, inheritedMedia = null) {
       }
 
       // parse children
-      block.children.forEach(child => parseStyles(child, parentRef, inheritedMedia));
+      children.forEach(child => parseStyles(child, parentRef, inheritedMedia));
     }
   }
-}
-
-function cloneBaseStyles(baseRef, clonedRef) {
-  for (var ref of AST.keys()) {
-    if (
-      ref === baseRef ||
-      ref.startsWith(`${baseRef}${SPACE}`)
-    ) {
-      // clone and save base styles
-      const fullyQualifiedClonedRef = ref.replace(baseRef, clonedRef);
-      AST.set(fullyQualifiedClonedRef, AST.get(ref).map(style => ({...style})));
-      AST.get(fullyQualifiedClonedRef).isCloned = true;
-    }
-  }
-}
-
-function isSubclass(parentRef, className, source) {
-  // for now only support single inheritance & top level nodes
-  if (
-    className &&
-    className.includes(DOT)
-  ) {
-    if (parentRef === null) {
-      return true;
-    }
-    logNestedSubclass(source, className);
-    throw new Error(`[Nested Subclass] Nested subclass \`${className}\` found in \`${parentRef}\``);
-  }
-
-  return false;
 }
 
 function parseAst() {
@@ -257,29 +213,16 @@ function makeCSS() {
   return CSS;
 }
 
-function saveRef(ref, {element, attrs, styles}) {
+function saveRef(ref, element, attrs, styles) {
   if (stylesValid(ref, element, attrs, styles)) {
+    const newStyle = createStyleEntry(styles, attrs);
+
     if (AST.has(ref)) {
-      // ref already exists
-      const newStyle = createStyleEntry(styles, attrs);
-
-      if (AST.get(ref).isCloned) {
-        // find existing style whose min & max width are equal to new style (if any)
-        const equivalentStyle = AST.get(ref).find(({minWidth, maxWidth}) => minWidth === newStyle.minWidth && maxWidth === newStyle.maxWidth);
-
-        if (equivalentStyle) {
-          // merge new style with an equivalent style
-          mergeNewStyleWithEquivalentStyle(newStyle, equivalentStyle);
-        } else {
-          // treat new style as a new entry in AST
-          saveNewStyleForExistingRef(newStyle, ref);
-        }
-      } else {
-        // merge new styles with existing styles if no overrides present
-        saveNewStyleForExistingRef(newStyle, ref);
-      }
+      // merge style with existing styles
+      saveNewStyleForExistingRef(newStyle, ref);
     } else {
-      AST.set(ref, [createStyleEntry(styles, attrs)]);
+      // save new style
+      AST.set(ref, [newStyle]);
     }
   }
 }
@@ -323,26 +266,6 @@ function elementCanUseProperty(ref, element, attrs, styles) {
 function saveNewStyleForExistingRef(newStyle, ref) {
   AST.get(ref).forEach(existingStyle => checkForOverrides(existingStyle, newStyle));
   AST.get(ref).push(newStyle); // save styles
-}
-
-function mergeNewStyleWithEquivalentStyle(newStyle, equivalentStyle) {
-  const newStyles = stylesAsMap(newStyle.styles);
-  const equivalentStyles = stylesAsMap(equivalentStyle.styles);
-
-  for (var property of newStyles.keys()) {
-    if (equivalentStyles.has(property)) {
-      // style already exists, override it
-      equivalentStyles.set(
-        property,
-        `${newStyles.get(property)} /* (original value: ${equivalentStyles.get(property)}) */`
-      );
-    } else {
-      // add style
-      equivalentStyles.set(property, `${newStyles.get(property)}`);
-    }
-  }
-
-  equivalentStyle.styles = stylesToString(equivalentStyles);
 }
 
 function createStyleEntry(styles, {minWidth, maxWidth, __source}) {
@@ -440,13 +363,7 @@ function stylesAsMap(stylesAsString, attrs = null, ref = null) {
   return styles;
 }
 
-function stylesToString(stylesAsMap) {
-  return [...stylesAsMap].reduce((acc, [property, value]) => {
-    return acc += `${property}${COLON}${value}${SEMI_COLON}`;
-  }, BLANK);
-}
-
-function makeRef({element, attrs}) {
+function makeRef(element, attrs) {
   const { className, pseudo } = attrs;
 
   return element.concat(className ? `${DOT}${className}` : BLANK)
@@ -464,10 +381,10 @@ function makeSelectorFromRef(ref) {
       }
 
       if (selector.includes(DOT)) {
-        const isSubclass = selector.split(DOT).length === 3; // [element, baseClass, subClass]
+        const isModifierClass = selector.split(DOT).length === 3; // [element, baseClass, modifierClass]
 
-        if (isSubclass) {
-          return acc.concat(`${makeSubclassSelector(selector)}${pseudoSelector}`);
+        if (isModifierClass) {
+          return acc.concat(`${makeModifierClassSelector(selector)}${pseudoSelector}`);
         } else {
           return acc.concat(`${makeClassSelector(selector)}${pseudoSelector}`);
         }
@@ -487,9 +404,9 @@ function makeClassSelector(elementWithClass) {
   return `${element}[class="${cssClass}"]`;
 }
 
-function makeSubclassSelector(elementWithSubclass) {
-  const [element, baseClass, subClass] = elementWithSubclass.split(DOT);
-  return `${element}[class="${baseClass}${SPACE}${subClass}"]`;
+function makeModifierClassSelector(elementWithModifier) {
+  const [element, baseClass, modifierClass] = elementWithModifier.split(DOT);
+  return `${element}[class="${baseClass}${SPACE}${modifierClass}"]`;
 }
 
 // for testing / build tools
@@ -500,6 +417,7 @@ function tearDown() {
 
 module.exports = {
   createStyle,
+  createMixin,
   createCSS,
   saveSourceMap,
   tearDown,
