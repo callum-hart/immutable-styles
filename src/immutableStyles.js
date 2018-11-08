@@ -33,36 +33,33 @@ const AST = new Map();
 
 
 function createStyle(element, attrs, ...children) {
-  let styles = BLANK;
-  const childNodes = [];
-  const handleChild = child => child.element ? childNodes.push(child) : styles += child;
-
   // element is an immutable mixin
-  if (typeof(element) === 'function') {
-    return element(attrs, children);
-  }
+  if (typeof element === 'function') {
+    const mixin = element();
 
-  // children can contain styles for current element or child nodes
-  children.forEach(child => {
-    if (Array.isArray(child)) {
-      child.forEach(handleChild);
-    } else {
-      handleChild(child);
+    mixin.attrs = { ...mixin.attrs, ...attrs };
+    children.forEach(child => child.element ? mixin.children.push(child) : mixin.styles += child);
+
+    return mixin;
+  } else {
+    let styles = BLANK;
+    const childNodes = [];
+    const handleChild = child => child.element ? childNodes.push(child) : styles += child;
+
+    // children can contain styles for current element or child nodes
+    children.forEach(child => Array.isArray(child) ? child.forEach(handleChild) : handleChild(child));
+
+    return {
+      element,
+      attrs: attrs || {},
+      styles,
+      children: childNodes
     }
-  });
-
-  return {
-    element,
-    attrs: attrs || {},
-    styles,
-    children: childNodes
   }
 }
 
-const createMixin = ([attrs, children], ruleset) => createStyle(
-  ruleset.element,
-  { ...ruleset.attrs, ...attrs },
-  [ ...ruleset.children, ...ruleset.styles, ...children ]
+const createMixin = ({ element, attrs, children, styles }) => createStyle(
+  element, attrs, [...children, ...styles]
 );
 
 function attrsValid(attrs) {
