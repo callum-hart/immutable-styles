@@ -34,10 +34,14 @@ const AST = new Map();
 
 function createStyle(element, attrs, ...children) {
   // element is an immutable mixin
-  if (typeof element === 'function') {
-    const mixin = element();
+  if (typeof element === 'object') {
+    const mixin = {
+      element: element.element,
+      attrs: { ...element.attrs, ...attrs },
+      styles: element.styles,
+      children: [ ...element.children ]
+    };
 
-    mixin.attrs = { ...mixin.attrs, ...attrs };
     children.forEach(child => child.element ? mixin.children.push(child) : mixin.styles += child);
 
     return mixin;
