@@ -165,7 +165,7 @@ In conventional CSS the rule-set would be:
 }
 ```
 
-The equivalant immutable styles rule-set would be almost identical:
+The equivalant immutable rule-set would be almost identical:
 
 ```jsx
 <button className="btn-primary">
@@ -174,7 +174,7 @@ The equivalant immutable styles rule-set would be almost identical:
 </button>
 ```
 
-Whilst semantically similar – the *behaviour* of each rule-set is different. The first [CSS] example is vulnerable to both intentional and unintensional overrides:
+Whilst semantically similar – the *behaviour* of each rule-set is different. The CSS ruleset is vulnerable to both intentional and unintensional overrides:
 
 ```css
 .promo .btn-primary {
@@ -210,6 +210,4 @@ The immutable rule-set for primary buttons is therefore a gospel truth. It can b
 
 <center>*</center>
 
-Whether attempted overrides happen in the same file or in another file – among equal selectors or nested selectors – or even among different screen-sizes, the immutable styles compiler catches them all.
-
-The complex task of detecting and preventing overrides is offloaded to a compiler; so that keeping track of overrides is no longer a developer concern.
+Whether attempted overrides happen in the same file or in another file – among equal selectors or nested selectors – or even among different screen-sizes, the immutable styles compiler catches them all. The complex task of detecting and preventing overrides is offloaded to a compiler – and the burden of keeping track of overrides is no longer a developer concern.

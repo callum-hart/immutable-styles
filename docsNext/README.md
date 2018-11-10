@@ -7,15 +7,14 @@ Catch CSS bugs ahead of time
 
 ## Features
 
-- Build Time Errors
-- Override Prevention
-- Discrete Breakpoints
-- Strict CSS Inheritance
-- Duplicate Property Detection
-- Runtime Override Protection
-- Pre-processor Features
-- Strict Type Selectors
-- Immutable Mixins
+- ⚠️ Build Time Errors
+- 🚫 CSS Override Prevention
+- 📱 Discrete Breakpoints
+- 👪 Strict CSS Inheritance
+- 🕵🏻 Duplicate Property Detection
+- ⛱️ Runtime Override Protection
+- 🏫 Strict Type Selectors
+- 🗿 Immutable Mixins
 
 ## What is Immutable Styles?
 

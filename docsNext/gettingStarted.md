@@ -4,7 +4,7 @@
 
 The goal of this tutorial is to introduce immutable styles in a *hopefully* accessible way.
 
-This tutorial will use a fictitious food app to demonstrate how immutable styles is used for styling web interfaces. For the sake of berevity we will focus on styling a part of the app – the restaurant card, which displays information for a given restaurant:
+This tutorial will use a fictitious food app to demonstrate how immutable styles is used for styling web interfaces. For the sake of berevity we will focus on styling a single part of the app – the restaurant card, which displays information for a given restaurant:
 
 *screenshot of restaurant card*
 
@@ -26,7 +26,7 @@ Then start the application:
 npm start
 ```
 
-In its current state the restaurant card looks rather unappetizing since the markup is unstyled.
+In its current state the restaurant card looks rather unappetizing since its markup is unstyled.
 
 The files we are interested in are: src/RestaurantCard.jsx – which contains the restaurant cards markup and: src/RestaurantCard.**iss.jsx** – which *will* contain the restaurant cards styles.
 
@@ -87,9 +87,10 @@ module.exports = [
   <div className="stars">
     {/* ... */}
   </div>
+];
 ```
 
-With the ruleset for the restaurant card in place lets add some styles that will make it look nicer. Replace lines 5 to 7 with the following snippet:
+With the ruleset for the restaurant card in place lets make it look nicer. Replace lines 5 to 7 with the following snippet:
 
 ```jsx
 <section className="card">
@@ -150,7 +151,7 @@ If you save the file – you will notice the first three stars are unstyled:
 
 *screenshot of progress so far*
 
-This is to be expeceted. Immutable styles treats type selectors – in this case `<span>` – and selectors with a class – in this case `<span className="shining">` as different selectors – *even though* they target the same element type. The type selector `<span>` only targets elements of type `span` that do not have a class. Elements of type `span` with a class – such as "shining" need to be styled individually. This is one of many *key differences* between immutable styles and CSS, which make immutable rulesets uniquely deterministic.
+This is to be expeceted. Immutable styles treat type selectors – in this case `<span>` – and selectors with a class – in this case `<span className="shining">` as different selectors – *even though* they target the same element type. The type selector `<span>` only targets elements of type `span` that do not have a class. Elements of type `span` with a class – such as "shining" need to be styled individually. This is a *key difference* between immutable styles and CSS.
 
 Lets style the shining stars:
 
@@ -159,7 +160,9 @@ Lets style the shining stars:
   {/* ... */}
 
   <span>
-    {/* ... */}
+    margin-right: 2px;
+    font-size: 18px;
+    color: lightgrey;
   </span>
 
   <span className="shining">
@@ -170,4 +173,4 @@ Lets style the shining stars:
 </div>
 ```
 
-You may have noticed 2/3 of CSS declarations – `margin-right` and `font-size` are the same for both normal and shining stars.
+You may have noticed two thirds of CSS declarations – `margin-right` and `font-size` are the same for both normal and shining stars.
