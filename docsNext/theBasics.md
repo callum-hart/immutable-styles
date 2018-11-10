@@ -55,8 +55,6 @@ The example above includes CSS declarations for both the first selector – the 
 </dl>
 ```
 
-> 💡Note: other than using JSX the similarites between React and Immutable Styles end. Immutable Styles is only concerned with *styling* web interfaces and not *building* them.
-
 ### JSX Attributes
 
 So far we've only seen *type selectors* – selectors that match elements by their HTML tag name. However it is common for CSS selectors to match elements based on a specific class name, pseudo class/element, and or screen-size.
@@ -104,7 +102,6 @@ Likewise the `pseudo` attribute is also used for *pseudo-elements* :
 
 The example above is the equivalant of a CSS rule-set defined within a `media-query`. In this case the selector targets the HTML element `body` on screen-sizes wider than 900px.
 
-
 **`maxWidth`**
 
 ```jsx
@@ -115,7 +112,7 @@ The example above is the equivalant of a CSS rule-set defined within a `media-qu
 
 The example above is the equivalant of a CSS *media-query* targeting screens less than 350px wide.
 
-> 💡Note: the unit for media-queries is predefined by immutable styles – all media queries  default to pixels – where `maxWidth="350"` equates to 350px.
+> 💡Note: the unit for media-queries is predefined by immutable styles – all media queries default to pixels – where `maxWidth="350"` equates to 350px.
 
 > 🔮 Supporting units other than pixels is something that could be added in future.
 
@@ -207,12 +204,12 @@ Modifying the background and text color of primary buttons inside elements with 
 
 *insert screenshot of compile time error here*
 
-The compiler makes runtime overrides impossible. Overrides are caught and prevented ahead of time. Compile time errors – such as the case above – are treated as failed builds, for which no CSS is generated. CSS is only generated for successful builds – those without compile time errors such as runtime overrides.
+The compiler makes overriding styles impossible. Overrides are caught and prevented ahead of time. Compile time errors – such as the case above – are treated as failed builds, for which no CSS is generated. CSS is only generated for successful builds – those without compile time errors.
 
 The immutable rule-set for primary buttons is therefore a gospel truth. It can be guaranteed that all primary buttons *will always* have a `cornflowerblue` background and `ivory` text color.
 
 <center>*</center>
 
-Whether attempted overrides happen in the same file or in another file – among equal selectors or nested selectors – or even among different screen-sizes, the compiler catches them all.
+Whether attempted overrides happen in the same file or in another file – among equal selectors or nested selectors – or even among different screen-sizes, the immutable styles compiler catches them all.
 
-The complex task of detecting and preventing runtime overrides is offloaded to a compiler; so that keeping track of overrides is no longer a developer concern.
+The complex task of detecting and preventing overrides is offloaded to a compiler; so that keeping track of overrides is no longer a developer concern.

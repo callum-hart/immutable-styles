@@ -8,11 +8,11 @@ This tutorial will use a fictitious food app to demonstrate how immutable styles
 
 *screenshot of restaurant card*
 
-Although fairly trivial, the restaurant card is a good fit for illustrating the basic concepts of immutable styles without introducing unnecessary and excessive details.
+Although fairly trivial, the restaurant card provides the perfect fit for illustrating the basic concepts of immutable styles without getting distracted by unnecessary and excessive details.
 
 ### Setup
 
-The first step is to clone the [turorial repository]():
+The first step is to clone the [turorial]():
 
 ```
 git clone ....immutable-styles-beginner-tutorial
@@ -26,7 +26,7 @@ Then start the application:
 npm start
 ```
 
-In its current state the restaurant card looks rather unappetizing – the markup is there –  the styling however is not.
+In its current state the restaurant card looks rather unappetizing since the markup is unstyled.
 
 The files we are interested in are: src/RestaurantCard.jsx – which contains the restaurant cards markup and: src/RestaurantCard.**iss.jsx** – which *will* contain the restaurant cards styles.
 
@@ -36,7 +36,7 @@ You may have noticed `RestaurantCard.iss.jsx` uses a dual file extension of `.is
 
 ### Boilerplate
 
-`RestaurantCard.iss.jsx` currently contains boilerplate code typical of any  Immutable Style Sheet:
+`RestaurantCard.iss.jsx` currently contains boilerplate code typical of any Immutable Style Sheet:
 
 ```jsx
 1|  /** @jsx createStyle */
@@ -45,79 +45,129 @@ You may have noticed `RestaurantCard.iss.jsx` uses a dual file extension of `.is
 4|  module.exports = [];
 ```
 
-Line two imports `createStyle` from immutable styles – which is a function that generates immutable rulesets. On line one `createStyle` is mapped to JSX – meaning any JSX tags in this file will be transpiled to `createStyle` function calls. Line four *will* export our immutable rulesets.
+Line 2 imports `createStyle` from immutable styles – which is a function that generates immutable rulesets. On line 1 the `createStyle` function is mapped to JSX – meaning any JSX tags in this file will be transpiled to `createStyle` function calls. Line 4 *will* export our immutable rulesets.
 
 ### Styling the restaurant card
 
 We are going to create our first immutable ruleset. Since this is the first lets make it special – we will style the restaurants star rating ⭐️.
 
-Replace line four of  `RestaurantCard.iss.jsx` with the following snippet:
+Replace line 4 of  `RestaurantCard.iss.jsx` with the following snippet:
 
 ```jsx
 module.exports = [
-  <ul className="stars">
-    padding-left: 0;
-    display: flex;
-    <li>
-      list-style-type: none;
+  <div className="stars">
+    margin: 10px 0;
+
+    <span>
+      margin-right: 2px;
+      font-size: 18px;
       color: gold;
-    </li>
-  </ul>
+    </span>
+  </div>
 ];
 ```
 
-Save the file – you should see the following:
+Save the file – and you should see the following:
 
 *screenshot of progress so far*
 
-Next, lets focus on the restaurant cards layout. The details – rating, name, opening time and summary – should sit to the right of the image. Add the following to `RestaurantCard.iss.jsx`:
+Next, lets focus on the layout of the restaurant card. The details – rating, name, opening time and summary – should sit to the right of the image. Add the following to `RestaurantCard.iss.jsx`:
 
 ```jsx
 module.exports = [
   <section className="card">
     display: flex;
   </section>,
+
   <div className="details">
-    flex-grow: 1;
+    flex: 1;
+    margin-left: 10px;
   </div>,
-  <ul className="stars">
-    ...
+
+  <div className="stars">
+    {/* ... */}
+  </div>
 ```
 
-Now that we have the ruleset for the `card` lets apply styles that will make it look nicer. Replace lines five to seven with the following snippet:
+With the ruleset for the restaurant card in place lets add some styles that will make it look nicer. Replace lines 5 to 7 with the following snippet:
 
 ```jsx
-  <section className="card">
-    display: flex;
-    background-color: white;
-    box-shadow: 0 2px 2px 0 lightgrey;
-  </section>,
+<section className="card">
+  display: flex;
+  padding: 10px;
+  border-radius: 4px;
+  background: white;
+  box-shadow: 0 2px 2px 0 lightgrey;
+</section>,
 ```
 
-Finally, lets make the typography look...
+And finally, lets spruce up the typography:
+
+```jsx
+<h3>
+  margin: 0;
+  font-family: sans-serif;
+</h3>,
+
+<p>
+  margin: 10px 0;
+  font-family: sans-serif;
+  font-size: 14px;
+  color: slategrey;
+</p>
+```
 
 <center>*</center>
 
 So far, all restaurants in our app will have a five star rating. Sadly, in the real world this isn't always the case – some restaurants get a three star rating. Lets update both the markup and styling accordingly.
 
-In `RestaurantCard.jsx` lets add the classname "shining" to the first three stars:
+Firstly, lets change the default star color from `gold` to `lightgrey`:
 
 ```jsx
-10| <ul className="starRating">
-11|   <li className="shining">★</li>
-12|   <li className="shining">★</li>
-13|   <li className="shining">★</li>
-14|   <li>★</li>
-15|   <li>★</li>
-16| </ul>
+<div className="stars">
+  {/* ... */}
+
+  <span>
+    {/* ... */}
+    color: lightgrey;
+  </span>
+</div>
+```
+
+Now, in `RestaurantCard.jsx` add the classname "shining" to the top three stars:
+
+```jsx
+10| <div className="stars">
+11|   <span className="shining">★</span>
+12|   <span className="shining">★</span>
+13|   <span className="shining">★</span>
+14|   <span>★</span>
+15|   <span>★</span>
+16| </div>
 ```
 
 If you save the file – you will notice the first three stars are unstyled:
 
 *screenshot of progress so far*
 
+This is to be expeceted. Immutable styles treats type selectors – in this case `<span>` – and selectors with a class – in this case `<span className="shining">` as different selectors – *even though* they target the same element type. The type selector `<span>` only targets elements of type `span` that do not have a class. Elements of type `span` with a class – such as "shining" need to be styled individually. This is one of many *key differences* between immutable styles and CSS, which make immutable rulesets uniquely deterministic.
 
+Lets style the shining stars:
 
+```jsx
+<div className="stars">
+  {/* ... */}
 
+  <span>
+    {/* ... */}
+  </span>
 
+  <span className="shining">
+    margin-right: 2px;
+    font-size: 18px;
+    color: gold;
+  </span>
+</div>
+```
 
+You may have noticed 2/3 of CSS declarations – `margin-right` and `font-size` are the same for both normal and shining stars.
