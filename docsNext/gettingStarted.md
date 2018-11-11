@@ -56,11 +56,11 @@ Replace line 4 of  `RestaurantCard.iss.jsx` with the following snippet:
 ```jsx
 module.exports = [
   <div className="stars">
-    margin: 10px 0;
+    margin-bottom: 10px;
 
     <span>
       margin-right: 2px;
-      font-size: 18px;
+      font-size: 20px;
       color: gold;
     </span>
   </div>
@@ -81,7 +81,7 @@ module.exports = [
 
   <div className="details">
     flex: 1;
-    margin-left: 10px;
+    margin-left: 15px;
   </div>,
 
   <div className="stars">
@@ -95,7 +95,7 @@ With the ruleset for the restaurant card in place lets make it look nicer. Repla
 ```jsx
 <section className="card">
   display: flex;
-  padding: 10px;
+  padding: 15px;
   border-radius: 4px;
   background: white;
   box-shadow: 0 2px 2px 0 lightgrey;
@@ -106,7 +106,7 @@ And finally, lets spruce up the typography:
 
 ```jsx
 <h3>
-  margin: 0;
+  margin: 15px 0;
   font-family: sans-serif;
 </h3>,
 
@@ -122,7 +122,7 @@ And finally, lets spruce up the typography:
 
 So far, all restaurants in our app will have a five star rating. Sadly, in the real world this isn't always the case – some restaurants get a three star rating. Lets update both the markup and styling accordingly.
 
-Firstly, lets change the default star color from `gold` to `lightgrey`:
+Firstly, lets change the stars default color from `gold` to `lightgrey`:
 
 ```jsx
 <div className="stars">
@@ -151,26 +151,98 @@ If you save the file – you will notice the first three stars are unstyled:
 
 *screenshot of progress so far*
 
-This is to be expeceted. Immutable styles treat type selectors – in this case `<span>` – and selectors with a class – in this case `<span className="shining">` as different selectors – *even though* they target the same element type. The type selector `<span>` only targets elements of type `span` that do not have a class. Elements of type `span` with a class – such as "shining" need to be styled individually. This is a *key difference* between immutable styles and CSS.
+This is to be expeceted. Immutable styles treat type selectors – in this case `<span>` – and selectors with a class – in this case `<span className="shining">` as different selectors – *even though* they target the same element type. The type selector `<span>` only targets elements of type `span` that do not have a class. Elements of type `span` with a class – such as "shining" need to be styled individually. This is a *key difference* between immutable styles and CSS – and is one of the things that make immutable rulesets highly deterministic. Styles for a `span` without a class **are not applied** to a `span` with a class.
 
-Lets style the shining stars:
+With that in mind, lets us now add styles for stars with the class "shining":
 
 ```jsx
 <div className="stars">
   {/* ... */}
 
   <span>
-    margin-right: 2px;
-    font-size: 18px;
-    color: lightgrey;
+    {/* ... */}
   </span>
 
   <span className="shining">
     margin-right: 2px;
-    font-size: 18px;
+    font-size: 20px;
     color: gold;
   </span>
 </div>
 ```
 
-You may have noticed two thirds of CSS declarations – `margin-right` and `font-size` are the same for both normal and shining stars.
+> 💡Note: you may have noticed 2/3rds of the CSS declarations for `<span>` and `<span className="shining">` are the same – with each ruleset containing both `margin-right` and `font-size`. Immutable styles provides ways to remove duplicate styles – aiding reuse among similar rulesets – however these won't be introduced yet in the interests of not overcomplicating this tutorial.
+
+<center>*</center>
+
+The restaurant card is looking pretty good so far, however it's currently a bit static. It would be nice to add a hover effect and make sure the layout is optimized for mobile devices.
+
+Firstly lets add the hover effect, which is achieved using the **`pseudo`** JSX attribute (previously introduced in ["The Basics"]()):
+
+```jsx
+<section className="card">
+  {/* ... */}
+  transition: all .15s ease-in-out;
+</section>,
+
+<section className="card" pseudo=":hover">
+  background: ivory;
+  cursor: pointer;
+  transform: scale(1.02);
+</section>,
+```
+
+Now, lets optimize the restaurant card for mobile using the **`maxWidth`** JSX attribute:
+
+```jsx
+<section className="card" maxWidth="600">
+  margin: 0 20px;
+
+  <img className="image">
+    display: none;
+  </img>
+</section>,
+```
+
+Finally lets tighten up the spacing, to allow more content to fit on smaller screen-sizes:
+
+```jsx
+<section className="card" maxWidth="600">
+  {/* ... */}
+  padding: 10px;
+
+  <img className="image">
+    {/* ... */}
+  </img>
+
+  <div className="details">
+    margin-left: 0;
+  </div>
+</section>,
+```
+
+If you save the file and open up the browsers console you will see an error has be thrown: `[Override Found] The property `padding` has already been defined`, and the newly added styles have not been applied. Navigate to your terminal window and you will see the following compile time error:
+
+```
+[Override Found]
+
+The property `padding` is defined here:
+  /Users/callum-hart/Desktop/testingISS/src/beginnerTutorial/RestaurantCard.iss.jsx:7:5
+
+  5 |   <section className="card">
+  6 |     display: flex;
+> 7 |     padding: 15px;
+          ^^^^^^^
+
+And again here:
+  /Users/callum-hart/Desktop/testingISS/src/beginnerTutorial/RestaurantCard.iss.jsx:22:5
+
+  20 |   <section className="card" maxWidth="600">
+  21 |     margin: 0 20px;
+> 22 |     padding: 10px;
+           ^^^^^^^
+
+The first occurrence is overridden by the second.
+```
+
+As the error message shows the `padding` has been defined twice. The `padding` set in the first occurance (line 7) is applied to the card on *all* screen-sizes. The `padding` set in the second occurance (line 22) is applied to the card on screens narrower than 600px. This means on screen widths between 0px and 600px the `padding` property is defined twice – which *would* result in an override, if it weren't for the compiler catching it.
