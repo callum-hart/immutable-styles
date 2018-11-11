@@ -1,6 +1,4 @@
-# Getting Started
-
-## Beginner Tutorial
+# Beginner Tutorial
 
 The goal of this tutorial is to introduce immutable styles in a *hopefully* accessible way.
 
