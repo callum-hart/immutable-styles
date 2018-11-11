@@ -1,4 +1,4 @@
-# The case for Immutable Styles
+# The Case for Immutable Styles
 
 Those familiar with CSS will have heard the term "winning style"; in which CSS rules compete against one another. Importance, specificity and cascade decide which styles win via overrides.
 
@@ -14,7 +14,7 @@ Overrides make CSS **unpredictable** because:
 4. The longevity of an override is unknown. Just because a style wins today doesn’t mean it always will.
 5. They obfuscate developer intent. It’s hard to differentiate between an intentional and unintentional override (which is open to interpretation).
 
-Parallels can be drawn between mutable state in programs and overrides in CSS. When a style overrides another it mutates (changes) the value of the original style. Over recent years the front-end community has seen a huge shift towards removing mutable state in our applications - yet CSS has been left behind.
+Parallels can be drawn between mutable state in programs and overrides in CSS. When a style overrides another it mutates (changes) the value of the original style. Over recent years the front-end community has seen a huge shift towards removing mutable state in our applications - yet the way we approach CSS has remained as its always been.
 
 But why should the way we build applications be different to how we style them? We should unite construction with cosmetics. Immutable Styles is an attempt to remove mutation (a.k.a overrides) and thus complexity from CSS.
 
