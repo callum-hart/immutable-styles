@@ -26,7 +26,11 @@ Then start the application:
 npm start
 ```
 
-In its current state the restaurant card looks rather unappetizing since its markup is unstyled.
+And navigate to [localhost:3000](http://localhost:3000).
+
+In its current state the restaurant card looks rather unappetizing since its markup is unstyled:
+
+*screenshot of progress so far*
 
 The files we are interested in are: src/RestaurantCard.jsx – which contains the restaurant cards markup and: src/RestaurantCard.**iss.jsx** – which *will* contain the restaurant cards styles.
 
@@ -49,7 +53,7 @@ Line 2 imports `createStyle` from immutable styles – which is a function that 
 
 ### Styling the restaurant card
 
-We are going to create our first immutable ruleset. Since this is the first lets make it special – we will style the restaurants star rating ⭐️.
+Lets create our first immutable ruleset. Since it's our first lets make it special ⭐️. We will style the restaurants star rating icons.
 
 Replace line 4 of  `RestaurantCard.iss.jsx` with the following snippet:
 
@@ -153,7 +157,9 @@ If you save the file – you will notice the first three stars are unstyled:
 
 *screenshot of progress so far*
 
-This is to be expeceted. Immutable styles treat type selectors – in this case `<span>` – and selectors with a class – in this case `<span className="shining">` as different selectors – *even though* they target the same element type. The type selector `<span>` only targets elements of type `span` that do not have a class. Elements of type `span` with a class – such as "shining" need to be styled individually. This is a *key difference* between immutable styles and CSS – and is one of the things that make immutable rulesets highly deterministic. Styles for a `span` without a class **are not applied** to a `span` with a class.
+This is to be expeceted. Immutable styles treat type selectors – in this case `<span>` – and selectors with a class – in this case `<span className="shining">` as different selectors – *even though* they target the same element type. The type selector `<span>` only targets elements of type `span` that do not have a class. Elements of type `span` with a class – such as "shining" need to be styled individually. This is a *key difference* between immutable styles and CSS – and is one of the traits that make immutable styles highly deterministic.
+
+> 📖 Styles for an element without a class (such as `span`) **are not applied** to the same element type with a class (such as `<span className="shining">`).
 
 With that in mind, add a ruleset for stars with the class "shining":
 
@@ -173,7 +179,7 @@ With that in mind, add a ruleset for stars with the class "shining":
 </div>
 ```
 
-> 💡Note: you may have noticed 2/3rds of the CSS declarations for `<span>` and `<span className="shining">` are the same (each ruleset contains both `margin-right` and `font-size`). Immutable styles provides ways to remove duplicate styles, aiding reuse among similar rulesets – however these won't be introduced yet – in the interests of not overcomplicating this tutorial.
+> 💡Note: you may have noticed 2/3rds of the CSS declarations for `<span>` and `<span className="shining">` are the same (each ruleset contains both `margin-right` and `font-size`). Immutable styles provides ways to remove duplicate styles, aiding reuse among similar rulesets – however in the interests of not overcomplicating this tutorial won't be introduced yet.
 
 ### Interactions & Responsiveness
 
@@ -251,9 +257,11 @@ And again here:
 The first occurrence is overridden by the second.
 ```
 
-As the error message shows the `padding` has been defined twice. The `padding` set in the first occurance (line 7) is applied to the card on *all* screen-sizes. The `padding` set in the second occurance (line 22) is applied to the card on screens up to 600px wide. This means on screen widths between 0px and 600px the `padding` property is defined twice – which *would* result in an override, if it weren't for the compiler catching it.
+As the error message shows the `padding` has been defined twice. The `padding` set in the first occurance (line 7) is applied to the card on *all* screen-sizes. The `padding` set in the second occurance (line 22) is applied to the card on screens up to 600px wide. This means on screen widths between 0px and 600px the `padding` property is applied twice – which *would* result in an override, if it weren't for the compiler catching it.
 
-With this in mind, the first `padding` declaration should be moved out to another ruleset that specifically targets screens wider than 600px:
+> 📖 The immutable styles compiler can detect and prevent overrides that only occur on specific screen-sizes.
+
+With this in mind, the first `padding` declaration (line 7) should be moved out to another ruleset that specifically targets screens wider than 600px:
 
 ```jsx
 <section className="card">
