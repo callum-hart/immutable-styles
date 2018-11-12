@@ -65,7 +65,7 @@ The first occurrence is overridden by the second.
 
 ## Discrete Breakpoints
 
-Discrete breakpoints are a design pattern that ensure styles in one media query do not override styles in another media query. The rationale behind this is best illustrated using regular CSS:
+Discrete breakpoints are a design pattern that ensure styles in one media query do not override styles in another media query. This means two or more media queries cannot overlap if they contain rulesets that override each other. The rationale behind this is best illustrated using regular CSS:
 
 ```css
 @media (min-width: 500px) {
@@ -81,7 +81,9 @@ Discrete breakpoints are a design pattern that ensure styles in one media query 
 }
 ```
 
-In the example above the **media queries rely on their position in the cascade** to produce the expected behaviour. On screens wider than 1000px both rulesets apply – with the last in the cascade taking effect. The bottom ruleset overrides the other and the font-size of a.logo will be 18px. Reshuffling the order of rulesets produces a different result:
+In the example above the media queries rely on their position in the cascade to produce the expected behaviour – with the last in the cascade taking effect. On screens wider than 1000px the bottom ruleset overrides the other, so the `font-size` of `a.logo` will be 18px.
+
+Reshuffling the order of the rulesets produces a different result:
 
 ```css
 @media (min-width: 1000px) {
@@ -97,7 +99,7 @@ In the example above the **media queries rely on their position in the cascade**
 }
 ```
 
-Again on screens wider than 1000px both rulesets apply – with the last in the cascade taking effect – the font-size of `a.logo` will now be 16px. Unintuitively it is the **cascade and not the breakpoint size** that determines the font-size of the logo.
+Once again the last ruleset in the cascade takes effect, and on screens wider than 1000px the `font-size` of `a.logo` will be 16px. Unintuitively it is the **cascade and not the breakpoint size** that determines the `font-size` of the logo.
 
 Media queries are also dependant on specificity:
 
@@ -119,13 +121,13 @@ nav a.logo {
 }
 ```
 
-In the example above the ruleset with the strongest specificity out-competes the others – regardless of their position in the cascade or breakpoint size. On all screen-sizes the font-size of the logo will be 14px – since `nav a.logo` has the highest specificity.
+In the example above the ruleset with the strongest specificity out-competes the others, regardless of their position in the cascade or breakpoint size. On all screen-sizes the `font-size` of `a.logo` will be 14px, since `nav a.logo` has the highest specificity.
 
 <center>*</center>
 
-Discrete breakpoints remove the dependency media queries have on cascade and specificity. In immutable styles the compiler identifies any media queries that overlap – and then checks if they contain any overriding styles.
+Discrete breakpoints remove the dependency media queries have on cascade and specificity. In immutable styles the compiler identifies any overlapping media queries, and then checks if they contain any overriding rulesets.
 
-The equivalent immutable ruleset for the logo would be:
+The equivalent immutable ruleset would be:
 
 ```jsx
 <a className="logo" minWidth="500">
@@ -137,7 +139,7 @@ The equivalent immutable ruleset for the logo would be:
 </a>
 ```
 
-This throws a compile time error – since on screens wider than 1000px the logo `font-size` is applied twice:
+Which throws a compile time error, since on screens wider than 1000px the logos `font-size` is applied twice:
 
 ```
 [Override Found]
@@ -170,3 +172,5 @@ The solution is to partition the media queries into distinct ranges:
   font-size: 16px;
 </a>
 ```
+
+With the media queries no longer overlapping...
