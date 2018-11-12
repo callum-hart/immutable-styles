@@ -193,7 +193,7 @@ Firstly lets add the hover effect, which is achieved using the **`pseudo`** JSX 
 
 <section className="card" pseudo=":hover">
   background: ivory;
-  transform: scale(1.02);
+  transform: scale(1.05);
   cursor: pointer;
 </section>,
 ```
