@@ -6,9 +6,11 @@ Strict inheritance prevents inheritable CSS properties from being inherited. At 
 
 Having 10 `font-size` declarations is either the result of 10 instances where the developer(s) intent was to override the font-size, or more likey is the result of poorly scoped selectors. Either way the `font-size` of the target element is extremely brittle.
 
-Inheritable properties are very vulnerable to changes in HTML attributes/structure, selector specificity or cascade position. A single change can produce a different outcome. In this case `!important` has been used to protect the `font-size` from changes to specificity or cascade. *However, unfortunetly the winning property value is `inherit` which means a futher step is needed to track down where the `font-size` is inherited from.*
+Inheritable properties are very vulnerable to changes in HTML attributes/structure, selector specificity or cascade position. A single change can produce a different outcome. In this case `!important` has been used to protect the `font-size` from changes to specificity or cascade. However the winning property value is `inherit` which means a futher step is needed to track down where the `font-size` is inherited from.
 
-Strict inheritance prevents situations like the example above ahead of time. With strict inheritance, each inheritable property can only be used by a set of whitelisted elements. For example setting `font-size` on a `div` is not allowed:
+<center>*</center>
+
+Strict inheritance avoids problems like this. With strict inheritance, each inheritable property can only be used by a set of whitelisted elements. For example setting `font-size` on a `div` is not allowed:
 
 ```jsx
 <div>
@@ -16,7 +18,7 @@ Strict inheritance prevents situations like the example above ahead of time. Wit
 </div>
 ```
 
-Doing so throws a compile time error:
+Attempting to do so throws a compile time error:
 
 ```
 [Element Property Mismatch]
@@ -34,7 +36,7 @@ The element <div> cannot use the property `font-size`:
   <strong>, <span>, <li>, <input>, <button>
 ```
 
-With the strict inheritance pattern applying `font-size` to a `div` is too vauge. Instead `font-size` should be applied to a textual element:
+With strict inheritance applying `font-size` to a `div` is too vauge. Instead `font-size` should be applied to a textual element:
 
 ```jsx
 <div>
@@ -43,3 +45,5 @@ With the strict inheritance pattern applying `font-size` to a `div` is too vauge
   </p>
 </div>
 ```
+
+This makes the behaviour of inheritable properties far more deterministic. In the example above the `font-size` of the `p` is and always will be 1.4rem. The risk of the `p` inheriting a font size from somewhere else is removed. Treating inheritable properties like non-inheritable properties makes their behaviour predictable and robust.
