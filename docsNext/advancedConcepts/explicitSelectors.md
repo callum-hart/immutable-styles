@@ -42,7 +42,7 @@ The ruleset above uses a *modifier class* to explicitly target elements of type 
 
 > 💡Note: you may have noticed the same `background` declaration is defined in both the `btn-primary` and `btn-primary disabled` rulesets. Immutable styles provides ways to share styles accross similar rulesets, however these fall out of scope of explicit selectors.
 
-<center>*</center>
+## Nested Rulesets
 
 Explicit selectors also apply to nested rulesets:
 
@@ -54,10 +54,10 @@ Explicit selectors also apply to nested rulesets:
 </a>
 ```
 
-In the example above the ruleset only targets elements of type `a` (without a class) that have the parent element of type `nav` (also without a class).
+In the example above the ruleset only targets elements of type `a` that are the immediate children of elements of type `nav`. This is the equivalant of a *child combinator (A > B)* selector in CSS.
 
-- all nested rulesets equate to the `child combinator` (>) selector in CSS.
-- child combinator are stricter than descendant selectors since they only target the immediate children.
-- makes the behaviour of nested rulesets predictable
-- decendant selectors are too broad and very sensitive to changes in HTML (for example)
-- one to one mapping between structure of HTML and structure of immutable rulesets – predictable, deterministic. Look at structure of immutable rulesets and immediatley identify what the target HTML will be.
+In immutable styles all nested rulesets equate to child combinators in CSS. Child combinators offer several advantages over the less strict *decendant selectors (A B)* in several ways.
+
+Firstly, the behaviour of child combinators is highly predictable. It is very easy to identify who the target elements are and who the target elements are not. The structure of the *immutable* ruleset mirrors that of the target HTML.
+
+Secondly, child combinators narrow the scope of who their target elements are. This helps prevent poorly scoped selectors targeting unwanted elements, or clashing with other selectors, which prevents intensional and unintensional overrides.
