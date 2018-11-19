@@ -10,11 +10,11 @@ Catch CSS bugs ahead of time
 - ⚠️ Build Time Errors
 - 🚫 CSS Override Prevention
 - 📱 Discrete Breakpoints
-- 👪 Strict CSS Inheritance
+- 👪 Strict Inheritance
 - 🕵🏻 Duplicate Property Detection
-- ⛱️ Runtime Override Protection
-- 🏫 Strict Type Selectors
+- ⛱️ Typed Selectors
 - 🗿 Immutable Mixins
+- 🏹 Explicit Selectors
 
 ## What is Immutable Styles?
 
