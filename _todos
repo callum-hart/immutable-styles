@@ -1,0 +1,11 @@
+Todos:
+Documentation
+- Recipies
+  - Grouped Selectors (if possible)
+Release next version
+- Use lerna for packages DONE
+  - packages/core DONE
+  - packages/webpack-plugin DONE
+  - packages/tutorial DONE
+  - packages/doc-examples?
+- Use GitBook for documentation?
