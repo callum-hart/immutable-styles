@@ -24,7 +24,7 @@
 
 module.exports = [
   {
-    elements: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'strong', 'span', 'li', 'input', 'button', 'dt', 'dd'],
+    elements: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'strong', 'span', 'li', 'input', 'button', 'dt', 'dd', 'th', 'td'],
     properties: ['color', 'font-family', 'font-size', 'font-style', 'font-variant', 'font-weight', 'font', 'letter-spacing', 'line-height', 'text-align', 'text-indent', 'text-transform', 'white-space', 'word-spacing']
   },
   {

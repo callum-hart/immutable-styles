@@ -5,21 +5,21 @@ Immutable styles provides a couple of ways to share common styles among similar 
 1. [Mixins]()
 2. [Detached Rulesets]()
 
-Mixins are used to share styles among rulesets with the *same* element type. Whilst detached rulesets are used to share styles among rulesets with *different* element types. 
+Mixins are used to share styles among rulesets with the *same* element type. Whilst detached rulesets are used to share styles among rulesets with *different* element types.
 
-This guide will feature an example of sharing styles for each approach.
+This guide will feature an example for each approach.
 
-### Mixin Example
+### Sharing Styles with Mixins
 
 For mixins we will extend the button example first introduced in ["The Basics"]() guide.
 
-The designer has returned to the styleguide and added a few different button variations. In addition each variation has four UI states: a default, hover, focussed, and disabled state.
+The designer has returned to the styleguide and added a few different button variations. Additionally each variation now has four UI states: a default, hover, focussed, and disabled state.
 
 Here is our fictitious styleguide:
 
 *screenshot of styleguide*
 
-From the styleguide above we can identify common declarations shared among all buttons - each of which have the same:
+From the styleguide above we can identify common styles shared among all buttons:
 
 - `padding`
 - `border-width`
@@ -29,13 +29,13 @@ From the styleguide above we can identify common declarations shared among all b
 - `font-family`
 - `cursor`
 
-In contrast each button variation has unique declarations for the following:
+In contrast we can also identify styles unique to each button type:
 
 - `background`
 - `border-color`
 - `color`
 
-The common declarations for the default state can be put into a mixin:
+The common styles for the default state can be put into a mixin:
 
 ```jsx
 /** @jsx createStyle */
@@ -56,7 +56,7 @@ const button = {
 };
 ```
 
-Each button variation can now use the `button` mixin, and apply the declarations specific to each variation:
+Each button variation can use the `button.default` mixin to apply the common styles shared among all butons, and then apply its own styles unique to the button type:
 
 ```jsx
 /** @jsx createStyle */
@@ -87,7 +87,7 @@ module.exports = [
 ];
 ```
 
-We can use the same approach for the different UI states:
+The same approach can be applied to the different UI states. Common styles for each state can be assigned to its own mixin:
 
 ```jsx
 /** @jsx createStyle */
@@ -149,5 +149,64 @@ module.exports = [
   </button.hover>,
   <button.focus className="btn-brand" />,
   <button.disabled className="btn-brand" />
+];
+```
+
+### Sharing Styles with Detached Rulesets
+
+Detached rulesets allow groups of styles to be shared accross different rulesets. For example:
+
+```jsx
+/** @jsx createStyle */
+import { createStyle } from 'immutable-styles';
+
+const fontSmall = `
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.5rem;
+`;
+
+const fontMedium = `
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1rem;
+  line-height: 2rem;
+`;
+
+const fontLarge = `
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.5rem;
+  line-height: 3rem;
+`;
+
+const fontExtraLarge = `
+  font-family: 'Open Sans', sans-serif;
+  font-size: 2rem;
+  line-height: 4rem;
+`;
+
+// usage:
+
+module.exports = [
+  <h1>
+    { fontExtraLarge }
+  </h1>,
+  <h2>
+    { fontLarge }
+  </h2>,
+  <h3>
+    { fontMedium }
+  </h3>,
+  <th>
+    { fontMedium }
+  </th>,
+  <td>
+    { fontSmall }
+  </td>,
+  <p>
+    { fontSmall }
+  </p>,
+  <strong>
+    { fontSmall }
+  </strong>
 ];
 ```
