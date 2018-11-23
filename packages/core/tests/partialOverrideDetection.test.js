@@ -6,7 +6,7 @@ const {
   createCSS,
   createStyle,
   tearDown
-} = require('../src/immutableStyles');
+} = require('../index.js');
 
 beforeEach(() => tearDown());
 

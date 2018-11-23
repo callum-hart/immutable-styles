@@ -1,7 +1,6 @@
 const fs = require('fs');
+const ImmutableStyles = require('@immutable-styles/core');
 
-
-const ImmutableStyles = require('immutable-styles');
 const { logBuildError, logEnableWebpackSourceMaps } = ImmutableStyles;
 
 

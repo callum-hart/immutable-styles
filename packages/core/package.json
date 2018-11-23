@@ -1,0 +1,14 @@
+{
+  "name": "@immutable-styles/core",
+  "version": "1.0.0",
+  "description": "Immutable styles core compiler",
+  "author": "Callum Hart",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^22.1.4"
+  }
+}

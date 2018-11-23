@@ -3,7 +3,7 @@
  of same type with a class, i.e: `span` != `span.icon`
 */
 
-const { createStyle, tearDown } = require('../src/immutableStyles');
+const { createStyle, tearDown } = require('../index.js');
 
 beforeEach(() => tearDown());
 

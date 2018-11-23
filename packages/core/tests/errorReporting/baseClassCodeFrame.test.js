@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const { saveSourceMap, baseClassCodeFrame } = require('../../src/errorReporting');
+const { saveSourceMap, baseClassCodeFrame } = require('../../errorReporting');
 
 const fileName = './tests/errorReporting/mocks/baseClassCodeFrame.jsx';
 

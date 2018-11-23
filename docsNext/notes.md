@@ -123,11 +123,8 @@ Catch CSS bugs ahead of time
 
 ## Advanced Concepts
 
-- Single Inheritance Model
-	- see singleInheritanceModel.md, need to update examples to use JSX
 - Strict CSS Inheritance
 - Discrete Breakpoints
-- Unambiguos Declarations
 - Pre-processor'esque Features
 	- see features.md
 - How it Works
@@ -141,10 +138,10 @@ Catch CSS bugs ahead of time
 - Usage with JSX
 - Webpack plugin, with hot reload 🔥
 - Elm inspired error messages, with helpful hints!
-- Ambiguous property mixins
-- Nested subclass error handling
+- Immutable Mixins!
+- Partial override detection
+- Improved code coverage
 - `createCSS` now accepts an object aswell as array
-- Better code coverage
 
 ## Roadmap 🗺
 

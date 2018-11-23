@@ -2,7 +2,7 @@
  Testing interpolation for things such as variables, detached rule-sets.
 */
 
-const { createStyle, tearDown } = require('../src/immutableStyles');
+const { createStyle, tearDown } = require('../index.js');
 
 beforeEach(() => tearDown());
 

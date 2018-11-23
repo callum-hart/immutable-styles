@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const { saveSourceMap, CSSPropertyCodeFrame } = require('../../src/errorReporting');
+const { saveSourceMap, CSSPropertyCodeFrame } = require('../../errorReporting');
 
 const fileName = './tests/errorReporting/mocks/CSSPropertyCodeFrame.jsx';
 

@@ -10,7 +10,7 @@
 
 const fs = require('fs');
 
-const { saveSourceMap, attributeCodeFrame } = require('../../src/errorReporting');
+const { saveSourceMap, attributeCodeFrame } = require('../../errorReporting');
 
 const fileName = './tests/errorReporting/mocks/attributeCodeFrame.jsx';
 
