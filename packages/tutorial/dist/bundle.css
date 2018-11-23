@@ -1,0 +1,51 @@
+html:not([class]) {
+  height: 100%;
+}
+body:not([class]) {
+  height: 100%; margin: 0; background-image: linear-gradient(45deg, #f8f8f8 25%, transparent 25%), linear-gradient(135deg, #f8f8f8 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f8f8f8 75%), linear-gradient(135deg, transparent 75%, #f8f8f8 75%); background-size: 20px 20px; background-position: 0 0, 10px 0, 10px -10px, 0px 10px; background-color: #f4f4f4;
+}
+div[class="root"] {
+  height: 100%;
+}
+section[class="app"] {
+  height: 100%; display: flex; align-items: center; justify-content: center;
+}
+section[class="card"] {
+  display: flex; border-radius: 4px; background: white; box-shadow: 0 2px 2px 0 lightgrey; transition: background .15s ease-in-out, transform .15s ease-in-out;
+}
+@media (max-width:600px) {
+  section[class="card"] {
+    margin: 0 20px; padding: 0px;
+  }
+}
+@media (min-width:601px) {
+  section[class="card"] {
+    padding: 15px;
+  }
+}
+section[class="card"]:hover {
+  background: ivory; transform: scale(1.05); cursor: pointer;
+}
+@media (max-width:600px) {
+  section[class="card"] > img[class="image"] {
+    display: none;
+  }
+}
+div[class="details"] {
+  flex: 1; margin: 10px 15px 0;
+}
+div[class="stars"] {
+  margin-bottom: 10px;
+}
+div[class="stars"] > span:not([class]) {
+  margin-right: 2px; font-size: 20px; color: lightgrey;
+}
+div[class="stars"] > span[class="shining"] {
+  margin-right: 2px; font-size: 20px; color: gold;
+}
+h3:not([class]) {
+  margin: 15px 0; font-family: sans-serif;
+}
+p:not([class]) {
+  margin: 10px 0; font-family: sans-serif; font-size: 14px; color: slategrey;
+}
