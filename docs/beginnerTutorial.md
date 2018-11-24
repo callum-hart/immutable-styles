@@ -4,7 +4,9 @@ The goal of this tutorial is to introduce immutable styles in a *hopefully* acce
 
 This tutorial will use a fictitious food app to demonstrate how immutable styles is used for styling web interfaces. For the sake of berevity we will focus on styling a single part of the app – the restaurant card, which displays information for a given restaurant:
 
-![Screenshot of restaurant card](../docs/_images/RestaurantCardComplete.png "Screenshot of restaurant card")
+<p align="center">
+  <img src="../docs/_images/RestaurantCardComplete.png" width="710px" height="340px" alt="Screenshot of restaurant card"/>
+</p>
 
 Although fairly trivial, the restaurant card provides the perfect fit for illustrating the basic concepts of immutable styles without getting distracted by unnecessary and excessive details.
 
