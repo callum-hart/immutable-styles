@@ -1,7 +1,7 @@
 /** @jsx createStyle */
 import { createStyle } from '@immutable-styles/core';
 
-module.exports = [
+export default [
   <section className="card">
     display: flex;
     border-radius: 4px;

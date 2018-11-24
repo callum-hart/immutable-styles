@@ -6,7 +6,7 @@ Each error is documented below including the problem code and the error thrown.
 
 ### Unknown Attribute
 
-When an unknown attribute is found:
+When an unknown attribute is found.
 
 ```jsx
 <p foo="invalidAttr">
@@ -130,7 +130,7 @@ The ruleset above throws the following compile time error:
 
 ### Element Property Mismatch
 
-When an inheritable property is used by an invalid element type:
+When an inheritable property is used by an invalid element type.
 
 ```jsx
 <div>
