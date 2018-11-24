@@ -2,11 +2,11 @@ import React from 'react';
 
 import "./App.iss.jsx";
 
-import Playground from './Playground';
+import GroupedSelectors from './groupedSelectors/GroupedSelectors';
 
 const App = () => (
   <section className="app">
-    <Playground />
+    <GroupedSelectors />
   </section>
 )
 

@@ -10,15 +10,15 @@ div[class="root"] {
 section[class="app"] {
   height: 100%; display: flex; align-items: center; justify-content: center;
 }
-button[class="btn"] {
-  padding: 8px 12px; font-family: 'Open Sans', sans-serif; font-size: 14px; background: cadetblue; color: ivory;
-}
-button[class="btn"] {
-  border: none; cursor: pointer;
-}
 a[class="btn"] {
   padding: 8px 12px; font-family: 'Open Sans', sans-serif; font-size: 14px; background: cadetblue; color: ivory;
 }
 a[class="btn"] {
   text-decoration: none;
+}
+button[class="btn"] {
+  padding: 8px 12px; font-family: 'Open Sans', sans-serif; font-size: 14px; background: cadetblue; color: ivory;
+}
+button[class="btn"] {
+  border: none; cursor: pointer;
 }

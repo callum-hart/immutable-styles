@@ -1,7 +1,7 @@
 {
-  "name": "@immutable-styles/playground",
+  "name": "@immutable-styles/examples",
   "version": "1.0.0",
-  "description": "Immutable styles playground",
+  "description": "Immutable styles examples",
   "author": "Callum Hart",
   "license": "ISC",
   "main": "index.js",

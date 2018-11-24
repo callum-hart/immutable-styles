@@ -1,9 +1,10 @@
 Todos:
 - Take screenshots for documentation
 - Add paths to any links in documentation
-- Proof-read, spelling & grammar
+- Add README to packages/webpack-plugin
 - Use GitBook for documentation?
 - Tidy up, delete docsOld, rehome _notes.md and specNext.jsx
+- Proof-read, spelling & grammar
 - Release 1.0.0 🎆
 - Explore grouped selectors (if time)
 
