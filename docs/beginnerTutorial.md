@@ -4,7 +4,7 @@ The goal of this tutorial is to introduce immutable styles in a *hopefully* acce
 
 This tutorial will use a fictitious food app to demonstrate how immutable styles is used for styling web interfaces. For the sake of berevity we will focus on styling a single part of the app – the restaurant card, which displays information for a given restaurant:
 
-*screenshot of restaurant card*
+*RestaurantCardComplete.png*
 
 Although fairly trivial, the restaurant card provides the perfect fit for illustrating the basic concepts of immutable styles without getting distracted by unnecessary and excessive details.
 
@@ -13,8 +13,8 @@ Although fairly trivial, the restaurant card provides the perfect fit for illust
 The first step is to clone the [turorial]():
 
 ```
-git clone ....immutable-styles-beginner-tutorial
-cd immutable-styles-beginner-tutorial
+git clone git@github.com:callum-hart/immutable-styles.git
+cd immutable-styles/packages/tutorial
 npm install
 ```
 
@@ -28,7 +28,7 @@ And navigate to [localhost:8080](http://localhost:8080).
 
 In its current state the restaurant card looks rather unappetizing since its markup is unstyled:
 
-*screenshot of progress so far*
+![Screenshot of restaurant card](./docs/_images/RestaurantCardStageOne.png "Screenshot of restaurant card")
 
 The files we are interested in are: src/RestaurantCard.jsx – which contains the restaurant cards markup and: src/RestaurantCard.**iss.jsx** – which *will* contain the restaurant cards styles.
 
@@ -71,7 +71,7 @@ module.exports = [
 
 Save the file – and you should see the following:
 
-*screenshot of progress so far*
+*RestaurantCardStageTwo.png*
 
 Next, lets focus on the layout of the restaurant card. The details – rating, name, opening time and summary – should sit to the right of the image. Add the following to `RestaurantCard.iss.jsx`:
 
@@ -122,7 +122,7 @@ And finally, lets spruce up the typography:
 
 Save the file – and you should see the following:
 
-*screenshot of progress so far*
+*RestaurantCardStageThree.png*
 
 So far, all restaurants in our app will have a five star rating. Sadly, in the real world this isn't always the case – some restaurants get a three star rating. Lets update both the markup and styling accordingly.
 
@@ -153,7 +153,7 @@ Now, in `RestaurantCard.jsx` add the classname "shining" to the top three stars:
 
 If you save the file – you will notice the first three stars are unstyled:
 
-*screenshot of progress so far*
+*RestaurantCardStageFour.png*
 
 This is to be expeceted. Immutable styles treat type selectors – in this case `<span>` – and selectors with a class – in this case `<span className="shining">` as different selectors – *even though* they target the same element type. The type selector `<span>` only targets elements of type `span` that do not have a class. Elements of type `span` with a class – such as "shining" need to be styled individually. This is a *key difference* between immutable styles and CSS – and is one of the traits that make immutable styles highly deterministic.
 
@@ -233,27 +233,7 @@ And finally lets tighten up the spacing, to allow more content to fit on smaller
 
 If you save the file and open up the browsers console you will see an error has be thrown: ```[Override Found] The property `padding` has already been defined``` – and the newly added styles have not been applied. Navigate to your terminal window and you will see the following compile time error:
 
-```
-[Override Found]
-
-The property `padding` is defined here:
-  /Users/callum-hart/Desktop/testingISS/src/beginnerTutorial/RestaurantCard.iss.jsx:7:5
-
-  5 |   <section className="card">
-  6 |     display: flex;
-> 7 |     padding: 15px;
-          ^^^^^^^
-
-And again here:
-  /Users/callum-hart/Desktop/testingISS/src/beginnerTutorial/RestaurantCard.iss.jsx:22:5
-
-  20 |   <section className="card" maxWidth="600">
-  21 |     margin: 0 20px;
-> 22 |     padding: 0px;
-           ^^^^^^^
-
-The first occurrence is overridden by the second.
-```
+*RestaurantCardOverrideFound.png*
 
 As the error message shows the `padding` has been defined twice. The `padding` set in the first occurance (line 7) is applied to the card on *all* screen-sizes. The `padding` set in the second occurance (line 22) is applied to the card on screens up to 600px wide. This means on screen widths between 0px and 600px the `padding` property is applied twice – which *would* result in an override, if it weren't for the compiler catching it.
 

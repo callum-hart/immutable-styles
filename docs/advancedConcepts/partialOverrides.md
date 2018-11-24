@@ -23,25 +23,7 @@ In the example above the first ruleset uses the shorthand property `margin`, whi
 
 The second ruleset attempts to override the left margin using the longhand property `margin-left`. However since the left margin already has a value (of 10px) it cannot be overriden. Immutable styles detects this partial override and throws the following compile time error:
 
-```
-[Partial Override Found]
-
-The property `margin` is defined here:
-  /Users/callum-hart/Desktop/testingISS/src/beginnerTutorial/RestaurantCard.iss.jsx:6:5
-
-  5 |   <dl className="address">
-> 6 |     margin: 20px 10;
-          ^^^^^^
-
-Which is overridden by `margin-left`:
-  /Users/callum-hart/Desktop/testingISS/src/beginnerTutorial/RestaurantCard.iss.jsx:11:7
-
-  10 |     <dl className="address">
-> 11 |       margin-left: 20px;
-             ^^^^^^^^^^^
-
-The first occurrence is overridden by the second.
-```
+*PartialOverrideFoundThree.png*
 
 Another example of partial overrides can be seen when both shorthand and longhand border properties target the same element:
 
@@ -74,25 +56,7 @@ The first ruleset uses the shorthand property `border`, which translated to comp
 
 The second ruleset attempts to override the left border color using the longhand property `border-left-color`, which again is caught by the compiler:
 
-```
-[Partial Override Found]
-
-The property `border` is defined here:
-  /Users/callum-hart/Desktop/testingISS/src/beginnerTutorial/RestaurantCard.iss.jsx:6:5
-
-  5 |   <img className="gravatar">
-> 6 |     border: 1px solid gainsboro;
-          ^^^^^^
-
-Which is overridden by `border-left-color`:
-  /Users/callum-hart/Desktop/testingISS/src/beginnerTutorial/RestaurantCard.iss.jsx:11:7
-
-  10 |     <img className="gravatar">
-> 11 |       border-left-color: tomato;
-             ^^^^^^^^^^^^^^^^^
-
-The first occurrence is overridden by the second.
-```
+*PartialOverrideFoundFour.png*
 
 Not all partial overrides are so easy to detect:
 
@@ -117,23 +81,4 @@ The first ruleset uses the shorthand property `font`, which translated to comput
 
 Fortunately immutable styles is aware that the `line-height` set by `font` in the first ruleset is overridden by the second ruleset:
 
-```
-[Partial Override Found]
-
-The property `font` is defined here:
-  /Users/callum-hart/Desktop/testingISS/src/beginnerTutorial/RestaurantCard.iss.jsx:6:5
-
-  5 |   <h1>
-> 6 |     font: 600 30px/2 sans-serif;
-          ^^^^
-
-Which is overridden by `line-height`:
-  /Users/callum-hart/Desktop/testingISS/src/beginnerTutorial/RestaurantCard.iss.jsx:11:7
-
-  10 |     <h1>
-> 11 |       line-height: 1em;
-             ^^^^^^^^^^^
-
-The first occurrence is overridden by the second.
-```
-
+*PartialOverrideFoundFive.png*

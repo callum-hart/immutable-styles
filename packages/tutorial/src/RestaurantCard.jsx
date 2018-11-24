@@ -8,9 +8,9 @@ const RestaurantCard = () => (
 
     <div className="details">
       <div className="stars">
-        <span className="shining">★</span>
-        <span className="shining">★</span>
-        <span className="shining">★</span>
+        <span>★</span>
+        <span>★</span>
+        <span>★</span>
         <span>★</span>
         <span>★</span>
       </div>

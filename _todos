@@ -1,7 +1,9 @@
 Todos:
 - Take screenshots for documentation
 - Add paths to any links in documentation
+- Add logo and header to README
 - Add README to packages/webpack-plugin
+- Organise relatedMaterial.md
 - Use GitBook for documentation?
 - Tidy up, delete docsOld, rehome _notes.md and specNext.jsx
 - Proof-read, spelling & grammar

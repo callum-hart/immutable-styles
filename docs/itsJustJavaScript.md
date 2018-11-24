@@ -31,7 +31,7 @@ const fontMedium = `
 ```
 
 ### Pre-processor Mixins
-*Not to be confused with immutable mixins*
+*Not to be confused with [immutable mixins]()*
 
 You can create your own:
 
@@ -85,7 +85,7 @@ const themes = {
 
 Compiling immutable styles server-side – and of course infrastructure permitting – would enable futher functionality, such as generating CSS specific to:
 
--  Experiments (AB testing)
+- ⚗️ Experiments (AB testing)
 - 🎌 Locale
 - 📱 Platform
 

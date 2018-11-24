@@ -16,7 +16,7 @@ When an unknown attribute is found:
 
 Throws:
 
-*Unknown-Attribute.png*
+*UnknownAttribute.png*
 
 ### Duplicate CSS Property
 
@@ -32,7 +32,7 @@ When a CSS property is defined more than once in same block.
 
 Throws:
 
-*Duplicate-CSS-Property.png*
+*DuplicateCSSProperty.png*
 
 ### Exact Override Found
 
@@ -53,7 +53,7 @@ When one style overrides another style.
 
 Throws:
 
-*Exact-Override-Found.png*
+*ExactOverrideFound.png*
 
 ### Partial Override Found
 
@@ -73,7 +73,7 @@ When one style partially overrides another style.
 
 Throws:
 
-*Partial-Override-Found.png*
+*PartialOverrideFound.png*
 
 ### Nested Media Query
 
@@ -83,7 +83,7 @@ When a media query is nested inside another media query.
 <footer minWidth="900">
   padding: 0 30px;
 
-  <p minWith="300">
+  <p minWidth="300">
     font-size: 1rem;
   </p>
 </footer>
@@ -91,7 +91,7 @@ When a media query is nested inside another media query.
 
 Throws:
 
-*Nested-Media-Query.png*
+*NestedMediaQuery.png*
 
 ### Element Property Mismatch
 
@@ -107,4 +107,4 @@ When an inheritable property is used by an invalid element type:
 
 Throws:
 
-*Element-Property-Mismatch.png*
+*ElementPropertyMismatch.png*

@@ -154,14 +154,19 @@ The key difference is that immutable styles are *compiled*. Just like Elms compi
 
 Imagine a designer has provided a styleguide that shows all primary buttons *should* look like this:
 
-*insert screenshot of button here*
+*PrimaryButton.png*
 
 In conventional CSS the rule-set would be:
 
 ```css
 .btn-primary {
-  background: cornflowerblue;
-  color: ivory;
+  padding: 10px 30px;
+  border: 1px solid #3B7AC9;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: 'Open Sans', sans-serif;
+  background: #4A96F8;
+  color: #FFFFFF;
 }
 ```
 
@@ -169,8 +174,13 @@ The equivalant immutable rule-set would be almost identical:
 
 ```jsx
 <button className="btn-primary">
-  background: cornflowerblue;
-  color: ivory;
+  padding: 10px 30px;
+  border: 1px solid #3B7AC9;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: 'Open Sans', sans-serif;
+  background: #4A96F8;
+  color: #FFFFFF;
 </button>
 ```
 
@@ -202,7 +212,7 @@ Attempting the same in immutable styes yeilds a different result. Overriding an 
 
 Modifying the background and text color of primary buttons inside elements with the class `promo` throws a compile time error:
 
-*insert screenshot of compile time error here*
+*PrimaryButtonOverrideFound.png*
 
 The compiler makes overriding styles impossible. Overrides are caught and prevented ahead of time. Compile time errors – such as the case above – are treated as failed builds, for which no CSS is generated. CSS is only generated for successful builds – those without compile time errors.
 

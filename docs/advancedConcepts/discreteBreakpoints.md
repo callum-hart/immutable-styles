@@ -52,25 +52,7 @@ The equivalent immutable ruleset for the logo would be:
 
 However this throws a compile time error, since on screens wider than 1000px the logos `font-size` is defined twice:
 
-```
-[Override Found]
-
-The property `font-size` is defined here:
-  /Users/callum-hart/Desktop/testingISS/src/beginnerTutorial/RestaurantCard.iss.jsx:6:5
-
-  5 |   <a className="logo" minWidth="500">
-> 6 |     font-size: 16px;
-          ^^^^^^^^^
-
-And again here:
-  /Users/callum-hart/Desktop/testingISS/src/beginnerTutorial/RestaurantCard.iss.jsx:10:5
-
-  9 |   <a className="logo" minWidth="1000">
-> 10 |     font-size: 16px;
-           ^^^^^^^^^
-
-The first occurrence is overridden by the second.
-```
+*IndiscreteBreakpointOverrideFound.png*
 
 The solution is to partition the media queries into discrete breakpoints (media queries that do not overlap) by adding a `maxWidth` of 999px to the first rule-set:
 

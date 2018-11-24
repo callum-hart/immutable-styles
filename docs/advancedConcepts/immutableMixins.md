@@ -60,7 +60,7 @@ Immutable mixins support child styles:
 </mixins.button>
 ```
 
-The example above targets elements of type `button` that have the class `btn-primary`. In addition to the three declarations returned from the mixin, the target element will have a background color of `slateblue`. 
+The example above targets elements of type `button` that have the class `btn-primary`. In addition to the three declarations returned from the mixin, the target element will have a background color of `slateblue`.
 
 The background color can be changed to `darkslateblue` on hover using the `pseudo` attribute:
 
@@ -132,17 +132,4 @@ Immutable mixins come with the same override protection as normal immutable rule
 
 The example above attempts to override the `padding` property defined by the `button` mixin, which throws a compile time error:
 
-```
-[Duplicate Property]
-  /Users/callum-hart/Desktop/testingISS/src/beginnerTutorial/App.iss.jsx:47:5
-
-The property `padding` has been defined twice:
-
-  46 |   <mixins.button className="btn-secondary">
-> 47 |     padding: 20px;
-           ^^^^^^^
-
-The first occurrence is overridden by the second.
-
-Hint: remove either one.
-```
+*MixinOverrideFound.png*

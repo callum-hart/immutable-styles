@@ -17,7 +17,7 @@ The designer has returned to the styleguide and added a few different button var
 
 Here is our fictitious styleguide:
 
-*screenshot of styleguide*
+*ButtonStyleguide.png*
 
 From the styleguide above we can identify common styles shared among all buttons:
 
