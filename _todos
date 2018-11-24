@@ -1,11 +1,9 @@
 Todos:
-Documentation
-- Recipies
-  - Grouped Selectors (if possible)
-Release next version
-- Use lerna for packages DONE
-  - packages/core DONE
-  - packages/webpack-plugin DONE
-  - packages/tutorial DONE
-  - packages/doc-examples?
+- Take screenshots for documentation
+- Add paths to any links in documentation
+- Proof-read, spelling & grammar
 - Use GitBook for documentation?
+- Tidy up, delete docsOld, rehome _notes.md and specNext.jsx
+- Release 1.0.0 🎆
+- Explore grouped selectors (if time)
+
