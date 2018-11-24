@@ -154,7 +154,14 @@ The key difference is that immutable styles are *compiled*. Just like Elms compi
 
 Imagine a designer has provided a styleguide that shows all primary buttons *should* look like this:
 
-*PrimaryButton.png*
+<p align="center">
+  <img src="../docs/_images/PrimaryButton.png"
+    width="710px"
+    height="210px"
+    alt="Screenshot of primary button"
+    title="Screenshot of primary button"
+  />
+</p>
 
 In conventional CSS the rule-set would be:
 
@@ -212,7 +219,14 @@ Attempting the same in immutable styes yeilds a different result. Overriding an 
 
 Modifying the background and text color of primary buttons inside elements with the class `promo` throws a compile time error:
 
-*PrimaryButtonOverrideFound.png*
+<p align="center">
+  <img src="../docs/_images/PrimaryButtonOverrideFound.png"
+    width="785px"
+    height="430px"
+    alt="Screenshot of primary button override compile time error"
+    title="Screenshot of primary button override compile time error"
+  />
+</p>
 
 The compiler makes overriding styles impossible. Overrides are caught and prevented ahead of time. Compile time errors – such as the case above – are treated as failed builds, for which no CSS is generated. CSS is only generated for successful builds – those without compile time errors.
 
