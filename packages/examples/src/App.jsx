@@ -2,11 +2,15 @@ import React from 'react';
 
 import "./App.iss.jsx";
 
-import GroupedSelectors from './groupedSelectors/GroupedSelectors';
+import SharingStylesWithMixins from './sharingStylesWithMixins/SharingStylesWithMixins';
+// import SharingStylesWithDetachedRulesets from './sharingStylesWithDetachedRulesets/SharingStylesWithDetachedRulesets';
+// import GroupedSelectors from './groupedSelectors/GroupedSelectors';
 
 const App = () => (
   <section className="app">
-    <GroupedSelectors />
+    <SharingStylesWithMixins />
+    {/* <SharingStylesWithDetachedRulesets /> */}
+    {/* <GroupedSelectors /> */}
   </section>
 )
 
