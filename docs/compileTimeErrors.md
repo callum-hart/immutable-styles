@@ -14,7 +14,7 @@ When an unknown attribute is found:
 </p>
 ```
 
-Throws:
+The ruleset above throws the following compile time error:
 
 <p align="center">
   <img src="../docs/_images/UnknownAttribute.png"
@@ -37,7 +37,7 @@ When a CSS property is defined more than once in same block.
 </h1>
 ```
 
-Throws:
+The ruleset above throws the following compile time error:
 
 <p align="center">
   <img src="../docs/_images/DuplicateCSSProperty.png"
@@ -65,7 +65,7 @@ When one style overrides another style.
 </div>
 ```
 
-Throws:
+The rulesets above throws the following compile time error:
 
 <p align="center">
   <img src="../docs/_images/ExactOverrideFound.png"
@@ -92,7 +92,7 @@ When one style partially overrides another style.
 </footer>
 ```
 
-Throws:
+The rulesets above throws the following compile time error:
 
 <p align="center">
   <img src="../docs/_images/PartialOverrideFound.png"
@@ -117,7 +117,7 @@ When a media query is nested inside another media query.
 </footer>
 ```
 
-Throws:
+The ruleset above throws the following compile time error:
 
 <p align="center">
   <img src="../docs/_images/NestedMediaQuery.png"
@@ -140,7 +140,7 @@ When an inheritable property is used by an invalid element type:
 
 *See [Strict Inheritance]() for more details.*
 
-Throws:
+The ruleset above throws the following compile time error:
 
 <p align="center">
   <img src="../docs/_images/ElementPropertyMismatch.png"

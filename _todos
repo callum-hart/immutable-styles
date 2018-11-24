@@ -1,11 +1,13 @@
 Todos:
-- Take screenshots for documentation
+- Take screenshots for documentation IN PROGRESS
 - Add paths to any links in documentation
 - Add logo and header to README
 - Add README to packages/webpack-plugin
 - Organise relatedMaterial.md
-- Use GitBook for documentation?
+- Rename examples package to react-examples
+- Add html-examples package to show that ISS isn't coupled to React
 - Tidy up, delete docsOld, rehome _notes.md and specNext.jsx
+- Use GitBook for documentation?
 - Proof-read, spelling & grammar
 - Release 1.0.0 🎆
 - Explore grouped selectors (if time)
