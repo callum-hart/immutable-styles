@@ -1,15 +1,5 @@
-# Grouped Selectors
-
-> ⚗️ Experimental.
-
-```html
-<button className="btn">btn</button>
-<a href="#" className="btn">btn</a>
-```
-
-```jsx
 /** @jsx createStyle */
-import { createStyle, createMixin } from 'immutable-styles';
+import { createStyle, createMixin } from '@immutable-styles/core';
 
 const createGroup = Tag => createMixin(
   <Tag>
@@ -38,4 +28,3 @@ module.exports = [
     text-decoration: none;
   </a>
 ];
-```

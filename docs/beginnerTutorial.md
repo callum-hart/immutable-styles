@@ -21,10 +21,10 @@ npm install
 Then start the application:
 
 ```
-npm start
+npm run start
 ```
 
-And navigate to [localhost:3000](http://localhost:3000).
+And navigate to [localhost:8080](http://localhost:8080).
 
 In its current state the restaurant card looks rather unappetizing since its markup is unstyled:
 
