@@ -16,7 +16,14 @@ When an unknown attribute is found:
 
 Throws:
 
-*UnknownAttribute.png*
+<p align="center">
+  <img src="../docs/_images/UnknownAttribute.png"
+    width="780px"
+    height="241px"
+    alt="Unknown Attribute compile time error"
+    title="Unknown Attribute compile time error"
+  />
+</p>
 
 ### Duplicate CSS Property
 
@@ -32,7 +39,14 @@ When a CSS property is defined more than once in same block.
 
 Throws:
 
-*DuplicateCSSProperty.png*
+<p align="center">
+  <img src="../docs/_images/DuplicateCSSProperty.png"
+    width="780px"
+    height="307px"
+    alt="Duplicate CSS Property compile time error"
+    title="Duplicate CSS Property compile time error"
+  />
+</p>
 
 ### Exact Override Found
 
@@ -53,7 +67,14 @@ When one style overrides another style.
 
 Throws:
 
-*ExactOverrideFound.png*
+<p align="center">
+  <img src="../docs/_images/ExactOverrideFound.png"
+    width="785px"
+    height="359px"
+    alt="Exact Override Found compile time error"
+    title="Exact Override Found compile time error"
+  />
+</p>
 
 ### Partial Override Found
 
@@ -73,7 +94,14 @@ When one style partially overrides another style.
 
 Throws:
 
-*PartialOverrideFound.png*
+<p align="center">
+  <img src="../docs/_images/PartialOverrideFound.png"
+    width="785px"
+    height="340px"
+    alt="Partial Override Found compile time error"
+    title="Partial Override Found compile time error"
+  />
+</p>
 
 ### Nested Media Query
 
@@ -91,7 +119,14 @@ When a media query is nested inside another media query.
 
 Throws:
 
-*NestedMediaQuery.png*
+<p align="center">
+  <img src="../docs/_images/NestedMediaQuery.png"
+    width="785px"
+    height="306px"
+    alt="Nested Media Query compile time error"
+    title="Nested Media Query compile time error"
+  />
+</p>
 
 ### Element Property Mismatch
 
@@ -107,4 +142,11 @@ When an inheritable property is used by an invalid element type:
 
 Throws:
 
-*ElementPropertyMismatch.png*
+<p align="center">
+  <img src="../docs/_images/ElementPropertyMismatch.png"
+    width="785px"
+    height="299px"
+    alt="Element Property Mismatch compile time error"
+    title="Element Property Mismatch compile time error"
+  />
+</p>
