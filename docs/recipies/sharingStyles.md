@@ -17,7 +17,14 @@ The designer has returned to the styleguide and added a few different button var
 
 Here is our fictitious styleguide:
 
-*ButtonStyleguide.png*
+<p align="center">
+  <img src="../../docs/_images/ButtonStyleguide.png"
+    width="710px"
+    height="420px"
+    alt="Screenshot of button styleguide"
+    title="Screenshot of button styleguide"
+  />
+</p>
 
 From the styleguide above we can identify common styles shared among all buttons:
 
