@@ -1,9 +1,9 @@
 {
-  "name": "@immutable-styles/examples",
+  "name": "@immutable-styles/react-examples",
   "version": "1.0.0",
-  "description": "Immutable styles examples",
+  "description": "Examples of using immutable styles with React",
   "author": "Callum Hart",
-  "license": "ISC",
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --config ./webpack.config.js --mode development",
