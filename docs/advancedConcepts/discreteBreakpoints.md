@@ -52,9 +52,16 @@ The equivalent immutable ruleset for the logo would be:
 
 However this throws a compile time error, since on screens wider than 1000px the logos `font-size` is defined twice:
 
-*IndiscreteBreakpointOverrideFound.png*
+<p align="center">
+  <img src="../../docs/_images/IndiscreteBreakpointOverrideFound.png"
+    width="785px"
+    height="340px"
+    alt="Screenshot of indiscrete breakpoint"
+    title="Screenshot of indiscrete breakpoint"
+  />
+</p>
 
-The solution is to partition the media queries into discrete breakpoints (media queries that do not overlap) by adding a `maxWidth` of 999px to the first rule-set:
+The solution is to partition the media queries into discrete breakpoints (media queries that do not overlap) by adding a `maxWidth` of 999px to the first ruleset:
 
 ```jsx
 <a className="logo" minWidth="500" maxWidth="999">
@@ -78,7 +85,7 @@ Since the media queries no longer overlap switching the order of rulesets no lon
 </a>
 ```
 
-<center>*</center>
+<p align="center">*</p>
 
 It is also worth noting that in regular CSS media queries are also dependant on specificity:
 
@@ -110,9 +117,9 @@ The equivalent immutable ruleset would be:
 </a>
 ```
 
-However this throws a compile time error, since on screens wider than 500px the first rule-set overrides the second rule-set.
+However this throws a compile time error, since on screens wider than 500px the first ruleset overrides the second ruleset.
 
-<center>*</center>
+<p align="center">*</p>
 
 Discrete breakpoints makes media queries more predictable, since there’s no need to orchestrate overrides. Omitting overrides has made the order of media queries and their specificity irrelevant. Only the breakpoint size determines what styles apply which is far more intuitive and deterministic.
 

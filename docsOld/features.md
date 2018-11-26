@@ -1,6 +1,6 @@
 ## Features
 
-Since Immutable Styles is just JavaScript we get the niceties of CSS pre-processors for free. Leveraging ES6 template literals enables variables, detached rule-sets, mixins, and theming with little to no extra cost.
+Since Immutable Styles is just JavaScript we get the niceties of CSS pre-processors for free. Leveraging ES6 template literals enables variables, detached rulesets, mixins, and theming with little to no extra cost.
 
 ### Variables
 
@@ -15,7 +15,7 @@ createStyle(
 
 ```
 
-### Detached Rule-sets
+### Detached Rulesets
 
 ```js
 const mediumFont = `

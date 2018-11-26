@@ -10,9 +10,16 @@ Duplicate property detection prevents overrides from happening within the same r
 </section>
 ```
 
-In the example above the `background` property has been defined twice in the same ruleset. A compile time error catches the duplicate property and throws the following:
+In the example above the `background` property has been defined twice within the same ruleset. A compile time error catches the duplicate property and throws the following:
 
-*DuplicateCSSPropertyTwo.png*
+<p align="center">
+  <img src="../../docs/_images/DuplicateCSSPropertyTwo.png"
+    width="780px"
+    height="306px"
+    alt="Duplicate CSS Property compile time error"
+    title="Duplicate CSS Property compile time error"
+  />
+</p>
 
 <center>*</center>
 
@@ -28,6 +35,13 @@ It should be noted that if a property *partially overrides* another property in 
 
 In the example above both `margin` and `margin-bottom` have been used. Since the longhand property `margin-bottom` overrides the shorthand property `margin` a partial override error is thrown:
 
-*PartialOverrideFoundTwo.png*
+<p align="center">
+  <img src="../../docs/_images/PartialOverrideFoundTwo.png"
+    width="780px"
+    height="376px"
+    alt="Partial Override Found compile time error"
+    title="Partial Override Found compile time error"
+  />
+</p>
 
 More information on partial overrides can be [found here]().

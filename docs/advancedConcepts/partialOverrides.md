@@ -23,7 +23,14 @@ In the example above the first ruleset uses the shorthand property `margin`, whi
 
 The second ruleset attempts to override the left margin using the longhand property `margin-left`. However since the left margin already has a value (of 10px) it cannot be overriden. Immutable styles detects this partial override and throws the following compile time error:
 
-*PartialOverrideFoundThree.png*
+<p align="center">
+  <img src="../../docs/_images/PartialOverrideFoundThree.png"
+    width="785px"
+    height="345px"
+    alt="Partial Override Found compile time error"
+    title="Partial Override Found compile time error"
+  />
+</p>
 
 Another example of partial overrides can be seen when both shorthand and longhand border properties target the same element:
 
@@ -56,7 +63,14 @@ The first ruleset uses the shorthand property `border`, which translated to comp
 
 The second ruleset attempts to override the left border color using the longhand property `border-left-color`, which again is caught by the compiler:
 
-*PartialOverrideFoundFour.png*
+<p align="center">
+  <img src="../../docs/_images/PartialOverrideFoundFour.png"
+    width="780px"
+    height="342px"
+    alt="Partial Override Found compile time error"
+    title="Partial Override Found compile time error"
+  />
+</p>
 
 Not all partial overrides are so easy to detect:
 
@@ -81,4 +95,11 @@ The first ruleset uses the shorthand property `font`, which translated to comput
 
 Fortunately immutable styles is aware that the `line-height` set by `font` in the first ruleset is overridden by the second ruleset:
 
-*PartialOverrideFoundFive.png*
+<p align="center">
+  <img src="../../docs/_images/PartialOverrideFoundFive.png"
+    width="785px"
+    height="343px"
+    alt="Partial Override Found compile time error"
+    title="Partial Override Found compile time error"
+  />
+</p>

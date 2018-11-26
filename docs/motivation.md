@@ -14,8 +14,8 @@ Overrides make CSS **unpredictable** because:
 4. The longevity of an override is unknown. Just because a style wins today doesn’t mean it always will.
 5. They obfuscate developer intent. It’s hard to differentiate between an intentional and unintentional override (which is open to interpretation).
 
-Parallels can be drawn between mutable state in programs and overrides in CSS. When a style overrides another it mutates (changes) the value of the original style. Over recent years the front-end community has seen a huge shift towards removing mutable state in our applications - yet the way we approach CSS has remained as its always been.
+Parallels can be drawn between mutable state in programs and overrides in CSS. When a style overrides another it mutates (changes) the value of the original style. Over recent years the front-end community has seen a huge shift towards removing mutable state from how we *build* applications, yet the way we *style* applications has remained the same.
 
-But why should the way we build applications be different to how we style them? We should unite construction with cosmetics. Immutable Styles is an attempt to remove mutation (a.k.a overrides) and thus complexity from CSS.
+But why should the way we build applications be different to how we style them? We should unite construction with cosmetics. Immutable styles is an attempt to remove mutation (a.k.a overrides) and thus complexity from CSS.
 
 You can read more on this topic in the blog post: [CSS Overrides: Friend or Foe?](http://www.callumhart.com/blog/css-overrides-friend-or-foe)

@@ -1,5 +1,5 @@
 /*
- Testing interpolation for things such as variables, detached rule-sets.
+ Testing interpolation for things such as variables, detached rulesets.
 */
 
 const { createStyle, tearDown } = require('../index.js');
@@ -103,7 +103,7 @@ test('[interpolation] Variable used by property value', () => {
 });
 
 
-test('[interpolation] Detached CSS rule-set', () => {
+test('[interpolation] Detached CSS ruleset', () => {
   const headingStyles = 'font-family: "Fira Code"; font-size: 30px; font-weight: bold;';
 
   const input = createStyle(

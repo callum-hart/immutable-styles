@@ -41,7 +41,7 @@ const groups = {
   button: createGroup('button')
 };
 
-module.exports = [
+export default [
   <groups.link className="btn" />,
   <a className="btn">
     text-decoration: none;

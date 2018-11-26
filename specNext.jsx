@@ -13,7 +13,7 @@
 - Different types of extend, shallow & deep:
    - shallowExtend: copy styles from root node
    - deepExtend: copy styles from root node & its children
-- Only use direct decendant selector (>) if rule-set contains inheritable CSS property.
+- Only use direct decendant selector (>) if ruleset contains inheritable CSS property.
   - Will this make it harder to detect overrides?
   - Will this make styles less resilient to changes in HTML?
 */ }

@@ -18,7 +18,7 @@ Catch CSS bugs ahead of time
 
 ## What is Immutable Styles?
 
-Immutable Styles is a cross between a CSS pre-processor and a CSS in-JS library. Styles are written using JavaScript which are subsequently compiled to CSS. The library has 2 goals:
+Immutable styles is a cross between a CSS pre-processor and a CSS in-JS library. Styles are written using JavaScript which are subsequently compiled to CSS. The library has 2 goals:
 
 1. Make styles for the web **predictable**
 2. Make styles for the web **robust**
@@ -30,4 +30,4 @@ If you have ever encountered styles that were neither expected nor desired you p
 - c) Styles overriding other styles
 - d) Elements inheriting undesirable styles
 
-As the name suggests the library uses immutability to help remove these side effects. With Immutable Styles all CSS rules are immutable. An immutable CSS rule cannot change once created, which means it can **never** be overridden. This alone solves a, b and c (we will see the solution to d later).
+As the name suggests the library uses immutability to help remove these side effects. With Immutable styles all CSS rules are immutable. An immutable CSS rule cannot change once created, which means it can **never** be overridden. This alone solves a, b and c (we will see the solution to d later).

@@ -2,7 +2,14 @@
 
 Strict inheritance prevents inheritable CSS properties from being inherited. At first glance this may seem like an odd feature, however the current CSS inheritance model can quickly get out-of-hand, and thus become unpredictable. An example taken from one of the top 30 most visited sites on [Alexa](alexa.com/topsites) can be seen below:
 
-*WhatTheFont.png*
+<p align="center">
+  <img src="../../docs/_images/WhatTheFont.png"
+    width="772px"
+    height="718px"
+    alt="Screenshot of font-size applied ten times"
+    title="Screenshot of font-size applied ten times"
+  />
+</p>
 
 Having 10 `font-size` declarations is either the result of 10 instances where the developer(s) intent was to override the font-size, or more likey is the result of poorly scoped selectors. Either way the `font-size` of the target element is extremely brittle.
 
@@ -20,7 +27,14 @@ Strict inheritance avoids problems like this. With strict inheritance, each inhe
 
 Attempting to do so throws a compile time error:
 
-*ElementPropertyMismatchTwo.png*
+<p align="center">
+  <img src="../../docs/_images/ElementPropertyMismatchTwo.png"
+    width="785px"
+    height="300px"
+    alt="Element Property Mismatch compile time error"
+    title="Element Property Mismatch compile time error"
+  />
+</p>
 
 With strict inheritance applying `font-size` to a `div` is too vauge. Instead `font-size` should be applied to a textual element:
 

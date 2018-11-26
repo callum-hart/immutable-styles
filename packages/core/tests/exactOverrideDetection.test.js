@@ -210,7 +210,7 @@ test('Override not found when equal child nodes have different parent', () => {
 });
 
 
-test('Override found in same rule-set', () => {
+test('Override found in same ruleset', () => {
   const input = createStyle(
     'h1',
     {
@@ -224,7 +224,7 @@ test('Override found in same rule-set', () => {
 });
 
 
-test('Override found in detached CSS rule-set', () => {
+test('Override found in detached CSS ruleset', () => {
   const headingStyles = 'font-family: "Fira Code"; font-size: 30px; font-weight: bold;';
   const input = createStyle(
     'h1',

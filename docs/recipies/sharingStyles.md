@@ -73,7 +73,7 @@ const button = {
   /* ... */
 };
 
-module.exports = [
+export default [
   <button.default className="btn-primary">
     background: #4A96F8;
     border-color: #3B7AC9;
@@ -123,7 +123,7 @@ const button = {
   )
 };
 
-module.exports = [
+export default [
   // Primary Button
 
   <button.default className="btn-primary">
@@ -193,7 +193,7 @@ const fontExtraLarge = `
 
 // usage:
 
-module.exports = [
+export default [
   <h1>
     { fontExtraLarge }
   </h1>,

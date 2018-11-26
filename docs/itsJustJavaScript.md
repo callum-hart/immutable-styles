@@ -1,6 +1,6 @@
 # It's Just JavaScript
 
-Since immutable styles is just JavaScript it gets the niceties of CSS pre-processors for free. Leveraging everyday JavaScript enables variables, detached rule-sets, *pre-processor* mixins, and theming with little to no extra cost.
+Since immutable styles is just JavaScript it gets the niceties of CSS pre-processors for free. Leveraging everyday JavaScript enables variables, detached rulesets, *pre-processor* mixins, and theming with little to no extra cost.
 
 ### Variables
 

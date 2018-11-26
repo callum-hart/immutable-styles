@@ -58,7 +58,7 @@ You may have noticed `RestaurantCard.iss.jsx` uses a dual file extension of `.is
 1|  /** @jsx createStyle */
 2|  import { createStyle } from 'immutable-styles';
 3|
-4|  module.exports = [];
+4|  export default [];
 ```
 
 Line 2 imports `createStyle` from immutable styles – which is a function that generates immutable rulesets. On line 1 the `createStyle` function is mapped to JSX – meaning any JSX tags in this file will be transpiled to `createStyle` function calls. Line 4 *will* export our immutable rulesets.
@@ -70,7 +70,7 @@ Lets create our first immutable ruleset. Since it's our first lets make it speci
 Replace line 4 of  `RestaurantCard.iss.jsx` with the following snippet:
 
 ```jsx
-module.exports = [
+export default [
   <div className="stars">
     margin-bottom: 10px;
 
@@ -97,7 +97,7 @@ Save the file – and you should see the following:
 Next, lets focus on the layout of the restaurant card. The details – rating, name, opening time and summary – should sit to the right of the image. Add the following to `RestaurantCard.iss.jsx`:
 
 ```jsx
-module.exports = [
+export default [
   <section className="card">
     display: flex;
   </section>,

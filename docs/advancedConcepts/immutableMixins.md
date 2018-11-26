@@ -132,4 +132,11 @@ Immutable mixins come with the same override protection as normal immutable rule
 
 The example above attempts to override the `padding` property defined by the `button` mixin, which throws a compile time error:
 
-*MixinOverrideFound.png*
+<p align="center">
+  <img src="../../docs/_images/MixinOverrideFound.png"
+    width="785px"
+    height="252px"
+    alt="Override Found in mixin compile time error"
+    title="Override Found in mixin compile time error"
+  />
+</p>

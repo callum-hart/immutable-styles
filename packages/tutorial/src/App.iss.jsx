@@ -1,7 +1,7 @@
 /** @jsx createStyle */
 import { createStyle } from '@immutable-styles/core';
 
-module.exports = [
+export default [
   <html>
     height: 100%;
   </html>,

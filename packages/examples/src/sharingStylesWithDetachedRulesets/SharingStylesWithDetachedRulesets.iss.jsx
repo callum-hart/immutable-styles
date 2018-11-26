@@ -27,7 +27,7 @@ const fontExtraLarge = `
 
 // usage:
 
-module.exports = [
+export default [
   <h1>
     { fontExtraLarge }
   </h1>,
