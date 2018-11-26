@@ -1,4 +1,5 @@
-# Immutable Styles
+<h1 align="center"><img src="./docs/_images/logo.png" width="130px" height="135px" /><br>Immutable Styles</h1>
+
 Catch CSS bugs ahead of time
 
 > 📖 **Immutable Styles** | ɪˈmjuːtəb(ə)l | stʌɪl |
