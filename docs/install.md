@@ -1,4 +1,4 @@
-# Immutable Styles Webpack Plugin
+# Install
 
 install dependencies:
 - immutable styles

@@ -47,8 +47,8 @@ class ImmutableStylesPlugin {
   }
 
   apply(compiler) {
-    compiler.plugin('compilation', compilation => {
-      compilation.plugin('finish-modules', modules => {
+    compiler.hooks.compilation.tap('compilation', compilation => {
+      compilation.hooks.finishModules.tap('finish-modules', modules => {
         // Discard the previous AST and build a new one. This is because (like CSS)
         // immutable styles are global. A style in fileA can effect styles in fileB,
         // fileC, fileD et-cetera.
