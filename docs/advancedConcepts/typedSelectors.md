@@ -66,4 +66,4 @@ The equivalant ruleset for the `btn` class would be:
 </button>
 ```
 
-One of the caveats of JSX is a tag can only have one element type. This means grouped CSS selecters (such as `a.btn, button.btn {}`) are not *possible* – however immutable styles provides alternative ways to share styles across similar rulesets via [mixins]() or [detached rulesets]().
+One of the caveats of JSX is a tag can only have one element type. This means grouped CSS selecters (such as `a.btn, button.btn {}`) are not *possible*. However immutable styles provides an equivalent to grouped selectors via [detached rulesets]().

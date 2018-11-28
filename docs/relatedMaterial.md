@@ -16,3 +16,7 @@ Articles and videos that have directly or indirectly inspired and influenced imm
 - [Inventing on Principle](https://youtu.be/PUv66718DII)
 - [Simplicity Matters by Rich Hickey](https://youtu.be/rI8tNMsozo0)
 - [Making Impossible States Impossible](https://youtu.be/IcgmSRJHu_8)
+
+## Code
+
+TODO: add link to mono proof of concepts

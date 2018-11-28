@@ -26,29 +26,50 @@ import { createStyle, createMixin } from '@immutable-styles/core';
  *  }
  */
 
-const createGroup = Tag => createMixin(
-  <Tag>
-    padding: 8px 12px;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 14px;
-    background: cadetblue;
-    color: ivory;
-  </Tag>
-);
+// const createBtn = Tag => createMixin(
+//   <Tag>
+//     padding: 8px 12px;
+//     font-family: 'Open Sans', sans-serif;
+//     font-size: 14px;
+//     background: cadetblue;
+//     color: ivory;
+//   </Tag>
+// );
 
-const groups = {
-  link: createGroup('a'),
-  button: createGroup('button')
-};
+// const Link = createBtn('a');
+// const Button = createBtn('button');
+
+// export default [
+//   <Link className="btn" />,
+//   <a className="btn">
+//     text-decoration: none;
+//   </a>,
+
+//   <Button className="btn" />,
+//   <button className="btn">
+//     border: none;
+//     cursor: pointer;
+//   </button>
+// ];
+
+// Could achieve this via detached rulesets:
+
+const btnStyles = `
+  padding: 8px 12px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  background: cadetblue;
+  color: ivory;
+`;
 
 export default [
-  <groups.link className="btn" />,
   <a className="btn">
+    { btnStyles }
     text-decoration: none;
   </a>,
 
-  <groups.button className="btn" />,
   <button className="btn">
+    { btnStyles }
     border: none;
     cursor: pointer;
   </button>

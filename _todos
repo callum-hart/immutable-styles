@@ -1,9 +1,7 @@
 Todos:
-- Add README to docs/install IN PROGRESS
+- Proof-read, spelling & grammar
 - Add paths to any links in documentation
 - Use GitBook for documentation?
 - Tidy up, delete docsOld, rehome _notes.md and specNext.jsx
-- Proof-read, spelling & grammar
 - Tag commit
 - Release 1.0.0 🎆
-- Explore grouped selectors (if time)

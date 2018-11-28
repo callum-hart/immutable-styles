@@ -17,21 +17,28 @@ Although fairly trivial, the restaurant card provides the perfect fit for illust
 
 ### Setup
 
-The first step is to clone the [turorial]():
+The first step is to clone the [immutable styles ]() repository:
 
 ```
 git clone git@github.com:callum-hart/immutable-styles.git
+```
+
+Then navigate to the `tutorial` directory and install its dependencies:
+
+```
 cd immutable-styles/packages/tutorial
 npm install
 ```
 
-Then start the application:
+And then start the application:
 
 ```
 npm run start
 ```
 
-And navigate to [localhost:8080](http://localhost:8080).
+Finally open [localhost:8080](http://localhost:8080) in your favourite browser.
+
+<p align="center">*</p>
 
 In its current state the restaurant card looks rather unappetizing since its markup is unstyled:
 

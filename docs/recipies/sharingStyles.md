@@ -217,3 +217,51 @@ export default [
   </strong>
 ];
 ```
+
+### Grouped CSS Selectors
+
+Detached rulesets offer an alternative to grouped CSS selectors. In the [Typed Selectors]() guide the `btn` class could be used by elements of types `a` and `button`:
+
+```css
+a.btn,
+button.btn {
+  font-family: "Operator Mono SSm";
+  font-size: 14px;
+  background: cadetblue;
+  color: ivory;
+}
+
+a.btn {
+  text-decoration: none;
+}
+
+button.btn {
+  border: none;
+  cursor: pointer;
+}
+```
+
+The equivalent rulesets in immutable styles would be:
+
+```jsx
+const btnStyles = `
+  padding: 8px 12px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  background: cadetblue;
+  color: ivory;
+`;
+
+export default [
+  <a className="btn">
+    { btnStyles }
+    text-decoration: none;
+  </a>,
+
+  <button className="btn">
+    { btnStyles }
+    border: none;
+    cursor: pointer;
+  </button>
+];
+```
