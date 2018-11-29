@@ -1,5 +1,26 @@
 Todos:
 - Proof-read, spelling & grammar
+  - README ✅
+  - Motivation ✅
+  - The Basics ✅
+  - Beginner Tutorial ✅
+  - Install ✅
+  - It's Just JavaScript
+  - Compile Time Errors
+  - Advanced Concepts
+    - Discrete Breakpoints
+    - Typed Selectors
+    - Explicit Selectors
+    - Strict Inheritance
+    - Partial Overrides
+    - Duplicate Property Detection
+    - Immutable Mixins
+  - Recipies
+    - Sharing Styles
+  - Change Log
+  - Related Material
+- Todo comment in relatedMaterial
+- Add FAQ, licence to README?
 - Add paths to any links in documentation
 - Use GitBook for documentation?
 - Tidy up, delete docsOld, rehome _notes.md and specNext.jsx

@@ -40,7 +40,7 @@ Finally open [localhost:8080](http://localhost:8080) in your favourite browser.
 
 <p align="center">*</p>
 
-In its current state the restaurant card looks rather unappetizing since its markup is unstyled:
+In its current state the restaurant card looks rather unappetising since its markup is unstyled:
 
 <p align="center">
   <img src="../docs/_images/RestaurantCardStageOne.png"
@@ -101,7 +101,7 @@ Save the file – and you should see the following:
   />
 </p>
 
-Next, lets focus on the layout of the restaurant card. The details – rating, name, opening time and summary – should sit to the right of the image. Add the following to `RestaurantCard.iss.jsx`:
+Next, lets focus on the layout of the restaurant card. The details – the restaurants: rating, name, opening time and summary – should sit to the right of the image. Add the following to `RestaurantCard.iss.jsx`:
 
 ```jsx
 export default [
@@ -225,7 +225,7 @@ With that in mind, add a ruleset for stars with the class "shining":
 
 The restaurant card is looking pretty good so far, however it's currently a bit static. It would be nice to add a hover effect and make sure the layout is optimized for mobile devices.
 
-Firstly lets add the hover effect, which is achieved using the **`pseudo`** JSX attribute (previously introduced in ["The Basics"]()):
+Firstly lets add the hover effect, which is achieved using the **`pseudo`** JSX attribute (previously introduced in ["The Basics"]() guide):
 
 ```jsx
 <section className="card">
