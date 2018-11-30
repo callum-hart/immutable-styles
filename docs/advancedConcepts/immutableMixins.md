@@ -1,6 +1,6 @@
 # Immutable Mixins
 
-An immutable mixin is a function that takes an immutable ruleset and returns a new immutable ruleset. Immutable mixins help share common styles used accross similar rulesets. Here is an immutable mixin in its simplest form:
+An immutable mixin is a function that takes an immutable ruleset and returns a new immutable ruleset. Immutable mixins help share common styles used across similar rulesets. Here is an immutable mixin in its simplest form:
 
 ```jsx
 import { createStyle, createMixin } from 'immutable-styles';
@@ -14,13 +14,13 @@ const Button = createMixin(
 );
 ```
 
-The example above creates a mixin and assigns it to the variable `Button`. The `Button` variable can be included in JSX just like any other immutable ruleset:
+The example above creates a mixin and assigns it to the variable `Button`. This `Button` variable can be included in JSX just like any other immutable ruleset:
 
 ```jsx
 <Button />
 ```
 
-The example above targets elements of type `button` that do not have a class. The target element will recieve the three declarations: `padding`, `border-radius` and `font-size` returned from the mixin.
+The example above targets elements of type `button` that do not have a class. The target element will receive the three declarations: `padding`, `border-radius` and `font-size` returned from the mixin.
 
 A useful pattern is to namespace immutable mixins so they are easier to identify. The following mixin is exactly the same as the `Button` example above:
 
@@ -35,7 +35,7 @@ const mixins = {
   )
 }
 
-<!-- Usage: -->
+// Usage:
 
 <mixins.button />
 ```
@@ -48,7 +48,7 @@ Immutable mixins support the same [JSX attribute]() as immutable rulesets:
 <mixins.button className="btn" />
 ```
 
-The example above targets elements of type `button` that have the class `btn`. The target element will recieve the three declarations (`padding`, `border-radius`, `font-size`) returned from the mixin.
+The example above targets elements of type `button` that have the class `btn`. The target element will receive the three declarations (`padding`, `border-radius`, `font-size`) returned from the mixin.
 
 ### Children
 
@@ -60,7 +60,7 @@ Immutable mixins support child styles:
 </mixins.button>
 ```
 
-The example above targets elements of type `button` that have the class `btn-primary`. In addition to the three declarations returned from the mixin, the target element will have a background color of `slateblue`.
+The example above targets elements of type `button` that have the class `btn-primary`. In addition to the three declarations returned from the mixin, the target element will also have a background color of `slateblue`.
 
 The background color can be changed to `darkslateblue` on hover using the `pseudo` attribute:
 
@@ -102,7 +102,7 @@ Styles nested within mixins can be used like any other immutable ruleset:
 </mixins.button>
 ```
 
-The example above targets elements of type `button` that have the class `btn-primary`. The `svg` within the button recieves four declarations, three from the mixin: `width`, `height`, `fill` and the peachpuff `color` unique to icons within primary buttons.
+The example above targets elements of type `button` that have the class `btn-primary`. The `svg` within the button receives four declarations, three from the mixin: `width`, `height`, `fill` and the peachpuff `color` unique to icons within primary buttons.
 
 ### Modifier Classes
 
@@ -116,7 +116,7 @@ As with immutable rulesets immutable mixins support modifier classes. Modifier c
 </mixins.button>
 ```
 
-The exampe above targets elements of type `button` that have the classes `btn disabled`.
+The example above targets elements of type `button` that have the classes `btn disabled`.
 
 > 💡Note: you can read more above modifier classes in the [Explicit Selectors]() guide.
 

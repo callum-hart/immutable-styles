@@ -7,15 +7,13 @@ Immutable styles provides a couple of ways to share common styles among similar 
 
 Mixins are used to share styles among rulesets with the *same* element type. Whilst detached rulesets are used to share styles among rulesets with *different* element types.
 
-This guide will feature an example for each approach.
+This guide will feature an example of using each approach.
 
 ### Sharing Styles with Mixins
 
-For mixins we will extend the button example first introduced in ["The Basics"]() guide.
+For mixins we will extend the button example first introduced in ["The Basics"]() guide. The designer has returned to the style-guide and added a few different button variations. Additionally each variation now has four UI states: a default, hover, focussed, and disabled state.
 
-The designer has returned to the styleguide and added a few different button variations. Additionally each variation now has four UI states: a default, hover, focussed, and disabled state.
-
-Here is our fictitious styleguide:
+Here is our fictitious style-guide:
 
 <p align="center">
   <img src="../../docs/_images/ButtonStyleguide.png"
@@ -26,7 +24,7 @@ Here is our fictitious styleguide:
   />
 </p>
 
-From the styleguide above we can identify common styles shared among all buttons:
+From the style-guide above we can identify common styles shared among all buttons:
 
 - `padding`
 - `border-width`
@@ -63,7 +61,7 @@ const button = {
 };
 ```
 
-Each button variation can use the `button.default` mixin to apply the common styles shared among all butons, and then apply its own styles unique to the button type:
+Each button variation can use the `button.default` mixin to apply the common styles shared among all buttons, and then apply its own styles unique to the button type:
 
 ```jsx
 /** @jsx createStyle */
@@ -94,7 +92,7 @@ export default [
 ];
 ```
 
-The same approach can be applied to the different UI states. Common styles for each state can be assigned to its own mixin:
+The same approach can be applied to the different UI states. Common styles for each UI state can be assigned to its own mixin:
 
 ```jsx
 /** @jsx createStyle */
@@ -161,7 +159,7 @@ export default [
 
 ### Sharing Styles with Detached Rulesets
 
-Detached rulesets allow groups of styles to be shared accross different rulesets. For example:
+Detached rulesets allow groups of styles to be shared across different rulesets. For example:
 
 ```jsx
 /** @jsx createStyle */
@@ -225,7 +223,7 @@ Detached rulesets offer an alternative to grouped CSS selectors. In the [Typed S
 ```css
 a.btn,
 button.btn {
-  font-family: "Operator Mono SSm";
+  font-family: 'Open Sans', sans-serif;
   font-size: 14px;
   background: cadetblue;
   color: ivory;

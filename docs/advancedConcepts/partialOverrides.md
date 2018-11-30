@@ -1,6 +1,6 @@
 # Partial Overrides
 
-A partial override occurs when two or more rulesets containing related, but not *identical* declarations target the same element. This happens when a shorthand property overrides a longhand property – or visa versa. Here is a partial override in its simplest form:
+A partial override occurs when two or more rulesets containing related, but not *identical* declarations target the same element. This happens when a shorthand property overrides a longhand property, or visa versa. Here is a partial override in its simplest form:
 
 ```jsx
 <dl className="address">
@@ -21,7 +21,7 @@ In the example above the first ruleset uses the shorthand property `margin`, whi
 - `margin-bottom: 20px;`
 - `margin-left: 10px;`
 
-The second ruleset attempts to override the left margin using the longhand property `margin-left`. However since the left margin already has a value (of 10px) it cannot be overriden. Immutable styles detects this partial override and throws the following compile time error:
+The second ruleset attempts to override the left margin using the longhand property `margin-left`. However since the left margin already has a value (of 10px) it cannot be overridden. Immutable styles detects this partial override and throws the following compile time error:
 
 <p align="center">
   <img src="../../docs/_images/PartialOverrideFoundThree.png"

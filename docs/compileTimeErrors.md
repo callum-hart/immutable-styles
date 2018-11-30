@@ -1,12 +1,10 @@
-## Compile Time Errors
+# Compile Time Errors
 
-Immutable styles ships with a friendly compiler that helps assist development, rather than bark at you. If the compiler finds an error, such as a CSS override the compilation process is terminated and an error is thrown.
+Immutable styles ships with a friendly compiler that helps assist development, rather than bark at you. If the compiler finds an error, such as a CSS override the compilation process is terminated and an error is thrown. Each error is documented below including the problem code and the error thrown.
 
-Each error is documented below including the problem code and the error thrown.
+### Invalid Attribute
 
-### Unknown Attribute
-
-When an unknown attribute is found.
+When an invalid attribute is used.
 
 ```jsx
 <p foo="invalidAttr">
@@ -14,7 +12,7 @@ When an unknown attribute is found.
 </p>
 ```
 
-The ruleset above throws the following compile time error:
+The ruleset above throws an "Invalid Attribute" compile time error:
 
 <p align="center">
   <img src="../docs/_images/UnknownAttribute.png"
@@ -25,7 +23,7 @@ The ruleset above throws the following compile time error:
   />
 </p>
 
-### Duplicate CSS Property
+### Duplicate Property
 
 When a CSS property is defined more than once in same block.
 
@@ -37,7 +35,7 @@ When a CSS property is defined more than once in same block.
 </h1>
 ```
 
-The ruleset above throws the following compile time error:
+The ruleset above throws a "Duplicate Property" compile time error:
 
 <p align="center">
   <img src="../docs/_images/DuplicateCSSProperty.png"
@@ -48,7 +46,7 @@ The ruleset above throws the following compile time error:
   />
 </p>
 
-### Exact Override Found
+### Override Found
 
 When one style overrides another style.
 
@@ -65,7 +63,7 @@ When one style overrides another style.
 </div>
 ```
 
-The rulesets above throws the following compile time error:
+The rulesets above throws an "Override Found" compile time error:
 
 <p align="center">
   <img src="../docs/_images/ExactOverrideFound.png"
@@ -92,7 +90,7 @@ When one style partially overrides another style.
 </footer>
 ```
 
-The rulesets above throws the following compile time error:
+The rulesets above throws a "Partial Override Found" compile time error:
 
 <p align="center">
   <img src="../docs/_images/PartialOverrideFound.png"
@@ -117,7 +115,7 @@ When a media query is nested inside another media query.
 </footer>
 ```
 
-The ruleset above throws the following compile time error:
+The ruleset above throws a "Nested Media Query" compile time error:
 
 <p align="center">
   <img src="../docs/_images/NestedMediaQuery.png"
@@ -140,7 +138,7 @@ When an inheritable property is used by an invalid element type.
 
 *See [Strict Inheritance]() for more details.*
 
-The ruleset above throws the following compile time error:
+The ruleset above throws a "Element Property Mismatch" compile time error:
 
 <p align="center">
   <img src="../docs/_images/ElementPropertyMismatch.png"

@@ -34,7 +34,7 @@ Reshuffling the order of the rulesets produces a different outcome:
 }
 ```
 
-Once again the last ruleset in the cascade takes effect – on screens wider than 1000px the `font-size` of `a.logo` will be 16px. Unintuitively it is the **cascade and not the breakpoint size** that determines the `font-size` of the logo.
+Once again the last ruleset in the cascade takes effect. On screens wider than 1000px the `font-size` of `a.logo` will be 16px. Unintuitively it is the **cascade and not the breakpoint size** that determines the `font-size` of the logo.
 
 Discrete breakpoints remove this dependency media queries have on the cascade. In immutable styles the compiler identifies any media queries that overlap, and then checks if they contain any overriding rulesets.
 
@@ -101,7 +101,7 @@ nav a.logo {
 }
 ```
 
-In the example above the ruleset with the strongest specificity out-competes the other, regardless of their position in the cascade or breakpoint size. On screens wider than 500px the `font-size` of `a.logo` will be 14px, since the `nav a.logo` selector has the higher specificity.
+In the example above the ruleset with the strongest specificity out-competes the other, regardless of position in the cascade or breakpoint size. On screens wider than 500px the `font-size` of `a.logo` will be 14px, since the `nav a.logo` selector has the higher specificity.
 
 The equivalent immutable ruleset would be:
 
@@ -121,6 +121,6 @@ However this throws a compile time error, since on screens wider than 500px the 
 
 <p align="center">*</p>
 
-Discrete breakpoints makes media queries more predictable, since there’s no need to orchestrate overrides. Omitting overrides has made the order of media queries and their specificity irrelevant. Only the breakpoint size determines what styles apply which is far more intuitive and deterministic.
+Discrete breakpoints makes media queries more predictable since there’s no need to orchestrate overrides. Omitting overrides has made the order of media queries and their specificity irrelevant. Only the breakpoint size determines what styles apply which is far more intuitive and deterministic.
 
 This pattern buys guarantees. We can guarantee what font size the logo will be on different screen-sizes. We can guarantee that changing the order of media queries won’t affect the outcome, and changing specificity won’t sidestep the cascade and override subsequent rulesets. Finally, we can guarantee the font size in one media query won’t get overridden by another.

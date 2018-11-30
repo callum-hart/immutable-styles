@@ -32,3 +32,24 @@ If you have ever encountered styles that were neither expected nor desired you p
 - d) Elements inheriting undesirable styles
 
 As the name suggests the library uses immutability to help remove these side effects. With immutable styles all CSS rules are immutable. An immutable CSS rule cannot change once created, which means it can **never** be overridden. This alone solves a, b and c (we will see the solution to d later).
+
+## FAQ
+
+TODO
+
+## Change Log
+
+Immutable styles adheres to [Semantic Versioning](https://semver.org).
+
+### 1.0.0 🎉
+
+- Usage with JSX
+- Webpack plugin, with hot reload 🔥
+- Elm inspired error messages, with helpful hints!
+- Immutable mixins!
+- Partial override detection
+- Improved code coverage
+
+## Licence
+
+TODO
