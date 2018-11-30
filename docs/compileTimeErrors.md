@@ -1,192 +1,150 @@
-## Compile Time Errors
+# Compile Time Errors
 
-Immutable Styles are compiled from JavaScript to CSS (using the method `createCSS`). The library ships with a friendly compiler that helps assist development, rather than bark at you. If the compiler finds an error, such as a CSS override the compilation process is terminated and an error is thrown.
+Immutable styles ships with a friendly compiler that helps assist development, rather than bark at you. If the compiler finds an error, such as a CSS override the compilation process is terminated and an error is thrown. Each error is documented below including the problem code and the error thrown.
 
-Each error is documented below including the problem code and the error thrown.
+### Invalid Attribute
 
-### Unknown Attribute
+When an invalid attribute is used.
 
-When an unknown attribute is found:
-
-```js
-createStyle(
-  "p",
-  {
-    foo: "invalidAttr"
-  },
-  'font-size: 20px;'
-)
+```jsx
+<p foo="invalidAttr">
+  font-size: 20px;
+</p>
 ```
 
-Throws:
+The ruleset above throws an "Invalid Attribute" compile time error:
 
-```
-[Unknown Attribute] "foo" is not a valid attribute
+<p align="center">
+  <img src="../docs/_images/UnknownAttribute.png"
+    width="780px"
+    height="241px"
+    alt="Unknown Attribute compile time error"
+    title="Unknown Attribute compile time error"
+  />
+</p>
 
-Occurrence found:
-
-  foo="invalidAttr"
-
-Only the following attributes are permitted:
-
-  className, minWidth, maxWidth, pseudo
-```
-
-### Duplicate CSS Property
+### Duplicate Property
 
 When a CSS property is defined more than once in same block.
 
-```js
-createStyle(
-  "h1",
-  {
-    className: "title"
-  },
-  `color: darkslategray;
-  font-size: 20px;
-  color: burlywood;`
-)
-```
-
-Throws:
-
-```
-[Duplicate CSS Property] The property "color" has been defined more than once by "h1.title"
-
+```jsx
+<h1 className="title">
   color: darkslategray;
   font-size: 20px;
   color: burlywood;
+</h1>
 ```
+
+The ruleset above throws a "Duplicate Property" compile time error:
+
+<p align="center">
+  <img src="../docs/_images/DuplicateCSSProperty.png"
+    width="780px"
+    height="307px"
+    alt="Duplicate CSS Property compile time error"
+    title="Duplicate CSS Property compile time error"
+  />
+</p>
 
 ### Override Found
 
 When one style overrides another style.
 
-```js
-createStyle(
-  "p",
-  {
-    className: "child"
-  },
-  'color: darksalmon;'
-),
-createStyle(
-  "div",
-  {
-    className: "parent"
-  },
-  createStyle(
-    "p",
-    {
-      className: "child"
-    },
-    `font-size: 10px;
-    color: lightsalmon;`
-  )
-)
-```
-
-Throws:
-
-```
-[Override Found] "div.parent p.child" overrides the "color" set by "p.child"
-
-Overridden styles ("p.child"):
-
+```jsx
+<p className="child">
   color: darksalmon;
+</p>,
 
-Overriding styles ("div.parent p.child"):
-
-  font-size: 10px;
-  color: lightsalmon;
-
-The "color" of "p.child" cannot be overridden
+<div className="parent">
+  <p className="child">
+    font-size: 10px;
+    color: lightsalmon;
+  </p>
+</div>
 ```
+
+The rulesets above throws an "Override Found" compile time error:
+
+<p align="center">
+  <img src="../docs/_images/ExactOverrideFound.png"
+    width="785px"
+    height="359px"
+    alt="Exact Override Found compile time error"
+    title="Exact Override Found compile time error"
+  />
+</p>
+
+### Partial Override Found
+
+When one style partially overrides another style.
+
+```jsx
+<dl className="address">
+  margin: 20px 10px;
+</dl>,
+
+<footer>
+  <dl className="address">
+    margin-left: 20px;
+  </dl>
+</footer>
+```
+
+The rulesets above throws a "Partial Override Found" compile time error:
+
+<p align="center">
+  <img src="../docs/_images/PartialOverrideFound.png"
+    width="785px"
+    height="340px"
+    alt="Partial Override Found compile time error"
+    title="Partial Override Found compile time error"
+  />
+</p>
 
 ### Nested Media Query
 
 When a media query is nested inside another media query.
 
-```js
-createStyle(
-  "footer",
-  {
-    minWidth: 900
-  },
-  'padding: 0 30px;',
-  createStyle(
-    "p",
-    {
-      minWidth: 300
-    },
-    'font-size: 12px;'
-  )
-)
+```jsx
+<footer minWidth="900">
+  padding: 0 30px;
+
+  <p minWidth="300">
+    font-size: 1rem;
+  </p>
+</footer>
 ```
 
-Throws:
+The ruleset above throws a "Nested Media Query" compile time error:
 
-```
-[Nested Media Query] Nested media query found in "footer"
-
-Outer media query ("footer"):
-
-  min-width of 900
-
-Inner media query ("footer p"):
-
-  min-width of 300
-```
-
-### Unknown Base Class
-
-When a subclass extends a superclass that hasn't been defined.
-
-```js
-createStyle(
-  "div",
-  {
-    className: "baseClass.subClass"
-  },
-  'padding: 30px;'
-)
-```
-
-Throws:
-
-```
-[Unknown Base Class] The base class "div.baseClass" does not exist
-
-Occurrence found:
-
-  "div.baseClass.subClass"
-```
+<p align="center">
+  <img src="../docs/_images/NestedMediaQuery.png"
+    width="785px"
+    height="306px"
+    alt="Nested Media Query compile time error"
+    title="Nested Media Query compile time error"
+  />
+</p>
 
 ### Element Property Mismatch
 
-Immutable Styles does not allow child elements to inherit styles from parent elements. This means inheritable CSS properties can only be applied directly to a given element. Otherwise it wouldn't be possible for the compiler to detect a child element overriding an inherited style.
+When an inheritable property is used by an invalid element type.
 
-The usage of inheritable CSS properties are whitelisted to certain elements, for example `font-size` can be used by a `p` but not a `div`:
-
-```js
-createStyle(
-  "div",
-  null,
-  'font-size: 20px;'
-)
+```jsx
+<div>
+  font-size: 1.4rem;
+</div>
 ```
 
-Throws:
+*See [Strict Inheritance]() for more details.*
 
-```
-[Element Property Mismatch] The element <div> cannot use the property "font-size"
+The ruleset above throws a "Element Property Mismatch" compile time error:
 
-Occurrence found ("div"):
-
-  font-size: 20px;
-
-"font-size" can only be used by the following elements:
-
-  <h1>, <h2>, <h3>, <h4>, <h5>, <h6>, <p>, <a>, <strong>, <span>
-  <li>, <input>, <button>
-```
+<p align="center">
+  <img src="../docs/_images/ElementPropertyMismatch.png"
+    width="785px"
+    height="299px"
+    alt="Element Property Mismatch compile time error"
+    title="Element Property Mismatch compile time error"
+  />
+</p>

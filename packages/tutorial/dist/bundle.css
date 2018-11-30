@@ -1,0 +1,12 @@
+html:not([class]) {
+  height: 100%;
+}
+body:not([class]) {
+  height: 100%; margin: 0; background-image: linear-gradient(45deg, #f8f8f8 25%, transparent 25%), linear-gradient(135deg, #f8f8f8 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f8f8f8 75%), linear-gradient(135deg, transparent 75%, #f8f8f8 75%); background-size: 20px 20px; background-position: 0 0, 10px 0, 10px -10px, 0px 10px; background-color: #f4f4f4;
+}
+div[class="root"] {
+  height: 100%;
+}
+section[class="app"] {
+  height: 100%; display: flex; align-items: center; justify-content: center;
+}
