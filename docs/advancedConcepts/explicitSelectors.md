@@ -40,7 +40,9 @@ The HTML element above will not receive the styles defined by the `btn-primary` 
 
 The ruleset above uses a *modifier class* to explicitly target elements of type `button` with both classes `btn-primary` and  `disabled`.
 
-> 💡Note: you may have noticed the same `background` declaration is defined in both the `btn-primary` and `btn-primary disabled` rulesets. Immutable styles provides ways to share styles across similar rulesets, however these fall out of scope of explicit selectors.
+> ###### Note on Sharing Styles
+
+> You may have noticed the same `background` declaration is defined in both the `btn-primary` and `btn-primary disabled` rulesets. Immutable styles provides ways to share styles across similar rulesets, however these fall out of scope of explicit selectors.
 
 ## Nested Rulesets
 

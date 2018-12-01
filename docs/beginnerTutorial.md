@@ -8,14 +8,12 @@ This tutorial will use a fictitious food app to demonstrate how immutable styles
   <img src="../docs/_images/RestaurantCardComplete.png"
     width="710px"
     height="340px"
-    alt="Screenshot of restaurant card"
-    title="Screenshot of restaurant card"
   />
 </p>
 
 Although fairly trivial, the restaurant card provides the perfect fit for illustrating the basic concepts of immutable styles without getting distracted by unnecessary and excessive details.
 
-### Setup
+## Setup
 
 The first step is to clone the [immutable styles ]() repository:
 
@@ -38,16 +36,12 @@ npm run start
 
 Finally open [localhost:8080](http://localhost:8080) in your favourite browser.
 
-<p align="center">*</p>
-
 In its current state the restaurant card looks rather unappetising since its markup is unstyled:
 
 <p align="center">
   <img src="../docs/_images/RestaurantCardStageOne.png"
     width="710px"
     height="420px"
-    alt="Screenshot of restaurant card"
-    title="Screenshot of restaurant card"
   />
 </p>
 
@@ -55,9 +49,11 @@ The files we are interested in are: src/RestaurantCard.jsx – which contains th
 
 You may have noticed `RestaurantCard.iss.jsx` uses a dual file extension of `.iss.jsx`. The first part – `iss` stands for Immutable Style Sheets (or ISS for short). This naming convension allows the compiler to efficiently identify Immutable Style Sheets – whilst preserving JSX syntax highlighting.
 
-> 💡Note: although this tutorial uses React, it should be noted that immutable styles is markup agnostic – meaning it isn’t coupled or biased to a specific way of generating HTML. Just like a CSS pre-processor – immutable styles generates CSS which can be used on any website – rendered server or client-side.
+> ###### Note on Markup
 
-### Boilerplate
+> Although this tutorial uses React, it should be noted that immutable styles is markup agnostic – meaning it isn’t coupled or biased to a specific way of generating HTML. Just like a CSS pre-processor – immutable styles generates CSS which can be used on any website – rendered server or client-side.
+
+## Boilerplate
 
 `RestaurantCard.iss.jsx` currently contains boilerplate code typical of any Immutable Style Sheet:
 
@@ -70,7 +66,7 @@ You may have noticed `RestaurantCard.iss.jsx` uses a dual file extension of `.is
 
 Line 2 imports `createStyle` from immutable styles – which is a function that generates immutable rulesets. On line 1 the `createStyle` function is mapped to JSX – meaning any JSX tags in this file will be transpiled to `createStyle` function calls. Line 4 *will* export our immutable rulesets.
 
-### Styling the restaurant card
+## Styling the Restaurant Card
 
 Lets create our first immutable ruleset. Since it's our first lets make it special ⭐️. We will style the restaurants star rating icons.
 
@@ -96,8 +92,6 @@ Save the file – and you should see the following:
   <img src="../docs/_images/RestaurantCardStageTwo.png"
     width="710px"
     height="420px"
-    alt="Screenshot of restaurant card"
-    title="Screenshot of restaurant card"
   />
 </p>
 
@@ -148,14 +142,12 @@ And finally, lets spruce up the typography:
 </p>
 ```
 
-Save the file – and you should see the following:
+Save the file, and you should see the following:
 
 <p align="center">
   <img src="../docs/_images/RestaurantCardStageThree.png"
     width="710px"
     height="340px"
-    alt="Screenshot of restaurant card"
-    title="Screenshot of restaurant card"
   />
 </p>
 
@@ -192,14 +184,14 @@ If you save the file – you will notice the first three stars are unstyled:
   <img src="../docs/_images/RestaurantCardStageFour.png"
     width="710px"
     height="340px"
-    alt="Screenshot of restaurant card"
-    title="Screenshot of restaurant card"
   />
 </p>
 
 This is to be expeceted. Immutable styles treat type selectors – in this case `<span>` – and selectors with a class – in this case `<span className="shining">` as different selectors – *even though* they target the same element type. The type selector `<span>` only targets elements of type `span` that do not have a class. Elements of type `span` with a class – such as "shining" need to be styled individually. This is a *key difference* between immutable styles and CSS – and is one of the traits that make immutable styles highly deterministic.
 
-> 📖 Styles for an element without a class (such as `span`) **are not applied** to the same element type with a class (such as `<span className="shining">`).
+> ###### Key Point
+
+> Styles for an element without a class (such as `span`) **are not applied** to the same element type with a class (such as `<span className="shining">`).
 
 With that in mind, add a ruleset for stars with the class "shining":
 
@@ -219,9 +211,11 @@ With that in mind, add a ruleset for stars with the class "shining":
 </div>
 ```
 
-> 💡Note: you may have noticed 2/3rds of the CSS declarations for `<span>` and `<span className="shining">` are the same (each ruleset contains both `margin-right` and `font-size`). Immutable styles provides ways to remove duplicate styles, aiding reuse among similar rulesets – however in the interests of not overcomplicating this tutorial won't be introduced yet.
+> ###### Note on Sharing Styles
 
-### Interactions & Responsiveness
+> You may have noticed 2/3rds of the CSS declarations for `<span>` and `<span className="shining">` are the same (each ruleset contains both `margin-right` and `font-size`). Immutable styles provides ways to remove duplicate styles, aiding reuse among similar rulesets – however in the interests of not overcomplicating this tutorial won't be introduced yet.
+
+## Interactions & Responsiveness
 
 The restaurant card is looking pretty good so far, however it's currently a bit static. It would be nice to add a hover effect and make sure the layout is optimized for mobile devices.
 
@@ -279,14 +273,14 @@ If you save the file and open up the browsers console you will see an error has 
   <img src="../docs/_images/RestaurantCardOverrideFound.png"
     width="855px"
     height="375px"
-    alt="Screenshot of restaurant card override"
-    title="Screenshot of restaurant card override"
   />
 </p>
 
 As the error message shows the `padding` has been defined twice. The `padding` set in the first occurance (line 7) is applied to the card on *all* screen-sizes. The `padding` set in the second occurance (line 22) is applied to the card on screens up to 600px wide. This means on screen widths between 0px and 600px the `padding` property is applied twice – which *would* result in an override, if it weren't for the compiler catching it.
 
-> 📖 The immutable styles compiler can detect and prevent overrides that only occur on specific screen-sizes.
+> ###### Key Point
+
+> The immutable styles compiler can detect and prevent overrides that only occur on specific screen-sizes.
 
 With this in mind, the first `padding` declaration (line 7) should be moved out to another ruleset that specifically targets screens wider than 600px:
 

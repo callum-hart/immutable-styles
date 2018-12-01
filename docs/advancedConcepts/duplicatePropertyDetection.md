@@ -16,12 +16,8 @@ In the example above the `background` property has been defined twice within the
   <img src="../../docs/_images/DuplicateCSSPropertyTwo.png"
     width="780px"
     height="306px"
-    alt="Duplicate CSS Property compile time error"
-    title="Duplicate CSS Property compile time error"
   />
 </p>
-
-<center>*</center>
 
 It should be noted that if a property *partially overrides* another property in the *same ruleset* a partial override error is thrown:
 
@@ -39,8 +35,6 @@ In the example above both `margin` and `margin-bottom` have been used. Since the
   <img src="../../docs/_images/PartialOverrideFoundTwo.png"
     width="780px"
     height="376px"
-    alt="Partial Override Found compile time error"
-    title="Partial Override Found compile time error"
   />
 </p>
 

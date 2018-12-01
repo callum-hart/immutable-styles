@@ -27,8 +27,6 @@ The second ruleset attempts to override the left margin using the longhand prope
   <img src="../../docs/_images/PartialOverrideFoundThree.png"
     width="785px"
     height="345px"
-    alt="Partial Override Found compile time error"
-    title="Partial Override Found compile time error"
   />
 </p>
 
@@ -67,8 +65,6 @@ The second ruleset attempts to override the left border color using the longhand
   <img src="../../docs/_images/PartialOverrideFoundFour.png"
     width="780px"
     height="342px"
-    alt="Partial Override Found compile time error"
-    title="Partial Override Found compile time error"
   />
 </p>
 
@@ -99,7 +95,5 @@ Fortunately immutable styles is aware that the `line-height` set by `font` in th
   <img src="../../docs/_images/PartialOverrideFoundFive.png"
     width="785px"
     height="343px"
-    alt="Partial Override Found compile time error"
-    title="Partial Override Found compile time error"
   />
 </p>

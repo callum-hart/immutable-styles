@@ -2,7 +2,7 @@
 
 Since immutable styles is just JavaScript it gets the niceties of CSS pre-processors for free. Leveraging everyday JavaScript enables variables, detached rulesets, *pre-processor* mixins, and theming with little to no extra cost.
 
-### Variables
+## Variables
 
 ```jsx
 const brandColor = 'plum';
@@ -14,7 +14,7 @@ const brandColor = 'plum';
 </nav>
 ```
 
-### Detached Rulesets
+## Detached Rulesets
 
 ```jsx
 const fontMedium = `
@@ -30,8 +30,7 @@ const fontMedium = `
 </h1>
 ```
 
-### Pre-processor Mixins
-*Not to be confused with [immutable mixins]()*
+## Pre-processor Mixins
 
 You can create your own:
 
@@ -61,7 +60,9 @@ const { lighten } = require('polished');
 </a>
 ```
 
-### Themes
+*Not to be confused with [immutable mixins]()*.
+
+## Themes
 
 ```jsx
 const ACTIVE_THEME = 'light';
@@ -81,7 +82,7 @@ const themes = {
 </body>
 ```
 
-### Server-side
+## Server-side
 
 Compiling immutable styles server-side – and of course infrastructure permitting – would enable futher functionality, such as generating CSS specific to:
 
@@ -89,6 +90,8 @@ Compiling immutable styles server-side – and of course infrastructure permitti
 - 🎌 Locale
 - 📱 Platform
 
-> 🔮 Whilst this is technically possible now an official server-side compiler hasn't been released – something that could change in future.
+> ###### Note on Support
+
+> Whilst this is technically possible now an official server-side compiler hasn't been released. *Official* support for server-side compilation could be added in future releases.
 
 

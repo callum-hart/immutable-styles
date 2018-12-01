@@ -1,6 +1,6 @@
 # Related Material
 
-Articles and videos that have directly or indirectly inspired and influenced immutable styles:
+Articles and videos that have directly or indirectly inspired and influenced immutable styles.
 
 ## Articles
 

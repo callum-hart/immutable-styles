@@ -6,16 +6,12 @@ Strict inheritance prevents inheritable CSS properties from being inherited. At 
   <img src="../../docs/_images/WhatTheFont.png"
     width="772px"
     height="718px"
-    alt="Screenshot of font-size applied ten times"
-    title="Screenshot of font-size applied ten times"
   />
 </p>
 
 In the screenshot above the `font-size` of the target element is defined 10 times. Having 10 `font-size` declarations is either the result of 10 instances where the developer(s) intent was to override the font-size, or more likely is the result of poorly scoped selectors. Either way the `font-size` of the target element is extremely brittle.
 
 Inheritable properties are very vulnerable to changes in HTML attributes/structure, selector specificity or cascade position. A single change can produce a different outcome. In this case `!important` has been used to protect the `font-size` from changes to specificity or cascade. However the winning property value is `inherit` which means a further step is needed to track down where the `font-size` is inherited from.
-
-<center>*</center>
 
 Strict inheritance avoids situations like this. With strict inheritance, each inheritable property can only be used by a set of whitelisted elements. For example setting `font-size` on a `div` is not allowed:
 
@@ -31,8 +27,6 @@ Attempting to do so throws a compile time error:
   <img src="../../docs/_images/ElementPropertyMismatchTwo.png"
     width="785px"
     height="300px"
-    alt="Element Property Mismatch compile time error"
-    title="Element Property Mismatch compile time error"
   />
 </p>
 

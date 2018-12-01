@@ -2,7 +2,7 @@
 
 Immutable styles ships with a friendly compiler that helps assist development, rather than bark at you. If the compiler finds an error, such as a CSS override the compilation process is terminated and an error is thrown. Each error is documented below including the problem code and the error thrown.
 
-### Invalid Attribute
+## Invalid Attribute
 
 When an invalid attribute is used.
 
@@ -18,12 +18,10 @@ The ruleset above throws an "Invalid Attribute" compile time error:
   <img src="../docs/_images/UnknownAttribute.png"
     width="780px"
     height="241px"
-    alt="Unknown Attribute compile time error"
-    title="Unknown Attribute compile time error"
   />
 </p>
 
-### Duplicate Property
+## Duplicate Property
 
 When a CSS property is defined more than once in same block.
 
@@ -41,12 +39,10 @@ The ruleset above throws a "Duplicate Property" compile time error:
   <img src="../docs/_images/DuplicateCSSProperty.png"
     width="780px"
     height="307px"
-    alt="Duplicate CSS Property compile time error"
-    title="Duplicate CSS Property compile time error"
   />
 </p>
 
-### Override Found
+## Override Found
 
 When one style overrides another style.
 
@@ -69,12 +65,10 @@ The rulesets above throws an "Override Found" compile time error:
   <img src="../docs/_images/ExactOverrideFound.png"
     width="785px"
     height="359px"
-    alt="Exact Override Found compile time error"
-    title="Exact Override Found compile time error"
   />
 </p>
 
-### Partial Override Found
+## Partial Override Found
 
 When one style partially overrides another style.
 
@@ -96,12 +90,10 @@ The rulesets above throws a "Partial Override Found" compile time error:
   <img src="../docs/_images/PartialOverrideFound.png"
     width="785px"
     height="340px"
-    alt="Partial Override Found compile time error"
-    title="Partial Override Found compile time error"
   />
 </p>
 
-### Nested Media Query
+## Nested Media Query
 
 When a media query is nested inside another media query.
 
@@ -121,12 +113,10 @@ The ruleset above throws a "Nested Media Query" compile time error:
   <img src="../docs/_images/NestedMediaQuery.png"
     width="785px"
     height="306px"
-    alt="Nested Media Query compile time error"
-    title="Nested Media Query compile time error"
   />
 </p>
 
-### Element Property Mismatch
+## Element Property Mismatch
 
 When an inheritable property is used by an invalid element type.
 
@@ -136,15 +126,13 @@ When an inheritable property is used by an invalid element type.
 </div>
 ```
 
-*See [Strict Inheritance]() for more details.*
-
 The ruleset above throws a "Element Property Mismatch" compile time error:
 
 <p align="center">
   <img src="../docs/_images/ElementPropertyMismatch.png"
     width="785px"
     height="299px"
-    alt="Element Property Mismatch compile time error"
-    title="Element Property Mismatch compile time error"
   />
 </p>
+
+*See [Strict Inheritance]() for more details.*

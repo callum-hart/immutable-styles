@@ -18,8 +18,6 @@ In the ruleset above the `.btn` class is obscure. We cannot guarantee who the co
 
 In addition styles specific to a certain element type are bundled into the `.btn` class – and therefore applied to all consumers, which introduces unnecessary bloat (dead-code). In the example above `text-decoration: none;` is only required for elements of type `a` using the `.btn` class.
 
-<center>*</center>
-
 When selectors include the element type it's easier to make connection between the CSS and HTML:
 
 ```css
@@ -46,8 +44,6 @@ From the CSS it's easy to identify what elements consume the `.btn` class. We ca
 This also makes it easier to separate reusable styles from those specific to a certain element type. The CSS declaration `text-decoration: none;` is only needed by elements of type `a` so is moved out into a ruleset of its own.
 
 Not only does this separate concerns it helps organise styles into smaller, manageable, and distinct chunks. It's easy to identify where to add or remove styles for `a`. Better still if elements of type `a` stop consuming the `.btn` class safely removing styles specific to them is a breeze.
-
-<center>*</center>
 
 Typed selectors are baked into immutable styles by default. Since JSX requires an element type it is impossible to have an immutable ruleset without an element type. The equivalant ruleset for the `btn` class would be:
 

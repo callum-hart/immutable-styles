@@ -88,7 +88,7 @@ Likewise the `pseudo` attribute is also used for *pseudo-elements* :
 </span>
 ```
 
-> ##### Note on Pseudo Attributes
+> ###### Note on Pseudo Attributes
 
 > The `pseudo` JSX attribute supports both CSS2 (`:before`) and CSS3 (`::before`) syntax.
 
@@ -112,7 +112,7 @@ The example above is the equivalent of a CSS ruleset defined within a `media-que
 
 The example above is the equivalent of a CSS *media-query* targeting screens less than 350px wide.
 
-> ##### Note on Media Query Units
+> ###### Note on Media Query Units
 
 > The unit for media queries is predefined by immutable styles. All media queries default to pixels, where `maxWidth="350"` equates to 350px.
 
@@ -136,13 +136,13 @@ The example above features the `className`, `minWidth` and `pseudo` JSX attribut
 
 On screens wider than 350px HTML elements of type `span` – with the class `icon` – whose ancestor is a `div` with the class `side-bar` will be the color magenta. On `hover` the same icon color will change to darkmagenta.
 
-> ##### Note on JSX Attributes
+> ###### Note on JSX Attributes
 
 > It should be noted that *unlike* props in React, only JSX attributes predefined by immutable styles are allowed.
 
-## 🚫 No Overrides Allowed
+## No Overrides Allowed
 
-> ##### Recommended Reading
+> ###### Recommended Reading
 
 > If you haven't already, I strongly recommend reading [The case for Immutable Styles]() and the post [CSS Overrides: Friend or Foe?]() before reading this section.
 
@@ -150,7 +150,7 @@ Until now we have only observed the similarities between immutable styles and CS
 
 There are however some major differences between immutable styles and CSS – most of which fall under the umbrella goal of **preventing CSS overrides**. Just like elms compiler prevents runtime errors in JavaScript, the immutable styles compiler prevents runtime overrides in CSS.
 
-> ##### Runtime Override | ˈrʌntʌɪm | əʊvəˈrʌɪd |
+> ###### Runtime Override | ˈrʌntʌɪm | əʊvəˈrʌɪd |
 
 > A runtime override happens when two or more rulesets containing conflicting declarations target the same element.
 

@@ -56,8 +56,6 @@ However this throws a compile time error, since on screens wider than 1000px the
   <img src="../../docs/_images/IndiscreteBreakpointOverrideFound.png"
     width="785px"
     height="340px"
-    alt="Screenshot of indiscrete breakpoint"
-    title="Screenshot of indiscrete breakpoint"
   />
 </p>
 
@@ -84,8 +82,6 @@ Since the media queries no longer overlap switching the order of rulesets no lon
   font-size: 16px;
 </a>
 ```
-
-<p align="center">*</p>
 
 It is also worth noting that in regular CSS media queries are also dependant on specificity:
 
@@ -118,8 +114,6 @@ The equivalent immutable ruleset would be:
 ```
 
 However this throws a compile time error, since on screens wider than 500px the first ruleset overrides the second ruleset.
-
-<p align="center">*</p>
 
 Discrete breakpoints makes media queries more predictable since there’s no need to orchestrate overrides. Omitting overrides has made the order of media queries and their specificity irrelevant. Only the breakpoint size determines what styles apply which is far more intuitive and deterministic.
 

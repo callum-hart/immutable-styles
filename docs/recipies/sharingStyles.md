@@ -9,7 +9,7 @@ Mixins are used to share styles among rulesets with the *same* element type. Whi
 
 This guide will feature an example of using each approach.
 
-### Sharing Styles with Mixins
+## Sharing Styles with Mixins
 
 For mixins we will extend the button example first introduced in ["The Basics"]() guide. The designer has returned to the style-guide and added a few different button variations. Additionally each variation now has four UI states: a default, hover, focussed, and disabled state.
 
@@ -19,8 +19,6 @@ Here is our fictitious style-guide:
   <img src="../../docs/_images/ButtonStyleguide.png"
     width="710px"
     height="420px"
-    alt="Screenshot of button styleguide"
-    title="Screenshot of button styleguide"
   />
 </p>
 
@@ -157,7 +155,7 @@ export default [
 ];
 ```
 
-### Sharing Styles with Detached Rulesets
+## Sharing Styles with Detached Rulesets
 
 Detached rulesets allow groups of styles to be shared across different rulesets. For example:
 
@@ -216,7 +214,7 @@ export default [
 ];
 ```
 
-### Grouped CSS Selectors
+## Grouped CSS Selectors
 
 Detached rulesets offer an alternative to grouped CSS selectors. In the [Typed Selectors]() guide the `btn` class could be used by elements of types `a` and `button`:
 

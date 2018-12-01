@@ -40,7 +40,7 @@ const mixins = {
 <mixins.button />
 ```
 
-> 💡Note: from here onwards all examples will follow the namespace pattern. Alongside improving readability namespacing allows mixins to be named after JSX elements. Without a namespace mixins cannot have the same name as JSX elements (otherwise the compiler doesn't know whether an element or mixin is being used).
+From here onwards all examples will follow the namespace pattern. Alongside improving readability namespacing allows mixins to be named after JSX elements. Without a namespace mixins cannot have the same name as JSX elements (otherwise the compiler doesn't know whether an element or mixin is being used).
 
 Immutable mixins support the same [JSX attribute]() as immutable rulesets:
 
@@ -50,7 +50,7 @@ Immutable mixins support the same [JSX attribute]() as immutable rulesets:
 
 The example above targets elements of type `button` that have the class `btn`. The target element will receive the three declarations (`padding`, `border-radius`, `font-size`) returned from the mixin.
 
-### Children
+## Children
 
 Immutable mixins support child styles:
 
@@ -104,7 +104,7 @@ Styles nested within mixins can be used like any other immutable ruleset:
 
 The example above targets elements of type `button` that have the class `btn-primary`. The `svg` within the button receives four declarations, three from the mixin: `width`, `height`, `fill` and the peachpuff `color` unique to icons within primary buttons.
 
-### Modifier Classes
+## Modifier Classes
 
 As with immutable rulesets immutable mixins support modifier classes. Modifier classes allow selectors to explicitly target elements with multiple classes:
 
@@ -118,9 +118,11 @@ As with immutable rulesets immutable mixins support modifier classes. Modifier c
 
 The example above targets elements of type `button` that have the classes `btn disabled`.
 
-> 💡Note: you can read more above modifier classes in the [Explicit Selectors]() guide.
+> ###### Note on Modifier Classes
 
-### Override Protection
+> You can read more about modifier classes in the [Explicit Selectors]() guide.
+
+## Override Protection
 
 Immutable mixins come with the same override protection as normal immutable rulesets:
 
@@ -136,7 +138,5 @@ The example above attempts to override the `padding` property defined by the `bu
   <img src="../../docs/_images/MixinOverrideFound.png"
     width="785px"
     height="252px"
-    alt="Override Found in mixin compile time error"
-    title="Override Found in mixin compile time error"
   />
 </p>
