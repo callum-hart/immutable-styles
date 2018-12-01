@@ -1,6 +1,6 @@
 {
   "name": "@immutable-styles/tutorial",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Immutable styles beginner tutorial",
   "author": "Callum Hart",
   "license": "MIT",
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@immutable-styles/core": "^1.0.0",
-    "@immutable-styles/webpack-plugin": "^1.0.0",
+    "@immutable-styles/webpack-plugin": "^1.0.1",
     "react": "^16.6.3",
     "react-dom": "^16.6.3"
   },
