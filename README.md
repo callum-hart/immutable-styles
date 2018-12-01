@@ -72,6 +72,10 @@ Immutable styles adheres to [Semantic Versioning](https://semver.org).
 - Partial override detection
 - Improved code coverage
 
+## Documentation
+
+The documentation can be [found here](https://callum-hart.gitbook.io/immutable-styles/).
+
 ## Licence
 
 [MIT](https://github.com/callum-hart/immutable-styles/blob/master/LICENSE)
