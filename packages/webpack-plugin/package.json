@@ -1,6 +1,6 @@
 {
   "name": "@immutable-styles/webpack-plugin",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Immutable styles webpack plugin",
   "author": "Callum Hart",
   "license": "MIT",
@@ -9,6 +9,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@immutable-styles/core": "1.0.1"
+    "@immutable-styles/core": "^1.0.0"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@immutable-styles/tutorial",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Immutable styles beginner tutorial",
   "author": "Callum Hart",
   "license": "MIT",
@@ -11,16 +11,16 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@immutable-styles/core": "1.0.1",
-    "@immutable-styles/webpack-plugin": "1.0.1",
+    "@immutable-styles/core": "^1.0.0",
+    "@immutable-styles/webpack-plugin": "^1.0.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3"
   },
   "devDependencies": {
     "@babel/core": "^7.1.6",
+    "@babel/plugin-transform-react-jsx-source": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
-    "@babel/plugin-transform-react-jsx-source": "^7.0.0",
     "babel-loader": "^8.0.4",
     "webpack": "^4.26.0",
     "webpack-cli": "^3.1.2",
