@@ -1,6 +1,6 @@
 {
   "name": "@immutable-styles/core",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Immutable styles core compiler",
   "author": "Callum Hart",
   "license": "MIT",

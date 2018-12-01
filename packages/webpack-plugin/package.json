@@ -1,6 +1,6 @@
 {
   "name": "@immutable-styles/webpack-plugin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Immutable styles webpack plugin",
   "author": "Callum Hart",
   "license": "MIT",
@@ -12,6 +12,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@immutable-styles/core": "^1.0.0"
+    "@immutable-styles/core": "^1.0.2"
   }
 }
