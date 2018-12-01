@@ -7,6 +7,9 @@
     "type": "git",
     "url": "https://github.com/callum-hart/immutable-styles.git"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "lerna": "^3.4.3"
   }
