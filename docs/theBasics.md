@@ -8,7 +8,7 @@ Immutable styles are represented using a [Tree](https://en.wikipedia.org/wiki/Tr
 
 ```jsx
 <h1>
-  font-family: "Operator Mono";
+  font-family: 'Open Sans', sans-serif;
   font-weight: 600;
   font-size: 2rem;
 </h1>
