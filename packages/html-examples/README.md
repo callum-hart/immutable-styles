@@ -1,7 +1,7 @@
 # @immutable-styles/html-examples
 > Package containing examples of using immutable styles with HTML.
 
-### Setup Steps
+## Setup
 
 Clone the [immutable styles ]() repository:
 

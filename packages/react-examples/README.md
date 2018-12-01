@@ -1,7 +1,7 @@
 # @immutable-styles/react-examples
 > Package containing examples of using immutable styles with React.
 
-### Setup Steps
+## Setup
 
 Clone the [immutable styles ]() repository:
 
