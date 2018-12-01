@@ -60,7 +60,7 @@ const { lighten } = require('polished');
 </a>
 ```
 
-*Not to be confused with [immutable mixins]()*.
+*Not to be confused with [immutable mixins](advancedConcepts/immutableMixins.md)*.
 
 ## Themes
 

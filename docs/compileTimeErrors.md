@@ -135,4 +135,4 @@ The ruleset above throws a "Element Property Mismatch" compile time error:
   />
 </p>
 
-*See [Strict Inheritance]() for more details.*
+*See [Strict Inheritance](advancedConcepts/strictInheritance.md) for more details.*

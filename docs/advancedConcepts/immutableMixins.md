@@ -42,7 +42,7 @@ const mixins = {
 
 From here onwards all examples will follow the namespace pattern. Alongside improving readability namespacing allows mixins to be named after JSX elements. Without a namespace mixins cannot have the same name as JSX elements (otherwise the compiler doesn't know whether an element or mixin is being used).
 
-Immutable mixins support the same [JSX attribute]() as immutable rulesets:
+Immutable mixins support the same [JSX attribute](../theBasics.md) as immutable rulesets:
 
 ```jsx
 <mixins.button className="btn" />
@@ -120,7 +120,7 @@ The example above targets elements of type `button` that have the classes `btn d
 
 > ###### Note on Modifier Classes
 
-> You can read more about modifier classes in the [Explicit Selectors]() guide.
+> You can read more about modifier classes in the [Explicit Selectors](explicitSelectors.md) guide.
 
 ## Override Protection
 

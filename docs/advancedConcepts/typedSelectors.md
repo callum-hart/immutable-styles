@@ -58,4 +58,4 @@ Typed selectors are baked into immutable styles by default. Since JSX requires a
 </button>
 ```
 
-One of the caveats of JSX is a tag can only have one element type. This means grouped CSS selecters (such as `a.btn, button.btn {}`) are not *possible*. However immutable styles provides an equivalent to grouped selectors via [detached rulesets]().
+One of the caveats of JSX is a tag can only have one element type. This means grouped CSS selecters (such as `a.btn, button.btn {}`) are not *possible*. However immutable styles provides an equivalent to grouped selectors via [detached rulesets](../recipies/sharingStyles.md#sharing-styles-with-detached-rulesets).

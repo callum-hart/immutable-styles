@@ -38,4 +38,4 @@ In the example above both `margin` and `margin-bottom` have been used. Since the
   />
 </p>
 
-More information on partial overrides can be [found here]().
+More information on partial overrides can be [found here](partialOverrides.md).

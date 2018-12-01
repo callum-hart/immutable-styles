@@ -2,16 +2,16 @@
 
 Immutable styles provides a couple of ways to share common styles among similar rulesets:
 
-1. [Mixins]()
-2. [Detached Rulesets]()
+1. [Immutable Mixins](../advancedConcepts/immutableMixins.md)
+2. [Detached Rulesets](../itsJustJavaScript.md#detached-rulesets)
 
 Mixins are used to share styles among rulesets with the *same* element type. Whilst detached rulesets are used to share styles among rulesets with *different* element types.
 
 This guide will feature an example of using each approach.
 
-## Sharing Styles with Mixins
+## Sharing Styles with Immutable Mixins
 
-For mixins we will extend the button example first introduced in ["The Basics"]() guide. The designer has returned to the style-guide and added a few different button variations. Additionally each variation now has four UI states: a default, hover, focussed, and disabled state.
+For mixins we will extend the button example first introduced in [The Basics](../theBasics.md) guide. The designer has returned to the style-guide and added a few different button variations. Additionally each variation now has four UI states: a default, hover, focussed, and disabled state.
 
 Here is our fictitious style-guide:
 
@@ -216,7 +216,7 @@ export default [
 
 ## Grouped CSS Selectors
 
-Detached rulesets offer an alternative to grouped CSS selectors. In the [Typed Selectors]() guide the `btn` class could be used by elements of types `a` and `button`:
+Detached rulesets offer an alternative to grouped CSS selectors. In the [Typed Selectors](../advancedConcepts/typedSelectors.md) guide the `btn` class could be used by elements of types `a` and `button`:
 
 ```css
 a.btn,

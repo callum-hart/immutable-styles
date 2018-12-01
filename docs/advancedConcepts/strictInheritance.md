@@ -1,6 +1,6 @@
 # Strict Inheritance
 
-Strict inheritance prevents inheritable CSS properties from being inherited. At first glance this may seem like an odd feature, however the current CSS inheritance model can quickly get out-of-hand, and thus become unpredictable. An example taken from one of the top 30 most visited sites on [Alexa](alexa.com/topsites) can be seen below:
+Strict inheritance prevents inheritable CSS properties from being inherited. At first glance this may seem like an odd feature, however the current CSS inheritance model can quickly get out-of-hand, and thus become unpredictable. An example taken from one of the top 30 most visited sites on [Alexa](https://www.alexa.com/topsites) can be seen below:
 
 <p align="center">
   <img src="../../docs/_images/WhatTheFont.png"

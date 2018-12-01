@@ -15,7 +15,7 @@ Although fairly trivial, the restaurant card provides the perfect fit for illust
 
 ## Setup
 
-The first step is to clone the [immutable styles ]() repository:
+The first step is to clone the [immutable styles](https://github.com/callum-hart/immutable-styles) repository:
 
 ```
 git clone git@github.com:callum-hart/immutable-styles.git
@@ -219,7 +219,7 @@ With that in mind, add a ruleset for stars with the class "shining":
 
 The restaurant card is looking pretty good so far, however it's currently a bit static. It would be nice to add a hover effect and make sure the layout is optimized for mobile devices.
 
-Firstly lets add the hover effect, which is achieved using the **`pseudo`** JSX attribute (previously introduced in ["The Basics"]() guide):
+Firstly lets add the hover effect, which is achieved using the **`pseudo`** JSX attribute (previously introduced in [The Basics](theBasics.md) guide):
 
 ```jsx
 <section className="card">

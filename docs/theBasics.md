@@ -144,7 +144,7 @@ On screens wider than 350px HTML elements of type `span` – with the class `ico
 
 > ###### Recommended Reading
 
-> If you haven't already, I strongly recommend reading [The case for Immutable Styles]() and the post [CSS Overrides: Friend or Foe?]() before reading this section.
+> If you haven't already, I strongly recommend reading [The Case for Immutable Styles](motivation.md) and the post [CSS Overrides: Friend or Foe?](http://www.callumhart.com/blog/css-overrides-friend-or-foe) before reading this section.
 
 Until now we have only observed the similarities between immutable styles and CSS – the only difference *so far* being immutable styles are written using JSX.
 

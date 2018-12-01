@@ -1,6 +1,6 @@
 # Install
 
-Immutable styles can be integrated with Webpack using the [Webpack plugin]().
+Immutable styles can be integrated with Webpack using the [Webpack plugin](https://github.com/callum-hart/immutable-styles/tree/master/packages/webpack-plugin).
 
 > 🔮 Support for other build systems (such as Parcel) will be added in future releases.
 
@@ -107,8 +107,8 @@ And lastly in `.babelrc` register the following presets and plugins:
 
 Some examples of using immutable styles with Webpack can be found in the following packages:
 
-- [html-examples](): which shows how to use immutable styles with plain HTML
-- [react-examples](): which shows how to use immutable styles with React
+- [html-examples](https://github.com/callum-hart/immutable-styles/tree/master/packages/html-examples): which shows how to use immutable styles with plain HTML
+- [react-examples](https://github.com/callum-hart/immutable-styles/tree/master/packages/react-examples): which shows how to use immutable styles with React
 
 
 

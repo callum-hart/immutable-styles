@@ -38,7 +38,7 @@ The HTML element above will not receive the styles defined by the `btn-primary` 
 </button>
 ```
 
-The ruleset above uses a *modifier class* to explicitly target elements of type `button` with both classes `btn-primary` and  `disabled`.
+The ruleset above uses a **modifier class** to explicitly target elements of type `button` with both classes `btn-primary` and  `disabled`.
 
 > ###### Note on Sharing Styles
 
