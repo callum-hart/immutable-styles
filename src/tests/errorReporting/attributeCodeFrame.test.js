@@ -9,12 +9,13 @@
 
 
 const fs = require('fs');
+const path = require('path');
 
 const { saveSourceMap, attributeCodeFrame } = require('../../errorReporting');
 
-const fileName = './tests/errorReporting/mocks/attributeCodeFrame.jsx';
+const fileName = './mocks/attributeCodeFrame.jsx';
 
-beforeAll(() => saveSourceMap(fileName, fs.readFileSync(fileName, 'utf8')));
+beforeAll(() => saveSourceMap(fileName, fs.readFileSync(path.resolve(__dirname, fileName), 'utf8')));
 
 
 describe('invalid attribute', () => {

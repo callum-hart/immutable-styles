@@ -1,7 +1,7 @@
 const fs = require('fs');
-const ImmutableStyles = require('@immutable-styles/core');
 
-const { logBuildError, logEnableWebpackSourceMaps } = ImmutableStyles;
+const { createCSS, tearDown } = require('../index');
+const { saveSourceMap, logBuildError, logEnableWebpackSourceMaps } = require('../errorReporting');
 
 
 function isImmutableStylesModule(resourceName) {
@@ -24,7 +24,7 @@ function buildAST(modules) {
 
       try {
         if (isSoureMapEnabled(fileSource)) {
-          ImmutableStyles.saveSourceMap(fileName, fileSource._sourceMap.sourcesContent[0]);
+          saveSourceMap(fileName, fileSource._sourceMap.sourcesContent[0]);
           return eval(fileSource._value); // use https://www.npmjs.com/package/safer-eval instead?
         } else {
           logEnableWebpackSourceMaps();
@@ -41,7 +41,7 @@ function buildAST(modules) {
     , []);
 }
 
-class ImmutableStylesPlugin {
+class ImmutableStylesWebpackPlugin {
   constructor({dist = './dist/bundle.css'}) {
     this.dist = dist;
   }
@@ -52,10 +52,10 @@ class ImmutableStylesPlugin {
         // Discard the previous AST and build a new one. This is because (like CSS)
         // immutable styles are global. A style in fileA can effect styles in fileB,
         // fileC, fileD et-cetera.
-        ImmutableStyles.tearDown();
+        tearDown();
 
         try {
-          const CSS = ImmutableStyles.createCSS(buildAST(modules));
+          const CSS = createCSS(buildAST(modules));
 
           fs.writeFile(this.dist, CSS, 'utf8', (err) => {
             if (err) throw err;
@@ -68,4 +68,4 @@ class ImmutableStylesPlugin {
   }
 }
 
-module.exports = ImmutableStylesPlugin;
+module.exports = ImmutableStylesWebpackPlugin;

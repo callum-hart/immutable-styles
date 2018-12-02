@@ -1,18 +1,14 @@
 const forbiddenElementPropertyCombinations = require('./forbiddenElementPropertyCombinations');
 const forbiddenPropertyCombinations = require('./forbiddenPropertyCombinations');
 const {
-  saveSourceMap,
   clearSourceMaps,
   logInvalidAttribute,
   logDuplicateProperty,
   logExactOverrideFound,
   logPartialOverrideFound,
   logNestedMediaQuery,
-  logElementPropertyMismatch,
-  logBuildError,
-  logEnableWebpackSourceMaps
+  logElementPropertyMismatch
 } = require('./errorReporting');
-
 const {
   BLANK,
   SPACE,
@@ -27,6 +23,7 @@ const {
   ZERO,
   MEDIA_UNIT
 } = require('./constants');
+const ImmutableStylesWebpackPlugin = require('./integrations/webpack-plugin');
 
 
 const AST = new Map();
@@ -420,8 +417,6 @@ module.exports = {
   createStyle,
   createMixin,
   createCSS,
-  saveSourceMap,
   tearDown,
-  logBuildError,
-  logEnableWebpackSourceMaps
+  ImmutableStylesWebpackPlugin
 };

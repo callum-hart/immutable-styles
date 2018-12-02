@@ -7,10 +7,17 @@
     "type": "git",
     "url": "https://github.com/callum-hart/immutable-styles.git"
   },
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
   "publishConfig": {
     "access": "public"
   },
   "devDependencies": {
-    "lerna": "^3.4.3"
+    "jest": "^22.1.4"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }

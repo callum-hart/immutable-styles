@@ -103,15 +103,6 @@ function attributeCodeFrame(source, attr) {
   );
 }
 
-function baseClassCodeFrame(source, baseClass) {
-  return getCodeFrame(
-    forAttr(source),
-    source.lineNumber,
-    `${baseClass}\\.`,
-    baseClass
-  );
-}
-
 function CSSPropertyCodeFrame(source, CSSProperty, CSSValue) {
   return getCodeFrame(
     forDeclaration(source, CSSProperty, CSSValue),
@@ -280,7 +271,6 @@ module.exports = {
   clearSourceMaps,
   shouldLogErrorReport,
   attributeCodeFrame,
-  baseClassCodeFrame,
   CSSPropertyCodeFrame,
   logInvalidAttribute,
   logDuplicateProperty,

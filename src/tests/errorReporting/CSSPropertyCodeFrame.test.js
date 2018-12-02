@@ -1,10 +1,11 @@
 const fs = require('fs');
+const path = require('path');
 
 const { saveSourceMap, CSSPropertyCodeFrame } = require('../../errorReporting');
 
-const fileName = './tests/errorReporting/mocks/CSSPropertyCodeFrame.jsx';
+const fileName = './mocks/CSSPropertyCodeFrame.jsx';
 
-beforeAll(() => saveSourceMap(fileName, fs.readFileSync(fileName, 'utf8')));
+beforeAll(() => saveSourceMap(fileName, fs.readFileSync(path.resolve(__dirname, fileName), 'utf8')));
 
 
 describe('CSS property', () => {
