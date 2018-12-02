@@ -1,8 +1,7 @@
 const fs = require('fs');
 
-const { createCSS, tearDown } = require('../index');
+const { createCSS, tearDown } = require('../core');
 const { saveSourceMap, logBuildError, logEnableWebpackSourceMaps } = require('../errorReporting');
-
 
 function isImmutableStylesModule(resourceName) {
   return typeof(resourceName) !== 'undefined' &&
