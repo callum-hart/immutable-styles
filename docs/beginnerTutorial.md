@@ -15,20 +15,20 @@ Although fairly trivial, the restaurant card provides the perfect fit for illust
 
 ## Setup
 
-The first step is to clone the [immutable styles](https://github.com/callum-hart/immutable-styles) repository:
+The first step is to clone the [immutable styles tutorial](https://github.com/callum-hart/immutable-styles-tutorial) repository:
 
 ```
-git clone git@github.com:callum-hart/immutable-styles.git
+git clone git@github.com:callum-hart/immutable-styles-tutorial.git
 ```
 
-Then navigate to the `tutorial` directory and install its dependencies:
+Then navigate to the tutorial and install its dependencies:
 
 ```
-cd immutable-styles/packages/tutorial
+cd immutable-styles-tutorial
 npm install
 ```
 
-And then start the application:
+And start the application:
 
 ```
 npm run start
