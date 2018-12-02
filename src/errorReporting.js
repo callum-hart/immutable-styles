@@ -2,7 +2,6 @@ const {
   BLANK,
   SPACE,
   TAB,
-  DOT,
   COMMA
 } = require('./constants');
 
