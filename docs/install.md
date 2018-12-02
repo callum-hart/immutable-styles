@@ -106,10 +106,7 @@ And lastly in `.babelrc` register the following presets and plugins:
 
 ## Examples
 
-Some examples of using immutable styles with Webpack can be found in the following packages:
+Some examples of using immutable styles with Webpack can be found in the following repos:
 
-- [html-examples](): which shows how to use immutable styles with plain HTML
-- [react-examples](): which shows how to use immutable styles with React
-
-
-
+- [immutable-styles-html-example](https://github.com/callum-hart/immutable-styles-html-examples): which shows how to use immutable styles with plain HTML
+- [immutable-styles-react-example](https://github.com/callum-hart/immutable-styles-react-examples): which shows how to use immutable styles with React
