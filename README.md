@@ -4,6 +4,10 @@
 
 > A JavaScript library for styling web interfaces with a focus on predictability and robustness. It uses immutability to remove side effects often tied to CSS, allowing CSS bugs to be caught ahead of time.
 
+| Source | Result |
+| :----------------- | :----- |
+| ![](./docs/_images/HelloWorldSource.png) | ![](./docs/_images/HelloWorldResult.png) |
+
 ## Features
 
 - ⚠️ Compile Time Errors
