@@ -2,7 +2,7 @@
 
 > ###### Immutable Styles | ɪˈmjuːtəb(ə)l | stʌɪl |
 
-> A JavaScript library for styling web interfaces with a focus on predictability and robustness. It uses immutability to remove side effects often tied to CSS, allowing CSS bugs to be caught ahead of time.
+> A library for styling web interfaces with a focus on predictability and robustness. It uses immutability to remove side effects often tied to CSS, allowing CSS bugs to be caught ahead of time.
 
 | Source | Result |
 | :----------------- | :----- |
@@ -21,7 +21,7 @@
 
 ## What is Immutable Styles?
 
-Immutable styles is a cross between a CSS pre-processor and a CSS in-JS library. Styles are written using JavaScript which are subsequently compiled to CSS. The library has 2 goals:
+Immutable styles is a cross between a CSS pre-processor and a CSS-in-JSX library. Styles are written using JSX which are subsequently compiled to CSS. The library has 2 goals:
 
 1. Make styles for the web **predictable**
 2. Make styles for the web **robust**
@@ -61,7 +61,7 @@ Yes. Immutable styles evolved from an earlier open-source project of mine called
 
 ### Can I Contribute?
 
-Absolutely. The project is very welcome to feedback, fresh perspectives, feature requests, pull requests, and of course contributors 🙂
+Absolutely. This project is very welcome to feedback, fresh perspectives, feature requests, pull requests, and of course contributors ✌️
 
 ## Change Log
 
@@ -80,8 +80,10 @@ Immutable styles adheres to [Semantic Versioning](https://semver.org).
 
 The documentation can be [found here](https://callum-hart.gitbook.io/immutable-styles/).
 
+## Shoutouts
+
+Shoutout to [Joseph Luck](https://github.com/josephluck) and the good guys at [Goodlord](https://github.com/ohgoodlord) for the invaluable feedback on the early prototype 🙌
+
 ## Licence
 
 [MIT](https://github.com/callum-hart/immutable-styles/blob/master/LICENSE)
-
-Copyright (c) 2018-present, Callum Hart
