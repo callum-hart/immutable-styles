@@ -67,7 +67,7 @@ Absolutely. This project is very welcome to feedback, fresh perspectives, featur
 
 Immutable styles adheres to [Semantic Versioning](https://semver.org).
 
-### 1.0.0 🎉
+### 1.0.3 🎉
 
 - Usage with JSX
 - Webpack plugin, with hot reload 🔥
@@ -75,6 +75,13 @@ Immutable styles adheres to [Semantic Versioning](https://semver.org).
 - Immutable mixins!
 - Partial override detection
 - Improved code coverage
+
+### 1.0.4
+
+- Optimise generated CSS
+- Improved error messages:
+  - Link to relevant documentation
+  - More whitespace
 
 ## Documentation
 

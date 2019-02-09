@@ -54,7 +54,7 @@ class ImmutableStylesWebpackPlugin {
         tearDown();
 
         try {
-          const CSS = createCSS(buildAST(modules));
+          const CSS = createCSS(buildAST(modules), true);
 
           fs.writeFile(this.dist, CSS, 'utf8', (err) => {
             if (err) throw err;
