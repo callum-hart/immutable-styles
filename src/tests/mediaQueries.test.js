@@ -55,17 +55,7 @@ test('[media] Child nodes inherit breakpoint from parent node', () => {
     )
   ];
 
-    const output = `@media (min-width:300px) {
-  div[class="parentNode"] {
-    display: block;
-  }
-}
-@media (min-width:300px) {
-  div[class="parentNode"] > span[class="childNode"] {
-    font-size: 14px;
-  }
-}
-`;
+    const output = '@media(min-width:300px){div[class=parentNode]{display: block;}}@media(min-width:300px){div[class=parentNode] > span[class=childNode]{font-size: 14px;}}';
 
     expect(createCSS(input)).toEqual(output);
 });
