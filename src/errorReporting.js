@@ -8,10 +8,12 @@ const {
 
 const SOURCE_MAPS = new Map();
 
+const GUTTER = TAB.repeat(2);
 const END_FORMAT = '\x1b[0m';
 
 const color = {
   red: text => `\x1b[31m${text}${END_FORMAT}`,
+  lightBlue: text => `\x1b[94m${text}${END_FORMAT}`,
   dim: text => `\x1b[2m${text}${END_FORMAT}`
 }
 
@@ -78,11 +80,11 @@ function getCodeFrame(code, startingLineNumber, matcher, fragment) {
         problemLineNumber = startingLineNumber + i;
         problemColNumber = match.index + 1;
 
-        return `${color.red('>')}${SPACE}${lineNumber}${loc}`.concat(
-          `\n${TAB}${SPACE.repeat(lineNumber.length + match.index)}${color.red('^').repeat(fragment.length)}`
+        return `${GUTTER}${color.red('>')}${SPACE}${lineNumber}${loc}`.concat(
+          `\n${GUTTER}${TAB}${SPACE.repeat(lineNumber.length + match.index)}${color.red('^').repeat(fragment.length)}`
         );
       }
-      return `${TAB}${color.dim(`${lineNumber}${loc}`)}`;
+      return `${GUTTER}${TAB}${color.dim(`${lineNumber}${loc}`)}`;
   })
   .join('\n');
 
@@ -112,14 +114,13 @@ function CSSPropertyCodeFrame(source, CSSProperty, CSSValue) {
 }
 
 function logHeading(errorName) {
-  console.log(`\n${color.red(text.bold(`[${errorName}]`))}`);
+  console.log(`\n\n${GUTTER}${color.red(text.bold(`[${errorName}]`))}`);
 }
 
 function logFile(filePath, lineNumber, colNumber) {
-  // filePath = 'aFileWithoutPath.iss.jsx';
   const [fullPath, pathToFile, fileName] = filePath.match(/(.+[\/])(.+)/) || [null, null, filePath];
 
-  console.log(`${TAB}`.concat(pathToFile
+  console.log(`${GUTTER}${TAB}`.concat(pathToFile
     ? color.dim(pathToFile)
     : BLANK
   )
@@ -130,28 +131,34 @@ function logFile(filePath, lineNumber, colNumber) {
   ));
 }
 
+function logMoreInfo(infoLink) {
+  console.log(`${GUTTER}${color.dim('Read more about this error here:')}`);
+  console.log(`${GUTTER}${TAB}${color.lightBlue(`<${infoLink}>`)}\n\n`);
+}
+
 function logInvalidAttribute(source, attr, permittedAttrs) {
   if (shouldLogErrorReport(source)) {
     const { lineNumber, colNumber, codeFrame } = attributeCodeFrame(source, attr);
 
     logHeading('Invalid Attribute');
     logFile(source.fileName, lineNumber, colNumber);
-    console.log(`\n\`${attr}\` is not a valid attribute:\n`)
+    console.log(`\n${GUTTER}\`${attr}\` is not a valid attribute:\n`)
     console.log(codeFrame);
-    console.log(`\nOnly the following attributes are permitted:\n`);
+    console.log(`\n${GUTTER}Only the following attributes are permitted:\n`);
     chunkArray(permittedAttrs.filter(attr => attr !== '__source'))
       .map(chunk => chunk.join(`${COMMA}${SPACE}`))
-      .forEach(chunk => console.log(`${TAB}${chunk}`));
+      .forEach(chunk => console.log(`${GUTTER}${TAB}${chunk}`));
     console.log(`\n`
       .concat(attr === 'id'
-        ? `${text.underline('Hint')}: IDs cannot be used for styling, use className instead.\n`
+        ? `${GUTTER}${text.underline('Hint')}: IDs cannot be used for styling, use className instead.\n`
         : BLANK
       )
       .concat(attr === 'class'
-        ? `${text.underline('Hint')}: perhaps you meant className?\n`
+        ? `${GUTTER}${text.underline('Hint')}: perhaps you meant className?\n`
         : BLANK
       )
     );
+    logMoreInfo('https://callum-hart.gitbook.io/immutable-styles/compiletimeerrors#invalid-attribute');
   }
 }
 
@@ -161,10 +168,11 @@ function logDuplicateProperty(source, property, value) {
 
     logHeading('Duplicate Property');
     logFile(source.fileName, lineNumber, colNumber);
-    console.log(`\nThe property \`${property}\` has been defined twice:\n`)
+    console.log(`\n${GUTTER}The property \`${property}\` has been defined twice:\n`)
     console.log(codeFrame);
-    console.log('\nThe first occurrence is overridden by the second.');
-    console.log(`\n${text.underline('Hint')}: remove either one.\n`);
+    console.log(`\n${GUTTER}The first occurrence is overridden by the second.`);
+    console.log(`\n${GUTTER}${text.underline('Hint')}: remove either one.\n`);
+    logMoreInfo('https://callum-hart.gitbook.io/immutable-styles/compiletimeerrors#duplicate-property');
   }
 }
 
@@ -177,13 +185,14 @@ function logExactOverrideFound(overriddenSource, overridingSource, property) {
     const overridingCodeFrame = CSSPropertyCodeFrame(overridingSource, property);
 
     logHeading('Override Found');
-    console.log(`\nThe property \`${property}\` is defined here:`);
+    console.log(`\n${GUTTER}The property \`${property}\` is defined here:`);
     logFile(overriddenSource.fileName, overriddenCodeFrame.lineNumber, overriddenCodeFrame.colNumber);
     console.log(`\n${overriddenCodeFrame.codeFrame}`);
-    console.log('\nAnd again here:');
+    console.log(`\n${GUTTER}And again here:`);
     logFile(overridingSource.fileName, overridingCodeFrame.lineNumber, overridingCodeFrame.colNumber);
     console.log(`\n${overridingCodeFrame.codeFrame}`);
-    console.log('\nThe first occurrence is overridden by the second.\n');
+    console.log(`\n${GUTTER}The first occurrence is overridden by the second.\n`);
+    logMoreInfo('https://callum-hart.gitbook.io/immutable-styles/compiletimeerrors#override-found');
   }
 }
 
@@ -192,18 +201,19 @@ function logPartialOverrideFound(overriddenSource, overridingSource, overriddenP
     shouldLogErrorReport(overriddenSource) &&
     shouldLogErrorReport(overridingSource)
   ) {
-  const overriddenCodeFrame = CSSPropertyCodeFrame(overriddenSource, overriddenProperty)
-  const overridingCodeFrame = CSSPropertyCodeFrame(overridingSource, overridingProperty);
+    const overriddenCodeFrame = CSSPropertyCodeFrame(overriddenSource, overriddenProperty)
+    const overridingCodeFrame = CSSPropertyCodeFrame(overridingSource, overridingProperty);
 
-  logHeading('Partial Override Found');
-  console.log(`\nThe property \`${overriddenProperty}\` is defined here:`);
-  logFile(overriddenSource.fileName, overriddenCodeFrame.lineNumber, overriddenCodeFrame.colNumber);
-  console.log(`\n${overriddenCodeFrame.codeFrame}`);
-  console.log(`\nWhich is overridden by \`${overridingProperty}\`:`);
-  logFile(overridingSource.fileName, overridingCodeFrame.lineNumber, overridingCodeFrame.colNumber);
-  console.log(`\n${overridingCodeFrame.codeFrame}`);
-  console.log('\nThe first occurrence is overridden by the second.\n');
- }
+    logHeading('Partial Override Found');
+    console.log(`\n${GUTTER}The property \`${overriddenProperty}\` is defined here:`);
+    logFile(overriddenSource.fileName, overriddenCodeFrame.lineNumber, overriddenCodeFrame.colNumber);
+    console.log(`\n${overriddenCodeFrame.codeFrame}`);
+    console.log(`\n${GUTTER}Which is overridden by \`${overridingProperty}\`:`);
+    logFile(overridingSource.fileName, overridingCodeFrame.lineNumber, overridingCodeFrame.colNumber);
+    console.log(`\n${overridingCodeFrame.codeFrame}`);
+    console.log(`\n${GUTTER}The first occurrence is overridden by the second.\n`);
+    logMoreInfo('https://callum-hart.gitbook.io/immutable-styles/compiletimeerrors#partial-override-found');
+  }
 }
 
 function logNestedMediaQuery(outerMediaSource, outerMinWidthIfAny, innerMediaSource, innerMinWidthIfAny) {
@@ -221,13 +231,14 @@ function logNestedMediaQuery(outerMediaSource, outerMinWidthIfAny, innerMediaSou
     );
 
     logHeading('Nested Media Query');
-    console.log('\nA media query cannot be nested inside another media query.\n');
-    console.log('Outer media query:');
+    console.log(`\n${GUTTER}A media query cannot be nested inside another media query.\n`);
+    console.log(`${GUTTER}Outer media query:`);
     logFile(outerMediaSource.fileName, outerMediaCodeFrame.lineNumber, outerMediaCodeFrame.colNumber);
     console.log(`\n${outerMediaCodeFrame.codeFrame}`);
-    console.log('\nInner media query:');
+    console.log(`\n${GUTTER}Inner media query:`);
     logFile(innerMediaSource.fileName, innerMediaCodeFrame.lineNumber, innerMediaCodeFrame.colNumber);
     console.log(`\n${innerMediaCodeFrame.codeFrame}\n`);
+    logMoreInfo('https://callum-hart.gitbook.io/immutable-styles/compiletimeerrors#nested-media-query');
   }
 }
 
@@ -237,14 +248,15 @@ function logElementPropertyMismatch(source, element, property, permittedElements
 
     logHeading('Element Property Mismatch');
     logFile(source.fileName, lineNumber, colNumber);
-    console.log(`\nThe element <${element}> cannot use the property \`${property}\`:\n`);
+    console.log(`\n${GUTTER}The element <${element}> cannot use the property \`${property}\`:\n`);
     console.log(codeFrame);
-    console.log(`\n\`${property}\` can only be used by the following elements:\n`);
+    console.log(`\n${GUTTER}\`${property}\` can only be used by the following elements:\n`);
     chunkArray(permittedElements, 8)
       .map(chunk => chunk.map(element => `<${element}>`))
       .map(chunk => chunk.join(`${COMMA}${SPACE}`))
-      .forEach(chunk => console.log(`${TAB}${chunk}`));
+      .forEach(chunk => console.log(`${GUTTER}${TAB}${chunk}`));
     console.log('\n');
+    logMoreInfo('https://callum-hart.gitbook.io/immutable-styles/compiletimeerrors#element-property-mismatch');
   }
 }
 
