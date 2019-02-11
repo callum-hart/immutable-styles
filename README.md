@@ -83,6 +83,10 @@ Immutable styles adheres to [Semantic Versioning](https://semver.org).
   - Link to relevant documentation
   - More whitespace
 
+### 1.0.5
+
+- Fix generated CSS selector for modifier classes 🐛
+
 ## Documentation
 
 The documentation can be [found here](https://callum-hart.gitbook.io/immutable-styles/).

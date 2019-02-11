@@ -403,7 +403,7 @@ function makeClassSelector(elementWithClass) {
 
 function makeModifierClassSelector(elementWithModifier) {
   const [element, baseClass, modifierClass] = elementWithModifier.split(DOT);
-  return `${element}[class=${baseClass}${SPACE}${modifierClass}]`;
+  return `${element}[class="${baseClass}${SPACE}${modifierClass}"]`;
 }
 
 // for testing / build tools
