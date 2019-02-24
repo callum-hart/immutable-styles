@@ -25,11 +25,16 @@ const {
 } = require('./constants');
 
 
-const VERSION = 'v1.0.4';
+const VERSION = 'v1.0.51';
 const AST = new Map();
 
 
 function createStyle(element, attrs, ...children) {
+  // replace space in multiple class with dot
+  if (attrs && attrs.className && attrs.className.includes(SPACE)) {
+    attrs.className = attrs.className.replace(SPACE, DOT);
+  }
+
   // element is an immutable mixin
   if (typeof element === 'object') {
     const mixin = {

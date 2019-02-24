@@ -109,7 +109,7 @@ The example above targets elements of type `button` that have the class `btn-pri
 As with immutable rulesets immutable mixins support modifier classes. Modifier classes allow selectors to explicitly target elements with multiple classes:
 
 ```jsx
-<mixins.button className="btn.disabled">
+<mixins.button className="btn disabled">
   background: slategray;
   opactiy: 0.3;
   pointer-events: none;

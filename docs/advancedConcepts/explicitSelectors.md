@@ -31,7 +31,7 @@ In the example above the ruleset only targets elements of type `button` that hav
 The HTML element above will not receive the styles defined by the `btn-primary` ruleset. Combining the `btn-primary` class with the `disabled` class represents a different UI state and therefore should be handled explicitly by another ruleset:
 
 ```jsx
-<button className="btn-primary.disabled">
+<button className="btn-primary disabled">
   background: cornflowerblue;
   pointer-events: none;
   opacity: 0.8;
