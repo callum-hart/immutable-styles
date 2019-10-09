@@ -20,11 +20,16 @@ function buildAST(modules) {
     .map(module => {
       const fileName = module.resource;
       const fileSource = module._source;
+      const absolutePath = module.issuer.context;
 
       try {
         if (isSoureMapEnabled(fileSource)) {
           saveSourceMap(fileName, fileSource._sourceMap.sourcesContent[0]);
-          return eval(fileSource._value); // use https://www.npmjs.com/package/safer-eval instead?
+
+          return eval(
+            // transform relative paths to absolute paths
+            fileSource._value.replace(/require\(('|")(\.\.?)/g, `require("${absolutePath}/`)
+          );
         } else {
           logEnableWebpackSourceMaps();
         }
