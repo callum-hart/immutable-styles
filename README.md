@@ -1,8 +1,6 @@
-<h1 align="center"><img src="./docs/_images/logo.png" width="415px" height="145px" /><br>Immutable Styles</h1>
+<p align="center"><img src="./docs/_images/logo.png" width="415px" height="145px" /></p>
 
-> ###### Immutable Styles | ɪˈmjuːtəb(ə)l | stʌɪl |
-
-> A library for styling web interfaces with a focus on predictability and robustness. It uses immutability to remove side effects often tied to CSS, allowing UI bugs to be caught ahead of time.
+> A library for styling web interfaces with a focus on predictability and robustness. It uses immutability to remove side effects often tied to CSS, allowing UI bugs to be caught ahead of time!
 
 | Source | Result |
 | :----------------- | :----- |
