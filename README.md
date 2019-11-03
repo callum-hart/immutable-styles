@@ -1,4 +1,4 @@
-<h1 align="center"><img src="./docs/_images/logo.png" width="130px" height="135px" /><br>Immutable Styles</h1>
+<h1 align="center"><img src="./docs/_images/logo.png" width="415px" height="145px" /><br>Immutable Styles</h1>
 
 > ###### Immutable Styles | ɪˈmjuːtəb(ə)l | stʌɪl |
 
