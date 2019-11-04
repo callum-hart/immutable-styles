@@ -25,14 +25,14 @@ const {
 } = require('./constants');
 
 
-const VERSION = 'v1.0.51';
+const VERSION = 'v1.0.52';
 const AST = new Map();
 
 
 function createStyle(element, attrs, ...children) {
   // replace space in multiple class with dot
   if (attrs && attrs.className && attrs.className.includes(SPACE)) {
-    attrs.className = attrs.className.replace(SPACE, DOT);
+    attrs.className = attrs.className.replace(/ /g, DOT);
   }
 
   // element is an immutable mixin
@@ -383,13 +383,7 @@ function makeSelectorFromRef(ref) {
       }
 
       if (selector.includes(DOT)) {
-        const isModifierClass = selector.split(DOT).length === 3; // [element, baseClass, modifierClass]
-
-        if (isModifierClass) {
-          return acc.concat(`${makeModifierClassSelector(selector)}${pseudoSelector}`);
-        } else {
-          return acc.concat(`${makeClassSelector(selector)}${pseudoSelector}`);
-        }
+        return acc.concat(`${makeClassSelector(selector)}${pseudoSelector}`);
       } else {
         return acc.concat(`${makeTagOnlySelector(selector)}${pseudoSelector}`);
       }
@@ -402,13 +396,8 @@ function makeTagOnlySelector(element) {
 }
 
 function makeClassSelector(elementWithClass) {
-  const [element, cssClass] = elementWithClass.split(DOT);
-  return `${element}[class=${cssClass}]`;
-}
-
-function makeModifierClassSelector(elementWithModifier) {
-  const [element, baseClass, modifierClass] = elementWithModifier.split(DOT);
-  return `${element}[class="${baseClass}${SPACE}${modifierClass}"]`;
+  const [element, ...classNames] = elementWithClass.split(DOT);
+  return `${element}[class="${classNames.join(SPACE)}"]`;
 }
 
 // for testing / build tools

@@ -66,7 +66,7 @@ test('[pseudo] Node with class and pseudo-class', () => {
     'opacity: 0.75;'
   );
 
-  const output = 'a[class=btn]:hover{opacity: 0.75;}';
+  const output = 'a[class="btn"]:hover{opacity: 0.75;}';
 
   expect(createCSS(input)).toEqual(output);
 });
@@ -82,7 +82,7 @@ test('[pseudo] Node with class and pseudo-element', () => {
     'content: "🐹";'
   );
 
-  const output = 'a[class=btn--withIcon]::before{content: "🐹";}';
+  const output = 'a[class="btn--withIcon"]::before{content: "🐹";}';
 
   expect(createCSS(input)).toEqual(output);
 });
@@ -128,7 +128,7 @@ test('[pseudo] Node with class, psuedo-class and pseudo-element', () => {
     'opacity: 1;'
   );
 
-  const output = 'a[class=btn--withIcon]:hover::before{opacity: 1;}';
+  const output = 'a[class="btn--withIcon"]:hover::before{opacity: 1;}';
 
   expect(createCSS(input)).toEqual(output);
 });
@@ -144,7 +144,7 @@ test('[pseudo] Node with class, psuedo-class and pseudo-element', () => {
     'opacity: 0.5;'
   );
 
-  const output = 'a[class=btn--withIcon]:visited:hover::before{opacity: 0.5;}';
+  const output = 'a[class="btn--withIcon"]:visited:hover::before{opacity: 0.5;}';
 
   expect(createCSS(input)).toEqual(output);
 });
@@ -168,7 +168,7 @@ test('[pseudo] Node with psuedo-class and child node', () => {
     )
   ];
 
-  const output = 'div[class=parent]:hover > a[class=child]{text-decoration-line: underline;}';
+  const output = 'div[class="parent"]:hover > a[class="child"]{text-decoration-line: underline;}';
 
   expect(createCSS(input)).toEqual(output);
 });
@@ -192,7 +192,7 @@ test('[pseudo] Child node with psuedo-class', () => {
     )
   ];
 
-  const output = 'div[class=parent] > a[class=child]:hover{font-weight: bold;}';
+  const output = 'div[class="parent"] > a[class="child"]:hover{font-weight: bold;}';
 
   expect(createCSS(input)).toEqual(output);
 });
